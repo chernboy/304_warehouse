@@ -1,0 +1,23 @@
+{
+  "name": "warehouse",
+  "version": "1.0.0",
+  "description": "warehouse DB project for 304",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dacerron/304_warehouse.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dacerron/304_warehouse/issues"
+  },
+  "homepage": "https://github.com/dacerron/304_warehouse#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "http": "0.0.0"
+  }
+}
