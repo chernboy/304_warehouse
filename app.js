@@ -8,7 +8,7 @@ const port = 3000
 const htmlpath = "/html"
 const jspath= "/js"
 
-
+//FIX: this is kind of slow to look at, maybe route grouping would be good
 app.get('/admin', (req, res) => {
     console.log("received get request at admin")
     res.sendFile(location + htmlpath + "/admin.html")
@@ -39,6 +39,12 @@ app.get("/js/company.js", (req, res) => {
 
 app.get("/js/admin.js", (req, res) => {
     res.sendFile(location + jspath +"/admin.js")
+})
+
+app.get("/api/getItems", (req, res) => {
+    // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
+    // repeating info)
+    res.json({"iid":1234, "name": "itemName"});
 })
 
 app.listen(port, () => {

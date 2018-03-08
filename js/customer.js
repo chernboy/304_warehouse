@@ -6,24 +6,7 @@ Customer = (function () {
     var events = function () {
         console.log("calling events");
         document.querySelector("body").onload = function () {
-            console.log("document loaded");
-            var itemRow = document.getElementById("row");
-            console.log(itemRow.childNodes.length);
-            var children = itemRow.childNodes.forEach((child) => {
-                switch (child.id) {
-                    case "itemID":
-                        idCell = child;
-                        console.log("found idCell: " + JSON.stringify(idCell));
-                        break;
-                    case "itemName":
-                        nameCell = child;
-                        console.log("found nameCell: " + JSON.stringify(nameCell));
-                        break;
-                    default:
-                        console.log("found extra item");
-                        break;
-                }
-            });
+            console.log("[CUSTOMER] document loaded");
         };
     };
 
@@ -40,23 +23,46 @@ var ItemTableController = {}
 
 ItemTableController = (function () {
 
+    var table = $("#itemTableBody");
+    load("./itemObj.js");
+
     var events = function () {
-        $(document).onload(() => {
-            items = getItems(); // TODO: make the xmlhttprequest
+        $(document).ready(() => {
+            var items = getItems(); // TODO: make the xmlhttprequest
             populateTable(items);
         })
     };
 
     var getItems = function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                // Typical action to be performed when the document is ready:
-                this.responseL
-            }
-        };
-        xhttp.open("GET", "/api/getItems", true);
-        xhttp.send();
+        var items = []
+        $.get("/api/getItems", function () {
+            cosole.log("sent request for items");
+        })
+            .done(function (data) {
+                console.log("[ITC-AJAX] got result for items back " + JSON.stringify(data));
+                // later this will be an array
+                items.push(ItemFactory.generateItem(data)); // <- the structure of return should be defined externally
+            })
+            .fail(function () {
+                console.log("[ITC-AJAX] failed or timed out for requests");
+            })
+            .always(function () {
+                console.log("[ITC-AJAX] finished requesting for items");
+            });
+        return items
+    }
+
+    var populateTable = function(items) {
+        for (const o of items) {
+            table.append(ItemFactory.generateItemRow(o));
+        }
+    }
+
+    var getCleanRow = function() {
+        let row = $("#cleanRow").clone();
+        row.attr("id") = "";
+        row.removeClass("hidden");
+        return row;
     }
 
     return {
