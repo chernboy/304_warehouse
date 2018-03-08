@@ -6,6 +6,6 @@ var ItemFactory = (function () {
     }
 
     return {
-        generateItemRow: generateItem
+        generateItemRow: generateItemRow
     }
 })();

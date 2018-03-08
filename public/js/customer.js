@@ -4,10 +4,10 @@ Customer = (function () {
     var idCell;
     var nameCell;
     var events = function () {
-        console.log("calling events");
-        document.querySelector("body").onload = function () {
+        $(function () {
+            console.log("calling events");
             console.log("[CUSTOMER] document loaded");
-        };
+        });
     };
 
     return {
@@ -23,25 +23,23 @@ var ItemTableController = {}
 
 ItemTableController = (function () {
 
-    var table = $("#itemTableBody");
-    load("./itemObj.js");
-
     var events = function () {
-        $(document).ready(() => {
+        $(function () {
+            importItems();
             var items = getItems(); // TODO: make the xmlhttprequest
-            populateTable(items);
-        })
+            populateTableWithItems(items, $("#itemTableBody"));
+        });
     };
 
     var getItems = function () {
         var items = []
         $.get("/api/getItems", function () {
-            cosole.log("sent request for items");
+            console.log("sent request for items");
         })
             .done(function (data) {
-                console.log("[ITC-AJAX] got result for items back " + JSON.stringify(data));
                 // later this will be an array
-                items.push(ItemFactory.generateItem(data)); // <- the structure of return should be defined externally
+                items.push(ItemFactory.generateItemRow(data)); // <- the structure of return should be defined externally
+                console.log("pushed row");
             })
             .fail(function () {
                 console.log("[ITC-AJAX] failed or timed out for requests");
@@ -52,13 +50,22 @@ ItemTableController = (function () {
         return items
     }
 
-    var populateTable = function(items) {
+    var importItems = function() {
+        var script = $("<script>");
+        script.attr("src", "../js/itemObj.js");
+        script.attr("type", "text/javascript");
+        $('body').prepend(script);
+    }
+
+    var populateTableWithItems = function (items, table) {
+        console.log(table.html());
         for (const o of items) {
-            table.append(ItemFactory.generateItemRow(o));
+            var $row = ItemFactory.generateItemRow(o);
+            table.append($row);
         }
     }
 
-    var getCleanRow = function() {
+    var getCleanRow = function () {
         let row = $("#cleanRow").clone();
         row.attr("id") = "";
         row.removeClass("hidden");
@@ -68,6 +75,6 @@ ItemTableController = (function () {
     return {
         init: events
     }
-});
+})();
 
 ItemTableController.init();
