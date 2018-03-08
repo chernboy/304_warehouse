@@ -1,20 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Kalahari - Like Amazon, but Worse">
-        <meta name="author" content="Team Kalahari">
-        <title>Kalahari</title>
-        <link rel="icon" href="favicon.ico" type="image/ico"/>
-        <!-- Styles -->
-        <link href="global-styles.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    </head>
-    <body>
-        <div id="home"></div>
-        <script src="dist/bundle.js"></script>
-        <div text-align="center"><h1>Customer Util</h1></div>
-        <p><a href="/">Back</a></p>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Kalahari - Like Amazon, but Worse">
+    <meta name="author" content="Team Kalahari">
+    <title>Kalahari</title>
+    <!-- Styles -->
+</head>
+
+<body id="body">
+    <div id="home"></div>
+    <script type="text/javascript" src="../js/customer.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <div text-align="center">
+        <h1>Customer Util</h1>
+    </div>
+    <p>
+        <a href="/">Back</a>
+    </p>
+    <table>
+        <thead>Items in warehouse</thead>
+        <tbody>
+            <tr>
+                <td>Item ID</td>
+                <td>Item name</td>
+            </tr>
+            <tr id="cleanRow" class="hidden">
+                <td>Something</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
 </html>
