@@ -5,7 +5,6 @@ Customer = (function () {
     var nameCell;
     var events = function () {
         $(function () {
-            console.log("calling events");
             console.log("[CUSTOMER] document loaded");
         });
     };
@@ -23,34 +22,43 @@ var ItemTableController = {}
 
 ItemTableController = (function () {
 
+
     var events = function () {
         $(function () {
-            importItems();
-            var items = getItems(); // TODO: make the xmlhttprequest
-            populateTableWithItems(items, $("#itemTableBody"));
+            console.log("[ItemTableController: Document loaded");
+            importItemScript(); //itemObj.js holds item schema definition
+            getItems().then(function(result) {
+                console.log("got items:" + JSON.stringify(result))
+                populateTableWithItems(result, $("#itemTableBody"))
+            }).catch(function(err) {
+                console.log(err)
+            })
         });
     };
 
     var getItems = function () {
-        var items = []
-        $.get("/api/getItems", function () {
-            console.log("sent request for items");
-        })
-            .done(function (data) {
-                // later this will be an array
-                items.push(ItemFactory.generateItemRow(data)); // <- the structure of return should be defined externally
-                console.log("pushed row");
+        return new Promise(function (resolve, reject) {
+            result = [];
+            $.get("/api/getItems", function () {
+                console.log("sent request for items");
             })
-            .fail(function () {
-                console.log("[ITC-AJAX] failed or timed out for requests");
-            })
-            .always(function () {
-                console.log("[ITC-AJAX] finished requesting for items");
-            });
-        return items
+                .done(function (data) {
+                    // later this will be an array
+                    console.log("got items back");
+                    result.push(data); // <- the structure of return should be defined externally
+                    resolve(result);
+                })
+                .fail(function () {
+                    console.log("[ITC-AJAX] failed or timed out for requests");
+                    reject("failed to get items");
+                })
+                .always(function () {
+                    console.log("[ITC-AJAX] finished requesting for items");
+                });
+        });
     }
 
-    var importItems = function() {
+    var importItemScript = function () {
         var script = $("<script>");
         script.attr("src", "../js/itemObj.js");
         script.attr("type", "text/javascript");
@@ -58,11 +66,10 @@ ItemTableController = (function () {
     }
 
     var populateTableWithItems = function (items, table) {
-        console.log(table.html());
         for (const o of items) {
-            var $row = ItemFactory.generateItemRow(o);
-            table.append($row);
+            table.append(ItemFactory.generateItemRow(o));
         }
+        console.log("finished populating table");
     }
 
     var getCleanRow = function () {
