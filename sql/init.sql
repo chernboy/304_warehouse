@@ -79,6 +79,7 @@ CREATE TABLE CUSTOMER
 CREATE TABLE ITEM (
     I_ID        INTEGER NOT NULL,
     weight      DECIMAL,
+    quantity    INTEGER NOT NULL,
     volume      DECIMAL,
     lat         DECIMAL,
     lon         DECIMAL,
