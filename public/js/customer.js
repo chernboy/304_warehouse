@@ -85,3 +85,31 @@ ItemTableController = (function () {
 })();
 
 ItemTableController.init();
+
+var NavController = {};
+
+var NavController = (function() {
+
+    var bar = $("#navbar")
+    var buttons = []
+    var navbody = $("#navbody")
+    var faces = [];
+
+    var events = function() {
+        $(function() {
+            faces.push(...document.getElementsByClassName("nav-face"))
+            buttons.push(...document.getElementsByClassName("nav-button"))
+            for (let o of Array.keys(buttons)) {
+                
+            }
+        })
+    }
+
+    return {
+        init: events
+    }
+})();
+
+NavController.Init(function() {
+
+});
