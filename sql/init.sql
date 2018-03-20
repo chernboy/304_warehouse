@@ -95,7 +95,7 @@ CREATE TABLE SHIPPING_REQUEST (
     origin      VARCHAR(30),
     dest        VARCHAR(30),
     total_val   DOUBLE PRECISION,
-    veh_ID      VARCHAR(30) NOT NULL DEFAULT("0"),
+    veh_ID      VARCHAR(30) NOT NULL DEFAULT('0'),
     ID          INTEGER NOT NULL DEFAULT(0),
     lat         DOUBLE PRECISION NOT NULL DEFAULT(0),
     lon         DOUBLE PRECISION NOT NULL DEFAULT(0),
