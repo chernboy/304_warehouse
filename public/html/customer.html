@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Kalahari - Like Amazon, but Worse">
     <meta name="author" content="Team Kalahari">
+    <link rel="stylesheet" type="text/css" href="../css/customer.css">
+    <link rel="stylesheet" type="text/css" href="../css/header.css">
     <title>Kalahari</title>
     <!-- Styles -->
 </head>
@@ -15,28 +17,44 @@
     <script type="text/javascript" src="../dist/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../js/util.js"></script>
     <script type="text/javascript" src="../js/customer.js"></script>
-    <div horizontal-align="middle">
-        <h1>Customer Util</h1>
+    <script type="text/javascript" src="../js/include-header.js"></script>
+    <div include-header-html="./header.html"></div>
+    <div class="nav">
+        <div class="nav-head">
+            <div face="login" class="nav-button">Login</div>
+            <div face="catalog" class="nav-button">Catalog</div>
+            <div face="orders" class="nav-button">Orders</div>
+        </div>
+        <div class="nav-body">
+            <div face="login" class="face hidden">
+                <div>
+                    <h1>Login</h1>
+                </div>
+                <div>
+                    <form method="post" action="">
+                        <label>
+                            <input type="select">
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div face="catalog" class="face">
+                <h1>Catalog</h1>
+                <table>
+                    <thead>Items in warehouse</thead>
+                    <tbody id="itemTableBody">
+                        <tr>
+                            <td>Item ID</td>
+                            <td>Item name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div face="orders" class="face hidden">
+                <h1>Orders</h1>
+            </div>
+        </div>
     </div>
-    <div>
-        <form method="post" action="">
-            <label>
-                <input type="select">
-            </label>
-        </form>
-    </div>
-    <p>
-        <a href="/">Back</a>
-    </p>
-    <table>
-        <thead>Items in warehouse</thead>
-        <tbody id="itemTableBody">
-            <tr>
-                <td>Item ID</td>
-                <td>Item name</td>
-            </tr>
-        </tbody>
-    </table>
 </body>
 
 </html>

@@ -10,8 +10,23 @@ var Util = (function() {
         element.removeClass("hidden")
     }
 
+    var getHtml = function(file) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url:"../html/" + file, //maybe this url should be generalised? full path?
+                success: function(data) {
+                    resolve(data)
+                },
+                error: function(xhr, text, status) {
+                    reject(status)
+                }
+            })
+        })
+    }
+
     return {
         hide: hide,
-        show: show
+        show: show,
+        getHtml: getHtml
     }
 })()
