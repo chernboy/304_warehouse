@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Kalahari - Like Amazon, but Worse">
-        <meta name="author" content="Team Kalahari">
-        <title>Kalahari</title>
-        <link rel="icon" href="favicon.ico" type="image/ico"/>
-        <!-- Styles -->
-        <link href="global-styles.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    </head>
-    <body>
-        <div id="home"></div>
-        <div text-align="center"><h1>Welcome to Kalahari!</h1></div>
-        <p><a href="/customer">Customer's area</a></p>
-        <p><a href="/admin">Admin's area</a></p>
-        <p><a href="/company">Company area</a></p>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Kalahari - Like Amazon, but Worse">
+    <meta name="author" content="Team Kalahari">
+    <title>Kalahari</title>
+    <link rel="icon" href="favicon.ico" type="image/ico" />
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/global.css">
+    <link rel="stylesheet" type="text/css" href="../css/customer.css">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+
+</head>
+
+<body>
+    <script type="text/javascript" src="../dist/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <script type="text/javascript" src="../js/customer.js"></script>
+    <script type="text/javascript" src="../js/include-header.js"></script>
+    <script type="text/javascript" src="../js/nav-controller.js"></script>
+    <script type="text/javascript" src="../js/global.js"></script>
+    <div id="goto-home" class="header" include-header-html="./header.html"></div>
+    <div id="app">
+        <div id="home">
+            <div text-align="center">
+                <h1>Welcome to Kalahari!</h1>
+            </div>
+            <div id="goto-customer">
+                Customer Dashboard
+            </div>
+            <div id="goto-company">
+                Company Dashboard</div>
+            <div id="goto-admin">
+                Admin's area
+            </div>
+        </div>
+        <div class="customer hidden" include-customer-html="./customer.html"></div>
+        <div class="company hidden" include-company-html="./company.html"></div>
+        <div class="admin hidden" include-admin-html="./admin.html"></div>
+    </div>
+</body>
+
 </html>

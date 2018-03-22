@@ -7,12 +7,12 @@ IncludeHeader = (function () {
             $("*").each(function () {
                 if ($(this).attr("include-header-html")) {
                     Util.getHtml($(this).attr("include-header-html"))
-                    .then(function(html) {
-                        $("body").prepend(html)
-                        HeaderController.init();
-                    }).catch(function(error) {
-                        console.log("failed to get header " + JSON.stringify(error))
-                    })
+                        .then(function (html) {
+                            $(".header").prepend(html)
+                            HeaderController.init();
+                        }).catch(function (error) {
+                            console.log("failed to get header " + JSON.stringify(error))
+                        })
                 }
             })
         })

@@ -1,20 +1,28 @@
-var Customer = {}
+IncludeCustomer = {}
 
-Customer = (function () {
-    var idCell;
-    var nameCell;
+IncludeCustomer = (function () {
     var events = function () {
-        $(function () {
-            console.log("[CUSTOMER] document loaded");
-        });
-    };
+        console.log("Starting to include customer")
+        return new Promise((resolve, reject) => {
+            $("*").each(function () {
+                if ($(this).attr("include-customer-html")) {
+                    Util.getHtml($(this).attr("include-customer-html"))
+                        .then(function (html) {
+                            $(".customer").prepend(html)
+                            ItemTableController.init();
+                            resolve()
+                        }).catch(function (error) {
+                            reject("failed to get customer " + JSON.stringify(error))
+                        })
+                }
+            })
+        })
+    }
 
     return {
-        init: events
+        execute: events
     }
-})();
-
-Customer.init();
+})()
 
 // =================================
 var ItemTableController = {}
@@ -24,16 +32,14 @@ ItemTableController = (function () {
 
 
     var events = function () {
-        $(function () {
-            console.log("[ItemTableController: Document loaded");
-            importItemScript(); //itemObj.js holds item schema definition
-            getItems().then(function (result) {
-                console.log("got items:" + JSON.stringify(result))
-                populateTableWithItems(result, $("#itemTableBody"))
-            }).catch(function (err) {
-                console.log(err)
-            })
-        });
+        console.log("[ItemTableController: intialized");
+        importItemScript(); //itemObj.js holds item schema definition
+        getItems().then(function (result) {
+            console.log("got items:" + JSON.stringify(result))
+            populateTableWithItems(result, $("#itemTableBody"))
+        }).catch(function (err) {
+            console.log(err)
+        })
     };
 
     var getItems = function () {
@@ -43,10 +49,10 @@ ItemTableController = (function () {
                 type: "GET",
                 url: "/api/getItems",
                 contentType: "application/json",
-                success: function(data) {
+                success: function (data) {
                     resolve(data)
                 },
-                error: function(jqxhr, text, thrown) {
+                error: function (jqxhr, text, thrown) {
                     reject(text)
                 }
             })
@@ -76,59 +82,3 @@ ItemTableController = (function () {
         init: events
     }
 })();
-
-ItemTableController.init();
-
-var NavController = {};
-
-var NavController = (function () {
-
-    var nav
-
-    var navhead
-    var buttons;
-
-    var navbody
-    var faces
-
-    var events = function () {
-        $(function () {
-            nav = $(".nav");
-            
-            navhead = $(".nav-head")
-
-            navbody = $(".nav-body")
-            faces = $(".face")
-
-            $(".nav-button").each(function () {
-                $(this).on('click', function () {
-                    let face = $(this).attr("face")
-                    console.log(face + " was clicked")
-                    showFace(face)
-                })
-                $(this).on('mouseenter', function() {
-                    $(this).addClass("active")
-                })
-                $(this).on('mouseleave', function() {
-                    $(this).removeClass("active")
-                })
-            })
-        })
-    }
-
-    var showFace = function (face) {
-        $(".face").each(function() {
-            if ($(this).attr("face") === face) {
-                Util.show($(this))
-            } else {
-                Util.hide($(this))
-            }
-        })
-    }
-
-    return {
-        init: events
-    }
-})();
-
-NavController.init();
