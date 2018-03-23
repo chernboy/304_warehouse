@@ -34,6 +34,29 @@ app.get("/api/getItems", (req, res) => {
     res.json({"iid":1234, "name": "itemName"});
 });
 
+app.get("/api/makeShippingRequest", (req, res) => {
+    // TODO: Complete this    
+    // Adds a shipping request based on the parameters given in the request
+    // - 
+    // CREATE TABLE SHIPPING_REQUEST (
+    // req_num     INTEGER NOT NULL,
+    // origin      VARCHAR(30),
+    // dest        VARCHAR(30),
+    // total_val   DOUBLE PRECISION,
+    // veh_ID      VARCHAR(30) NOT NULL,
+    // ID          INTEGER NOT NULL,
+    // lat         DOUBLE PRECISION NOT NULL,
+    // lon         DOUBLE PRECISION NOT NULL,
+    // I_ID        INTEGER DEFAULT 0 NOT NULL,
+    if ('reqNum' in req.query && typeOf req.query.reqNum === "number") {
+        // TODO: Grab this value
+    }
+}
+
+func checkExists(object, key, type) {
+    return (key in object && typeOf object[key] === type)
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port, () => {
