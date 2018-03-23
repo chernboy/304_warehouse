@@ -48,13 +48,28 @@ app.get("/api/makeShippingRequest", (req, res) => {
     // lat         DOUBLE PRECISION NOT NULL,
     // lon         DOUBLE PRECISION NOT NULL,
     // I_ID        INTEGER DEFAULT 0 NOT NULL,
-    if ('reqNum' in req.query && typeOf req.query.reqNum === "number") {
-        // TODO: Grab this value
-    }
-}
 
-func checkExists(object, key, type) {
-    return (key in object && typeOf object[key] === type)
+    var qMap = req.query;
+
+    if (checkExists(qMap, "reqNum", "number") && checkExists(qMap, "vehID", "string") &&
+            checkExists(qMap, "ID", "number") && checkExists(qMap, "lat", "number") &&
+            checkExists(qMap, "lon", "number") && checkExists(qMap, "IID", "number")) {
+        // TODO: Do something here
+            res.send("got a valid request");
+    } else {
+        if(checkExists(qMap, "hello", "string")) {
+            res.send("yay!");
+        } else {
+            res.send("error: did not get all specified values");
+        }
+    }
+});
+
+
+
+// helper function that checks if the object contains the key and is of the correct type
+function checkExists(object, key, type) {
+    return (key in object) && (typeof(object[key]) === type);
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
