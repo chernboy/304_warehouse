@@ -36,11 +36,15 @@ app.get("/api/getItems", (req, res) => {
     // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
     // repeating info)
     client.query("SELECT * FROM WAREHOUSE").then(function(results) {
-        res.json(results.rows)
+        res.send(results.rows)
     }).catch(function(error) {
         console.log("failed to get items: " + error)
     });
 });
+
+app.get("/api/login", (req,res) => {
+
+})
 
 app.use(express.static(path.join(__dirname, 'public')));
 
