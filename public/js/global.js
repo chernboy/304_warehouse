@@ -29,7 +29,8 @@ var BodyController = (function () {
                     console.log("including company html")
                     IncludeCompany.execute().then(function () {
                         console.log("got company")
-                        NavController.init()
+                        await NavController.init()
+                        Util.refreshStyles("nav")
                     }).catch(function (err) {
                         console.log(err)
                     })

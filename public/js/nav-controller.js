@@ -11,7 +11,7 @@ var NavController = (function () {
     var faces
 
     var events = function () {
-        $(function () {
+        return new Promise((resolve, reject) => {
             faces = $(".face")
             if ($(".nav-button").length > 0) {
                 $(".nav-button").each(function () {
@@ -29,6 +29,8 @@ var NavController = (function () {
                     })
                 })
             }
+
+            resolve()
         })
     }
 
