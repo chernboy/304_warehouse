@@ -30,15 +30,19 @@ var ItemTableController = {}
 
 ItemTableController = (function () {
 
+    let tablebody = $("#itemTableBody")
 
     var events = function () {
         console.log("[ItemTableController: intialized");
         importItemScript(); //itemObj.js holds item schema definition
-        getItems().then(function (result) {
-            console.log("got items:" + JSON.stringify(result))
-            populateTableWithItems(result, $("#itemTableBody"))
-        }).catch(function (err) {
-            console.log(err)
+
+        $("#itemSearch").on("click", function () {
+            getItems().then(function (result) {
+                console.log("got items:" + JSON.stringify(result))
+                populateTableWithItems(result, $("#itemTableBody"))
+            }).catch(function (err) {
+                console.log(err)
+            })
         })
     };
 

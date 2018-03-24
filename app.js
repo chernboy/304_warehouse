@@ -1,11 +1,15 @@
 const express = require('express')
 const path = require('path');
-const app = express()
+const app = express();
+const pg = require('pg');
+const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
 
 const location = path.resolve(__dirname);
 const hostname = '127.0.0.1'
 const port = 3000
+const client = new pg.Client(connectionString);
 const htmlpath = "/public/html"
+client.connect();
 
 //FIX: this is kind of slow to look at, maybe route grouping would be good
 app.get('/admin', (req, res) => {
@@ -31,7 +35,11 @@ app.get('/', (req, res) => {
 app.get("/api/getItems", (req, res) => {
     // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
     // repeating info)
-    res.json({"iid":1234, "name": "itemName"});
+    client.query("SELECT * FROM WAREHOUSE").then(function(results) {
+        res.json(results.rows)
+    }).catch(function(error) {
+        console.log("failed to get items: " + error)
+    });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
