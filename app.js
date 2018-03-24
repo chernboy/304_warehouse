@@ -1,11 +1,14 @@
 const express = require('express')
 const path = require('path');
+const bodyParser = require('body-parser'); // To read JSON body data
 const app = express()
 
 const location = path.resolve(__dirname);
 const hostname = '127.0.0.1'
 const port = 3000
 const htmlpath = "/public/html"
+
+app.use(bodyParser.json()); // for parsing JSON body
 
 //FIX: this is kind of slow to look at, maybe route grouping would be good
 app.get('/admin', (req, res) => {
@@ -34,7 +37,7 @@ app.get("/api/getItems", (req, res) => {
     res.json({"iid":1234, "name": "itemName"});
 });
 
-app.get("/api/makeShippingRequest", (req, res) => {
+app.post("/api/makeShippingRequest", (req, res) => {
     // TODO: Complete this    
     // Adds a shipping request based on the parameters given in the request
     // - 
@@ -48,29 +51,28 @@ app.get("/api/makeShippingRequest", (req, res) => {
     // lat         DOUBLE PRECISION NOT NULL,
     // lon         DOUBLE PRECISION NOT NULL,
     // I_ID        INTEGER DEFAULT 0 NOT NULL,
-
-    var qMap = req.query;
-
-    if (checkExists(qMap, "reqNum", "number") && checkExists(qMap, "vehID", "string") &&
-            checkExists(qMap, "ID", "number") && checkExists(qMap, "lat", "number") &&
-            checkExists(qMap, "lon", "number") && checkExists(qMap, "IID", "number")) {
-        // TODO: Do something here
-            res.send("got a valid request");
-    } else {
-        if(checkExists(qMap, "hello", "string")) {
-            res.send("yay!");
-        } else {
-            res.send("error: did not get all specified values");
+    // -
+    // This works for get requests, but we should use PUTs to add records
+    body = req.body;
+    if (checkExists(body, "reqNum", "number") && checkExists(body, "vehID", "string") &&
+        checkExists(body, "ID", "number") && checkExists(body, "lat", "number") &&
+        checkExists(body, "lon", "number") && checkExists(body, "IID", "number")) {
+            // 
+            res.send("we did it!");
+            return;
         }
-    }
+    res.send(req.body);
 });
 
-
+app.get("/api/getOrders", (req, res) =>{
+    // Gets the order based on the customer ID
+});
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
     return (key in object) && (typeof(object[key]) === type);
 }
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
