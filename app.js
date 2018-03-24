@@ -1,12 +1,17 @@
 const express = require('express')
 const path = require('path');
 const bodyParser = require('body-parser'); // To read JSON body data
-const app = express()
+const app = express();
+const pg = require('pg');
+const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
+
 
 const location = path.resolve(__dirname);
-const hostname = '127.0.0.1'
-const port = 3000
-const htmlpath = "/public/html"
+const hostname = '127.0.0.1';
+const port = 3000;
+const client = new pg.Client(connectionString);
+const htmlpath = "/public/html";
+client.connect();
 
 app.use(bodyParser.json()); // for parsing JSON body
 
@@ -37,36 +42,7 @@ app.get("/api/getItems", (req, res) => {
     res.json({"iid":1234, "name": "itemName"});
 });
 
-app.post("/api/makeShippingRequest", (req, res) => {
-    // TODO: Complete this    
-    // Adds a shipping request based on the parameters given in the request
-    // - 
-    // CREATE TABLE SHIPPING_REQUEST (
-    // req_num     INTEGER NOT NULL,
-    // origin      VARCHAR(30),
-    // dest        VARCHAR(30),
-    // total_val   DOUBLE PRECISION,
-    // veh_ID      VARCHAR(30) NOT NULL,
-    // ID          INTEGER NOT NULL,
-    // lat         DOUBLE PRECISION NOT NULL,
-    // lon         DOUBLE PRECISION NOT NULL,
-    // I_ID        INTEGER DEFAULT 0 NOT NULL,
-    // -
-    // This works for get requests, but we should use PUTs to add records
-    body = req.body;
-    if (checkExists(body, "reqNum", "number") && checkExists(body, "vehID", "string") &&
-        checkExists(body, "ID", "number") && checkExists(body, "lat", "number") &&
-        checkExists(body, "lon", "number") && checkExists(body, "IID", "number")) {
-            // 
-            res.send("we did it!");
-            return;
-        }
-    res.send(req.body);
-});
 
-app.get("/api/getOrders", (req, res) =>{
-    // Gets the order based on the customer ID
-});
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
