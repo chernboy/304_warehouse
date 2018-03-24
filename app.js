@@ -43,13 +43,22 @@ app.get("/api/getItems", (req, res) => {
 });
 
 app.put("/api/addItem", (req, res) => {
+    var weight = req.query.weight
+    var quantity = req.query.quantity
+    var volume = req.query.volume
+    var lat = req.query.lat
+    var lon = req.query.lon
+    var req_num = req.query.req_num
+    var uid = req.query.ID
+
     // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
     // repeating info)
-    client.query("INSERT INTO ITEM VALUES($1, $2, ...", [...]).then(function(results) {
+    client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4,$5,$6,$7)", [weight, quantity, volume, lat, lon, req_num, uid]).then(function(results) {
         res.status(200)
         res.send()
     }).catch(function(error) {
-        console.log("failed to get items: " + error)
+        res.status(400)
+        res.send('error while fetching the items :(')
     });
 });
 
