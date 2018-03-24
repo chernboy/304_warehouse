@@ -42,6 +42,18 @@ app.get("/api/getItems", (req, res) => {
     });
 });
 
+app.put("/api/addItem", (req, res) => {
+    // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
+    // repeating info)
+    client.query("INSERT INTO ITEM VALUES($1, $2, ...", [...]).then(function(results) {
+        res.status(200)
+        res.send()
+    }).catch(function(error) {
+        console.log("failed to get items: " + error)
+    });
+});
+
+
 app.get("/api/login", (req,res) => {
 
 })
