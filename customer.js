@@ -50,6 +50,14 @@ app.post("/api/makeShippingRequest", (req, res) => {
 
         // Verify there exists the foreign elements in the other tables first
         // TODO: Verify vehID exists in SHIPPING_METHOD table
+        client.query("SELECT * FROM SHIPPING_METHOD WHERE ID = " + vehID).then(function(result) {
+            if(result.rowCount() == 0) {
+                res.send("Error, no Vehicle associated with " + vehID);
+                return;
+            }
+        }).catch(function(error) {
+                
+        });
         // TODO: ID exists in USER table
         // TODO: lat,lon exists in WAREHOUSE table
         // TODO: IID exists in ITEM table
