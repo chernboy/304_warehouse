@@ -42,8 +42,6 @@ app.get("/api/getItems", (req, res) => {
     res.json({"iid":1234, "name": "itemName"});
 });
 
-
-
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
     return (key in object) && (typeof(object[key]) === type);
