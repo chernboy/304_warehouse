@@ -56,13 +56,41 @@ app.post("/api/makeShippingRequest", (req, res) => {
                 return;
             }
         }).catch(function(error) {
-                
+                res.send("Error: " + error);
+                return;
         });
         // TODO: ID exists in USER table
+        client.query("SELECT * FROM USER WHERE ID = " + ID).then(function(result) {
+            if(result.rowCount() == 0) {
+                res.send("Error, no USER associated with " + ID);
+                return;
+            }
+        }).catch(function(error) {
+                res.send("Error: " + error);
+                return;
+        });
         // TODO: lat,lon exists in WAREHOUSE table
+        client.query("SELECT * FROM WAREHOUSE WHERE lat = " + lat + " AND lon " + lon).then(function(result) {
+            if(result.rowCount() == 0) {
+                res.send("Error, no WAREHOUSE associated with " + lat + " " + lon);
+                return;
+            }
+        }).catch(function(error) {
+                res.send("Error: " + error);
+                return;
+        });
         // TODO: IID exists in ITEM table
-
+        client.query("SELECT * FROM ITEM WHERE ID = " + IID).then(function(result) {
+            if(result.rowCount() == 0) {
+                res.send("Error, no ITEM associated with " + IID);
+                return;
+            }
+        }).catch(function(error) {
+                res.send("Error: " + error);
+                return;
+        });
         // TODO: Add shipping request to table
+        res.send("We have items here, it works!");
         return;
     }
     res.send(req.body);
