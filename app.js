@@ -37,10 +37,16 @@ app.get('/', (req, res) => {
 });
 
 app.get("/api/getItems", (req, res) => {
-    var filter = req.body.filter
+    var filter
+    try {
+        filter = parseInt(req.query.filter)
+    } catch(err) {
+        console.log(err)
+    }
+
     var rows = []
     if (filter) {
-        client.query("SELECT * FROM ITEM WHERE iid = $1", [filter], (err, result) => {
+        client.query("SELECT * FROM ITEM WHERE I_ID = $1", [filter], (err, result) => {
             if (err) {
                 res.status(400)
                 console.log(err)

@@ -35,20 +35,34 @@ ItemTableController = (function () {
     let tablebody = $("#itemTableBody")
 
     var events = function () {
+<<<<<<< HEAD
         console.log("[ItemTableController: intialized");
         importItemScript(); //itemObj.js holds item schema definition
         
+=======
+
+        importItemScript(); //itemObj.js holds item schema definitio
+>>>>>>> dante
 
         $("#searchitems").on("click", function () {
-            getItems().then(function (result) {
-                console.log("got items:" + JSON.stringify(result))
-                populateTableWithItems(result, $("#itemTableBody"))
-            }).catch(function (err) {
-                console.log(err)
+            let itemFilter = $("#itemFilter").val()
+            getItems(itemFilter)
+            .then((response) => {
+                return response.json();
+            })
+            .then((results) => {
+                populateTableWithItems(results, tablebody)
+            })
+        })
+
+        $("#loginSubmit").on('click', function () {
+            login().then(function (results) {
+                console.log("successfully logged in")
             })
         })
 
         //Moves to cart page on clicking checkout
+<<<<<<< HEAD
         $("#checkout").on('click', function() {
             //TODO: implement robust checking (must select a shipping option)
             Util.showFace("cart");
@@ -57,12 +71,21 @@ ItemTableController = (function () {
         //Creates shipping req, adds it to database, then redirects to order history
         $("#placeorder").on('click', function() {
             //TODO: create shipping request and add it to database
+=======
+        $("#checkout").on('click', function () {
+            //TODO: implement robust checking
+            Util.showFace("cart");
+        })
+
+        $("#placeorder").on('click', function () {
+            //TODO: create shipping method and add it to database
+>>>>>>> dante
             Util.showFace("orders");
         })
     };
 
-    var getItems = function () {
-        return fetch("/api/getItems")
+    var getItems = function (itemFilter) {
+        return fetch("/api/getItems?filter=" + itemFilter)
     }
 
     var importItemScript = function () {
@@ -73,15 +96,17 @@ ItemTableController = (function () {
     }
 
     var populateTableWithItems = function (items, table) {
-        table.append(ItemFactory.generateItemRow(items));
-        console.log("finished populating table");
+        for (let item of items) {
+            table.append(generateItemRow(item));
+        }
+        console.log("[CUSTOMER] finished populating table with items")
     }
 
-    var getCleanRow = function () {
-        let row = $("#cleanRow").clone();
-        row.attr("id") = "";
-        row.removeClass("hidden");
-        return row;
+    var generateItemRow = function(item) {
+        let row = $("<tr>").attr("value", item.I_ID)
+        row.append($("<td>").text(item.I_ID))
+        row.append($("<td>").text(item.cost))
+        return row
     }
 
     return {
