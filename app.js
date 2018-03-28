@@ -42,17 +42,14 @@ app.get("/api/getItems", (req, res) => {
 });
 
 app.get("/api/getShippingMethods", (req, res) => {
-    customer.getShippingMethods(req, res, client)
+    customer.getShippingMethods(req, res, client);
 });
 
-app.get("/apt/getOrders", (req, res) => {
-    customer.getOrders(req, res, client)
+app.get("/api/getOrders", (req, res) => {
+    customer.getOrders(req, res, client);
 });
 
-// helper function that checks if the object contains the key and is of the correct type
-function checkExists(object, key, type) {
-    return (key in object) && (typeof(object[key]) === type);
-}
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
