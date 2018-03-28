@@ -47,6 +47,11 @@ ItemTableController = (function () {
             var methods = await getShippingMethods()
             for (let o in methods)
         })
+
+        //Moves to cart page on clicking checkout
+        $("#checkout").on('click', function() {
+            Util.showFace("cart");
+        })
     };
 
     var getItems = function () {
