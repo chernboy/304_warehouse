@@ -2,18 +2,15 @@ const express = require('express')
 const path = require('path');
 const bodyParser = require('body-parser'); // To read JSON body data
 const app = express();
-// const pg = require('pg');
-// const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
-
-
+const pg = require('pg');
 const customer = require('./customer.js');
 
+const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
 const location = path.resolve(__dirname);
 const hostname = '127.0.0.1';
 const port = 3000;
-// const client = new pg.Client(connectionString);
+const client = new pg.Client(connectionString);
 const htmlpath = "/public/html";
-// client.connect();
 
 client.connect();
 app.use(bodyParser.json()); // for parsing JSON body
@@ -42,16 +39,15 @@ app.get('/', (req, res) => {
 app.get("/api/getItems", (req, res) => {
     // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
     // repeating info)
-    client.query("SELECT * FROM WAREHOUSE").then(function(results) {
-        res.send(results.rows)
-    }).catch(function(error) {
-        console.log("failed to get items: " + error)
-    });
 });
 
-app.get("/api/getShippingMethods", customer.getShippingMethods);
+app.get("/api/getShippingMethods", (req, res) => {
+    customer.getShippingMethods(req, res, client)
+});
 
-app.get("/apt/getOrders", customer.getOrders);
+app.get("/apt/getOrders", (req, res) => {
+    customer.getOrders(req, res, client)
+});
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {

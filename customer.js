@@ -1,9 +1,3 @@
-const pg = require('pg');
-const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
-const client = new pg.Client(connectionString);
-client.connect();
-
-
 // Customers:
 //  SELECT * FROM SHIPPING_REQUEST(...) ...
 //  decide which shipping methods to deliver the items
@@ -100,7 +94,7 @@ client.connect();
 // Gets orders based on a customer id
 // example: /apt/getOrders?UID=10
 // will fetch all shipping requests with UID = 10
-exports.getOrders = function(req, res) {
+exports.getOrders = function(req, res, client) {
     // Gets the order based on the customer ID
     if (checkExists(req.query, "UID", "string")) {
         // Checks if user ID exists, if it does
