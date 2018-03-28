@@ -11,12 +11,7 @@ var NavController = (function () {
     var faces
 
     var events = function () {
-        $(function () {
-            nav = $(".nav");
-
-            navhead = $(".nav-head")
-
-            navbody = $(".nav-body")
+        return new Promise((resolve, reject) => {
             faces = $(".face")
             if ($(".nav-button").length > 0) {
                 $(".nav-button").each(function () {
@@ -25,13 +20,17 @@ var NavController = (function () {
                         showFace(face)
                     })
                     $(this).on('mouseenter', function () {
+                        console.log("mouseenter")
                         $(this).addClass("active")
                     })
                     $(this).on('mouseleave', function () {
+                        console.log("mouseleave")
                         $(this).removeClass("active")
                     })
                 })
             }
+
+            resolve()
         })
     }
 

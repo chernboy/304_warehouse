@@ -19,9 +19,25 @@ var BodyController = (function () {
                 Util.show($(".customer"))
             })
             $("#goto-company").on('click', function () {
-                Util.hide("#home")
+                console.log("before home")
+                Util.hide($("#home"))
+                console.log("before customer")
                 Util.hide($(".customer"))
+                console.log("before admin")
                 Util.hide($(".admin"))
+                if ($(".company").children().length === 0) {
+                    console.log("including company html")
+                    IncludeCompany.execute().then(function () {
+                        console.log("got company")
+                        NavController.init().then(() => {
+                            Util.refreshStyles("nav")
+                        }).catch(() => {
+                            console.log("Faled to load nav styles")
+                        })
+                    }).catch(function (err) {
+                        console.log(err)
+                    })
+                }
                 Util.show($(".company"))
             })
             $("#goto-admin").on('click', function () {
