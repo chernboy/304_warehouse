@@ -81,7 +81,7 @@ const WarehouseSelectController = (function () {
 
     var createWarehouseOption = function (warehouse) {
         let option = $("<option>")
-        option.text("" + warehouse.lat + "" + warehouse.lon)
+        option.text("" + warehouse.lat + ", " + warehouse.lon)
         option.attr("lat", warehouse.lat)
         option.attr("lon", warehouse.lon)
         return option
