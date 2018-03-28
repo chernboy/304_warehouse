@@ -35,14 +35,8 @@ ItemTableController = (function () {
     let tablebody = $("#itemTableBody")
 
     var events = function () {
-<<<<<<< HEAD
-        console.log("[ItemTableController: intialized");
-        importItemScript(); //itemObj.js holds item schema definition
-        
-=======
 
         importItemScript(); //itemObj.js holds item schema definitio
->>>>>>> dante
 
         $("#searchitems").on("click", function () {
             let itemFilter = $("#itemFilter").val()
@@ -62,7 +56,6 @@ ItemTableController = (function () {
         })
 
         //Moves to cart page on clicking checkout
-<<<<<<< HEAD
         $("#checkout").on('click', function() {
             //TODO: implement robust checking (must select a shipping option)
             Util.showFace("cart");
@@ -71,15 +64,6 @@ ItemTableController = (function () {
         //Creates shipping req, adds it to database, then redirects to order history
         $("#placeorder").on('click', function() {
             //TODO: create shipping request and add it to database
-=======
-        $("#checkout").on('click', function () {
-            //TODO: implement robust checking
-            Util.showFace("cart");
-        })
-
-        $("#placeorder").on('click', function () {
-            //TODO: create shipping method and add it to database
->>>>>>> dante
             Util.showFace("orders");
         })
     };
