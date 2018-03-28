@@ -40,23 +40,27 @@ app.get("/api/getItems", (req, res) => {
     var filter = req.body.filter
     var rows = []
     if (filter) {
-        client.query("SELECT * FROM ITEMS WHERE iid = $1", [filter], (err, result) => {
+        client.query("SELECT * FROM ITEM WHERE iid = $1", [filter], (err, result) => {
             if (err) {
                 res.status(400)
+                console.log(err)
                 res.send("failed to get items")
             } else {
                 res.status(200)
+                console.log("filtered:" +result.rows)
                 res.send(result.rows)
             }
         })
     } else {
-        client.query("SELECT * FROM ITEMS", (err, result) => {
+        client.query("SELECT * FROM ITEM", (err, result) => {
             if (err) {
                 res.status(400)
+                console.log(err)
                 res.send("failed to get items")
             } else {
                 res.status(200)
-                res.send(result.row)
+                console.log("no filter:" + result.rows)
+                res.send(result.rows)
             }
         })
     }

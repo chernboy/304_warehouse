@@ -39,8 +39,9 @@ var Util = (function() {
     }
 
     return {
-        hide: hide,
-        show: show,
-        getHtml: getHtml
+        hide,
+        show,
+        getHtml,
+        showFace
     }
 })()

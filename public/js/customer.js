@@ -44,8 +44,6 @@ ItemTableController = (function () {
             }).catch(function (err) {
                 console.log(err)
             })
-            var methods = await getShippingMethods()
-            for (let o in methods)
         })
 
         //Moves to cart page on clicking checkout
