@@ -1,40 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Kalahari - Like Amazon, but Worse">
-        <meta name="author" content="Team Kalahari">
-        <title>Kalahari</title>
-        <!-- Styles -->
-        <link href="global-styles.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    </head>
-    <body>
-        <div text-align="center"><h1>Admin Util</h1></div>
-        <p><a href="/">Back</a></p>
+<div class="nav">
+    <div class="nav-head">        
+
+    </div>
+
+
+    <div class="nav-body">
+        <div text-align="center">
+            <h1>Admin Util</h1>
+        </div>
+        <p>
+            <a href="/">Back</a>
+        </p>
 
         <form action="/api/makeShippingRequest" method="POST">
             <label>
-                Req Num 
+                Req Num
                 <input type="number" name="reqNum">
-            </label><br/>
+            </label>
+            <br/>
             <label>
                 Vehicle ID
                 <input type="text" name="vehID">
-            </label><br/>
+            </label>
+            <br/>
             <label>
                 ID
                 <input type="number" name="ID">
-            </label><br/>
+            </label>
+            <br/>
             <label>
                 Latitude
                 <input type="number" name="lat">
-            </label><br/>
+            </label>
+            <br/>
             <label>
                 Longitude
                 <input type="number" name="lon">
-            </label><br/>
+            </label>
+            <br/>
             <label>
                 IID
                 <input type="number" name="IID">
@@ -43,5 +46,5 @@
 
             <button type="submit">submit</button>
         </form>
-    </body>
-</html>
+    </div>
+</div>
