@@ -66,6 +66,11 @@ app.get("/api/getItems", (req, res) => {
     }
 });
 
+app.get("/api/getWarehouses", (req, res) => {
+    var rows = []
+    client.query("SELECT * FROM ")
+})
+
 app.get("/api/getShippingMethods", (req, res) => {
     customer.getShippingMethods(req, res, client);
 });
