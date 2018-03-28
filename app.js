@@ -2,16 +2,18 @@ const express = require('express')
 const path = require('path');
 const bodyParser = require('body-parser'); // To read JSON body data
 const app = express();
-const pg = require('pg');
-const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
+// const pg = require('pg');
+// const connectionString = 'postgres://postgres:admin@localhost:5432/kalahari';
 
+
+const customer = require('./customer.js');
 
 const location = path.resolve(__dirname);
 const hostname = '127.0.0.1';
 const port = 3000;
-const client = new pg.Client(connectionString);
+// const client = new pg.Client(connectionString);
 const htmlpath = "/public/html";
-client.connect();
+// client.connect();
 
 app.use(bodyParser.json()); // for parsing JSON body
 
@@ -41,6 +43,10 @@ app.get("/api/getItems", (req, res) => {
     // repeating info)
     res.json({"iid":1234, "name": "itemName"});
 });
+
+app.get("/api/getShippingMethods", customer.getShippingMethods);
+
+app.get("/apt/getOrders", customer.getOrders);
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
