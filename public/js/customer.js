@@ -37,7 +37,7 @@ ItemTableController = (function () {
         importItemScript(); //itemObj.js holds item schema definitio
         
 
-        $("#itemSearch").on("click", function () {
+        $("#searchitems").on("click", function () {
             getItems().then(function (result) {
                 console.log("got items:" + JSON.stringify(result))
                 populateTableWithItems(result, $("#itemTableBody"))
@@ -50,6 +50,12 @@ ItemTableController = (function () {
         $("#checkout").on('click', function() {
             Util.showFace("cart");
         })
+
+        $("#placeorder").on('click', function() {
+            //TODO: create shipping method and add it to database
+            Util.showFace("orders");
+        })
+
     };
 
     var getItems = function () {
