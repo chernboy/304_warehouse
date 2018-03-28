@@ -36,7 +36,7 @@ ItemTableController = (function () {
 
     var events = function () {
         console.log("[ItemTableController: intialized");
-        importItemScript(); //itemObj.js holds item schema definitio
+        importItemScript(); //itemObj.js holds item schema definition
         
 
         $("#searchitems").on("click", function () {
@@ -50,12 +50,13 @@ ItemTableController = (function () {
 
         //Moves to cart page on clicking checkout
         $("#checkout").on('click', function() {
-            //TODO: implement robust checking
+            //TODO: implement robust checking (must select a shipping option)
             Util.showFace("cart");
         })
 
+        //Creates shipping req, adds it to database, then redirects to order history
         $("#placeorder").on('click', function() {
-            //TODO: create shipping method and add it to database
+            //TODO: create shipping request and add it to database
             Util.showFace("orders");
         })
     };
