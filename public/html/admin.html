@@ -13,5 +13,35 @@
     <body>
         <div text-align="center"><h1>Admin Util</h1></div>
         <p><a href="/">Back</a></p>
+
+        <form action="/api/makeShippingRequest" method="POST">
+            <label>
+                Req Num 
+                <input type="number" name="reqNum">
+            </label><br/>
+            <label>
+                Vehicle ID
+                <input type="text" name="vehID">
+            </label><br/>
+            <label>
+                ID
+                <input type="number" name="ID">
+            </label><br/>
+            <label>
+                Latitude
+                <input type="number" name="lat">
+            </label><br/>
+            <label>
+                Longitude
+                <input type="number" name="lon">
+            </label><br/>
+            <label>
+                IID
+                <input type="number" name="IID">
+            </label>
+
+
+            <button type="submit">submit</button>
+        </form>
     </body>
 </html>

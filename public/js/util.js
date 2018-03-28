@@ -10,6 +10,10 @@ var Util = (function() {
         element.removeClass("hidden")
     }
 
+    var refreshStyles = function(name) {
+        $(name + "css").replaceWith('<link id="' + name + 'css" rel="stylesheet" href="css/' + name + '.css?t=' + Date.now() + '"></link>')
+    }
+
     var getHtml = function(file) {
         return new Promise((resolve, reject) => {
             $.ajax({
