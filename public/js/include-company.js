@@ -14,7 +14,7 @@ IncludeCompany = (function () {
                             WarehouseSelectController.init();
                             resolve()
                         }).catch(function (error) {
-                            reject("failed to get company " + JSON.stringify(error))
+                            reject("failed to get company " + error)
                         })
                 }
             })
@@ -26,39 +26,7 @@ IncludeCompany = (function () {
     }
 })()
 
-
-var WarehouseSelectController = {}
-{
-    WarehouseSelectController = (function () {
-    
-    let select = $("#warehouseSelect");
-
-    function events() {
-        console.log("[CompanyShippingMethodsTableController: initialized");
-
-        return getWarehouses().then(function (result) {
-            console.log("got ShippingMethods:", result)
-            select.append(warehouseOptions(result))
-        }).catch(function (err) {
-            console.log(err)
-        })
-    }
-
-    var warehouseOptions = function(objs) {
-        let result = []
-        for (let o of obj){
-            let option = $("<option>")
-            option.value = obj.id
-            results.append(option)
-        }
-        return results
-    }
-
-    function getWarehouses() {
-        return fetch("/api/getWarehouses");
-    }
-
-const WarehouseSelectController = (function () {
+var WarehouseSelectController = (function () {
     var warehouseSelect
     var events = function () {
         warehouseSelect = $("#warehouseSelect")
@@ -86,4 +54,4 @@ const WarehouseSelectController = (function () {
     return {
         init: events
     }
-})()})}
+})()
