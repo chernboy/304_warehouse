@@ -19,10 +19,6 @@
   "dependencies": {
     "express": "^4.16.2",
     "http": "0.0.0",
-<<<<<<< HEAD
     "pg": "^6.1.0"
-=======
-    "oracledb": "^2.1.2"
->>>>>>> daphne
   }
 }
