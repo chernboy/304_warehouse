@@ -1,7 +1,8 @@
 <div class="nav">
     <div class="nav-head">
         <div face="login" class="nav-button">Login</div>
-        <div face="orders" class="nav-button">Orders</div>
+        <div face="addItems" class="nav-button">Add Items</div>
+        <div face="listItems" class="nav-button">List Items</div>
     </div>
     <div class="nav-body">
         <div face="login" class="face hidden">
@@ -16,10 +17,64 @@
                 </form>
             </div>
         </div>
-        <div face="orders" class="face hidden">
+        <div face="addItems" class="face hidden">
             <div text-align="center">
-                <h1>Company Utility</h1>
+                <h1>Add Items</h1>
             </div>
+
+            <form action="/api/addItem" method="POST">
+                <label>
+                    Cost
+                    <input type="number" name="cost">
+                </label>
+                <br/>
+                <label>
+                    Weight
+                    <input type="number" name="weight">
+                </label>
+                <br/>
+                <label>
+                    Quantity
+                    <input type="number" name="quantity">
+                </label>
+                <br/>
+                <label>
+                    Volume
+                    <input type="number" name="volume">
+                </label>
+                <br/>
+                <select id="warehouseSelect">
+                    <!-- populated by JS -->
+                    <option value="warehouse1">Warehouse1</option>
+                    <option value="warehouse2">Warehouse2</option>
+                    <option value="warehouse2">Warehouse3</option>
+                </select>
+                <br/>
+                <button type="submit">submit</button>
+            </form>
+        </div>
+        <div face="listItems" class="face hidden">
+            <div text-align="center">
+                <h1>List Items</h1>
+            </div>
+            <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>I_ID</th>
+                        <th>weight</th>
+                        <th>quantity</th>
+                        <th>volume</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>req_num</th>
+                        <th>ID</th>
+                        <tr>
+                </thead>
+                <tbody id="companyItemsTable">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
+            <button type="addItems">Add Item</button>
         </div>
     </div>
 </div>
