@@ -28,6 +28,16 @@ var Util = (function() {
         })
     }
 
+    var showFace = function (face) {
+        $(".face").each(function () {
+            if ($(this).attr("face") === face) {
+                Util.show($(this))
+            } else {
+                Util.hide($(this))
+            }
+        })
+    }
+
     return {
         hide: hide,
         show: show,

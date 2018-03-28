@@ -44,24 +44,13 @@ ItemTableController = (function () {
             }).catch(function (err) {
                 console.log(err)
             })
+            var methods = await getShippingMethods()
+            for (let o in methods)
         })
     };
 
     var getItems = function () {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                async: true,
-                type: "GET",
-                url: "/api/getItems",
-                contentType: "application/json",
-                success: function (data) {
-                    resolve(data)
-                },
-                error: function (jqxhr, text, thrown) {
-                    reject(text)
-                }
-            })
-        })
+        return fetch("/api/getItems")
     }
 
     var importItemScript = function () {
