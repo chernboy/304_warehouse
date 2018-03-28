@@ -37,7 +37,7 @@ ItemTableController = (function () {
         importItemScript(); //itemObj.js holds item schema definitio
         
 
-        $("#itemSearch").on("click", function () {
+        $("#searchitems").on("click", function () {
             getItems().then(function (result) {
                 console.log("got items:" + JSON.stringify(result))
                 populateTableWithItems(result, $("#itemTableBody"))
@@ -45,23 +45,21 @@ ItemTableController = (function () {
                 console.log(err)
             })
         })
+
+        //Moves to cart page on clicking checkout
+        $("#checkout").on('click', function() {
+            Util.showFace("cart");
+        })
+
+        $("#placeorder").on('click', function() {
+            //TODO: create shipping method and add it to database
+            Util.showFace("orders");
+        })
+
     };
 
     var getItems = function () {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                async: true,
-                type: "GET",
-                url: "/api/getItems",
-                contentType: "application/json",
-                success: function (data) {
-                    resolve(data)
-                },
-                error: function (jqxhr, text, thrown) {
-                    reject(text)
-                }
-            })
-        })
+        return fetch("/api/getItems")
     }
 
     var importItemScript = function () {

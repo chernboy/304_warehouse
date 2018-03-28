@@ -17,7 +17,7 @@ var NavController = (function () {
                 $(".nav-button").each(function () {
                     $(this).on('click', function () {
                         let face = $(this).attr("face")
-                        showFace(face)
+                        Util.showFace(face)
                     })
                     $(this).on('mouseenter', function () {
                         console.log("mouseenter")
@@ -31,16 +31,6 @@ var NavController = (function () {
             }
 
             resolve()
-        })
-    }
-
-    var showFace = function (face) {
-        $(".face").each(function () {
-            if ($(this).attr("face") === face) {
-                Util.show($(this))
-            } else {
-                Util.hide($(this))
-            }
         })
     }
 

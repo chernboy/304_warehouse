@@ -37,8 +37,33 @@ app.get('/', (req, res) => {
 });
 
 app.get("/api/getItems", (req, res) => {
-    // THIS IS A TEST ITEM FOR NOW (should define the schema elsewhere and import that to prevent
-    // repeating info)
+    var filter = req.body.filter
+    var rows = []
+    if (filter) {
+        client.query("SELECT * FROM ITEM WHERE iid = $1", [filter], (err, result) => {
+            if (err) {
+                res.status(400)
+                console.log(err)
+                res.send("failed to get items")
+            } else {
+                res.status(200)
+                console.log("filtered:" +result.rows)
+                res.send(result.rows)
+            }
+        })
+    } else {
+        client.query("SELECT * FROM ITEM", (err, result) => {
+            if (err) {
+                res.status(400)
+                console.log(err)
+                res.send("failed to get items")
+            } else {
+                res.status(200)
+                console.log("no filter:" + result.rows)
+                res.send(result.rows)
+            }
+        })
+    }
 });
 
 app.get("/api/getShippingMethods", (req, res) => {

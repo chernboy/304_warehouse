@@ -5,7 +5,7 @@
         <div face="orders" class="nav-button">Orders</div>
     </div>
     <div class="nav-body">
-        <div face="login" class="face hidden">
+        <div face="login" class="face">
             <div>
                 <h1>Login</h1>
             </div>
@@ -17,8 +17,12 @@
                 </form>
             </div>
         </div>
-        <div face="catalog" class="face">
+        <div face="catalog" class="face hidden">
             <h1>Catalog</h1>
+            <form>
+                <input type="text" name="search">
+                <button type="button" id="searchitems">Search</button>
+            </form>
             <table>
                 <thead>Items in warehouse</thead>
                 <tbody id="itemTableBody">
@@ -28,10 +32,24 @@
                     </tr>
                 </tbody>
             </table>
-            <button type="button" id="itemSearch">search</button>
+            <select>
+                <!--populate by JS-->
+                <option value="null">-Choose one-</option>
+                <option value="sea">Shipping</option>
+                <option value="air">Air</option>
+                <option value="land">Land</option>
+            </select>
+            <button type="button" id="checkout">Checkout</button>
         </div>
         <div face="orders" class="face hidden">
-            <h1>Orders</h1>
+            <h1>Order History</h1>
+            <!--populate orders-->
+        </div>
+        <div face="cart" class="face hidden">
+            <h1>Cart</h1>
+            <!--populate cart-->
+            <!--list total cost-->
+            <button type="button" id="placeorder">Place Order</button>
         </div>
     </div>
 </div>
