@@ -76,7 +76,6 @@ app.get("/api/userlogin", (req,res) => {
         results.push(row)
     })
     query.on('end', () => {
-        console.log(results)
         return res.json(results)
     })
 })
