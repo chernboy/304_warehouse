@@ -6,15 +6,15 @@
 
 // Creates a shipping request using
 // body parameterst
-// "reqNum"    -  "number" 
+// "reqNum"    -  "number"
 // "vehID"     -  "string" 
 // "ID"        -  "number" 
 // "lat"       -  "number" 
 // "lon"       -  "number" 
 // "IID"       -  "number" 
 // app.post("/api/makeShippingRequest", (req, res) => {
-exports.makeShippingRequest = function(req, res) {
-    // TODO: Complete this    
+exports.makeShippingRequest = function(req, res, client) {
+    // TODO: Complete this
     // Adds a shipping request based on the parameters given in the request
     // - 
     // CREATE TABLE SHIPPING_REQUEST (
@@ -32,17 +32,28 @@ exports.makeShippingRequest = function(req, res) {
     body = req.body;
     if (checkExists(body, "vehID", "string") &&
         checkExists(body, "ID", "number") && checkExists(body, "lat", "number") &&
-        checkExists(body, "lon", "number") && checkExists(body, "IID", "number")) {
-        // 
-        res.send("we did it!");
+        checkExists(body, "lon", "number") && checkExists(body, "i_id", "number")) {
         // retrieve information 
         // var reqNum = body["reqNum"];
         // TODO: Determine req_num
+        var req_num = 0;
+        client.query("SELECT max(req_num) FROM shipping_request").then(function(result) {
+            // TODO: Remove this and debug
+            console.log(result.rows);
+            res.send(result.rows);
+            return;
+        }).catch(function(error){
+            console.log("Error: couldn't retrieve rows");
+            res.status(500);
+            res.send("error: unable to determine next req_num"); 
+            return;
+        });
+
         var vehID  = body["vehID"];
         var ID     = body["ID"];
         var lat    = body["lat"];
         var lon    = body["lon"];
-        var IID    = body["IID"];
+        var i_id   = body["i_id"];
 
         // Verify there exists the foreign elements in the other tables first
         // TODO: Verify vehID exists in SHIPPING_METHOD table
@@ -76,9 +87,9 @@ exports.makeShippingRequest = function(req, res) {
                 return;
         });
         // TODO: IID exists in ITEM table
-        client.query("SELECT * FROM ITEM WHERE ID = " + IID).then(function(result) {
+        client.query("SELECT * FROM ITEM WHERE ID = " + i_id).then(function(result) {
             if(result.rowCount() == 0) {
-                res.send("Error, no ITEM associated with " + IID);
+                res.send("Error, no ITEM associated with " + i_id);
                 return;
             }
         }).catch(function(error) {
@@ -86,10 +97,11 @@ exports.makeShippingRequest = function(req, res) {
                 return;
         });
         // TODO: Add shipping request to table
-        res.send("We have items here, it works!");
+        // res.send("We have items here, it works!");
         return;
     }
-    res.send(req.body);
+    // res.send(req.body);
+    // return;
 };
 
 
@@ -126,6 +138,49 @@ exports.getShippingMethods = function(req, res, client) {
             res.send("error: 500");
         });
 };
+
+
+// GET request - returns an OK with the 
+exports.userLogin = function(req, res, client) {
+    if(!checkExists(req.query, "name", "string")) {
+        res.status(400);
+        res.send("Invalid use of API; must specify user name");
+        return;
+    }
+
+    client.query("SELECT * FROM customer WHERE cu_name = $1", [req.query["name"]]).then(result => {
+        if(result.rowCount != 1) {
+            res.status(500);
+            res.send("Error pulling user from database; Does user exist?");
+            return;
+        }
+        res.send("" + result.rows[0].id);
+    }).catch(e => {
+        res.status(500);
+        res.send("Error fetching data")
+    });
+}
+
+exports.compLogin = function (req, res, client) {
+    if (!checkExists(req.query, "name", "string")) {
+        res.status(400);
+        res.send("Invalid use of API; must specify company name");
+        return;
+    }
+
+    client.query("SELECT * FROM company WHERE co_name = $1", [req.query["name"]]).then(result => {
+        if (result.rowCount != 1) {
+            res.status(500);
+            res.send("Error pulling user from database; Does company exist?");
+            return;
+        }
+        res.send("" + result.rows[0].id);
+    }).catch(e => {
+        res.status(500);
+        res.send("Error fetching data")
+    });
+
+}
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {

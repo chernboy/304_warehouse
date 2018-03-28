@@ -41,14 +41,34 @@ app.get("/api/getItems", (req, res) => {
     // repeating info)
 });
 
+// GETs all shipping methods in the database
 app.get("/api/getShippingMethods", (req, res) => {
     customer.getShippingMethods(req, res, client);
 });
 
+// GETs all orders associated with the specified user
+// Parameters:
+// UID - string - User ID to get orders of
 app.get("/api/getOrders", (req, res) => {
     customer.getOrders(req, res, client);
 });
 
+// TODO: Document this
+app.post("/api/makeShippingRequest", (req, res) => {
+    customer.makeShippingRequest(req, res, client);
+});
+
+// GETs the UserID associated with the given customer
+// Parameters: name - string - name of user
+app.post("/api/userLogin", (req, res) => {
+    customer.userLogin(req, res, client); 
+});
+
+// GETs the UserID associated with the given company
+// Parameters: name - string - name of company
+app.post("/api/companyLogin", (req, res) => {
+    customer.compLogin(req, res, client);
+});
 
 
 app.use(express.static(path.join(__dirname, 'public')));
