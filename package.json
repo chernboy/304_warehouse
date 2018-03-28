@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "http": "0.0.0",
+    "packet-reader": "^0.3.1",
     "pg": "^6.1.0"
   }
 }
