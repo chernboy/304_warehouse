@@ -34,7 +34,8 @@ ItemTableController = (function () {
 
     var events = function () {
         console.log("[ItemTableController: intialized");
-        importItemScript(); //itemObj.js holds item schema definition
+        importItemScript(); //itemObj.js holds item schema definitio
+        
 
         $("#itemSearch").on("click", function () {
             getItems().then(function (result) {

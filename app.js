@@ -7,10 +7,11 @@ const pg = require('pg')
 const location = path.resolve(__dirname);
 const hostname = '127.0.0.1'
 const port = 3000
+const connectionString = "postgres://postgres:admin@localhost:5432/kalahari";
 const client = new pg.Client(connectionString);
 const htmlpath = "/public/html"
-client.connect();
 
+client.connect();
 app.use(bodyParser.json()); // for parsing JSON body
 
 //FIX: this is kind of slow to look at, maybe route grouping would be good
@@ -57,7 +58,7 @@ app.put("/api/addItem", (req, res) => {
     // repeating info)
     client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4,$5,$6,$7)", [weight, quantity, volume, lat, lon, req_num, uid]).then(function(results) {
         res.status(200)
-        res.send('got items')
+        res.send('sent item')
     }).catch(function(error) {
         res.status(400)
         res.send('error while fetching the items :(')
@@ -66,7 +67,18 @@ app.put("/api/addItem", (req, res) => {
 
 
 app.get("/api/userlogin", (req,res) => {
+    var id = req.body.id
+    var results = []
 
+    client.query("SELECT * FROM USER WHERE ID = $1", [id])
+
+    query.on('row', (row) => {
+        results.push(row)
+    })
+    query.on('end', () => {
+        console.log(results)
+        return res.json(results)
+    })
 })
 
 app.post("/api/makeShippingRequest", (req, res) => {
