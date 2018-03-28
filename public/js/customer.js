@@ -48,6 +48,7 @@ ItemTableController = (function () {
 
         //Moves to cart page on clicking checkout
         $("#checkout").on('click', function() {
+            //TODO: implement robust checking
             Util.showFace("cart");
         })
 
@@ -55,7 +56,6 @@ ItemTableController = (function () {
             //TODO: create shipping method and add it to database
             Util.showFace("orders");
         })
-
     };
 
     var getItems = function () {

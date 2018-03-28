@@ -17,6 +17,23 @@ var NavController = (function () {
                 $(".nav-button").each(function () {
                     $(this).on('click', function () {
                         let face = $(this).attr("face")
+                        //only allow access to order history and catalogs if user is logged in
+                        /*
+                        if (face == "orders" || face == "catalog" && !Util.checkCookieExist()) {
+                            return;
+                        }
+                        */
+
+                        //only allow access to additem and listitem if company is logged in
+                        /*
+                        if (face == "listItems" || face == "addItems && !Util.checkCookieExists()) {
+                            return;
+                        }
+                        */
+
+                        //only allows acces to admin parts if admin is logged in
+                        //TODO:
+
                         Util.showFace(face)
                     })
                     $(this).on('mouseenter', function () {
