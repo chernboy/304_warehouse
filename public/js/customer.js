@@ -45,6 +45,11 @@ ItemTableController = (function () {
                 console.log(err)
             })
         })
+
+        //Moves to cart page on clicking checkout
+        $("#checkout").on('click', function() {
+            Util.showFace("cart");
+        })
     };
 
     var getItems = function () {
