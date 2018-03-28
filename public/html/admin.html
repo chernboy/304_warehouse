@@ -23,53 +23,26 @@
         <div text-align="center">
             <h1>UnshippedOrders</h1>
         </div>
-
-        <form action="/api/makeShippingRequest" method="POST">
-            <label>
-                Request Number
-                <input type="number" name="reqNum">
-            </label>
-            <br/>
-            <label>
-                Origin
-                <input type="text" name="origin">
-            </label>
-            <br/>
-            <label>
-                Destination
-                <input type="text" name="dest">
-            </label>
-            <br/>
-            <label>
-                Total Values
-                <input type="number" name="total_val">
-            </label>
-            <br/>
-            <label>
-                Vehicle ID
-                <input type="text" name="vehID">
-            </label>
-            <br/>
-            <label>
-                Shipping Request ID
-                <input type="number" name="ID">
-            </label>
-            <br/>
-            <label>
-                Latitude
-                <input type="number" name="lat">
-            </label>
-            <br/>
-            <label>
-                Longitude
-                <input type="number" name="lon">
-            </label>
-            <br/>
-            <label>
-                Item ID
-                <input type="number" name="IID">
-            </label>
-        </form>
+        
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="makeShippingRequest">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
+        
         <button type="yes">yes</button>
         <button type="no">no</button>
     </div>
@@ -79,51 +52,23 @@
             <h1>ShippedOrders</h1>
         </div>
 
-        <form action="/api/makeShippingRequest" method="POST">
-            <label>
-                Request Number
-                <input type="number" name="reqNum">
-            </label>
-            <br/>
-            <label>
-                Origin
-                <input type="text" name="origin">
-            </label>
-            <br/>
-            <label>
-                Destination
-                <input type="text" name="dest">
-            </label>
-            <br/>
-            <label>
-                Total Values
-                <input type="number" name="total_val">
-            </label>
-            <br/>
-            <label>
-                Vehicle ID
-                <input type="text" name="vehID">
-            </label>
-            <br/>
-            <label>
-                Shipping Request ID
-                <input type="number" name="ID">
-            </label>
-            <br/>
-            <label>
-                Latitude
-                <input type="number" name="lat">
-            </label>
-            <br/>
-            <label>
-                Longitude
-                <input type="number" name="lon">
-            </label>
-            <br/>
-            <label>
-                Item ID
-                <input type="number" name="IID">
-            </label>
-        </form>
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="makeShippingRequest">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
     </div>
 </div>
