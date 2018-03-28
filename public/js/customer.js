@@ -3,6 +3,8 @@ IncludeCustomer = {}
 IncludeCustomer = (function () {
     var events = function () {
         console.log("Starting to include customer")
+        //REMOVE THIS ONCE WE HAVE LOGIN
+        Util.setCookie("cu_login", "something")
         return new Promise((resolve, reject) => {
             $("*").each(function () {
                 if ($(this).attr("include-customer-html")) {
@@ -48,6 +50,7 @@ ItemTableController = (function () {
 
         //Moves to cart page on clicking checkout
         $("#checkout").on('click', function() {
+            //TODO: implement robust checking
             Util.showFace("cart");
         })
 
@@ -55,7 +58,6 @@ ItemTableController = (function () {
             //TODO: create shipping method and add it to database
             Util.showFace("orders");
         })
-
     };
 
     var getItems = function () {

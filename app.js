@@ -68,7 +68,17 @@ app.get("/api/getItems", (req, res) => {
 
 app.get("/api/getWarehouses", (req, res) => {
     var rows = []
-    client.query("SELECT * FROM ")
+    client.query("SELECT * FROM WAREHOUSE", (err, result) => {
+        if (err) {
+            res.status(400)
+            console.log(err)
+            res.send("failed to get items")
+        } else {
+            res.status(200)
+            console.log("sending warehouses")
+            res.send(result.rows)
+        }
+    })
 })
 
 app.get("/api/getShippingMethods", (req, res) => {
@@ -78,7 +88,6 @@ app.get("/api/getShippingMethods", (req, res) => {
 app.get("/api/getOrders", (req, res) => {
     customer.getOrders(req, res, client);
 });
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 
