@@ -12,7 +12,6 @@ IncludeCompany = (function () {
                         .then(function (html) {
                             $(".company").prepend(html)
                             WarehouseSelectController.init();
-                            CompanyItemsTableController.init();
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get company " + JSON.stringify(error))
@@ -27,38 +26,37 @@ IncludeCompany = (function () {
     }
 })()
 
-const CompanyItemFactory = {
-    generateItemRow() {
-        $tr = $('<tr>')
-            .attr("id", item.iid)
-            .append($("<td>").text(item.iid))
-            .append($("<td>").text(item.name));
-        // TODO FILL IN OTHER ITEM ATTR
-        return $tr;
-    }
-}
 
-const CompanyItemsTableController = {}
+var WarehouseSelectController = {}
 {
-    let tablebody = $("#companyItemsTable");
+    WarehouseSelectController = (function () {
+    
+    let select = $("#warehouseSelect");
 
     function events() {
-        console.log("[CompanyItemsTableController: initialized");
+        console.log("[CompanyShippingMethodsTableController: initialized");
 
-        return getItems().then(function (result) {
-            console.log("got items:", result)
-            tablebody.append(CompanyItemFactory.generateItemRow(result))
+        return getWarehouses().then(function (result) {
+            console.log("got ShippingMethods:", result)
+            select.append(warehouseOptions(result))
         }).catch(function (err) {
             console.log(err)
         })
     }
 
-    function getItems() {
-        return fetch("/api/getItems");
+    var warehouseOptions = function(objs) {
+        let result = []
+        for (let o of obj){
+            let option = $("<option>")
+            option.value = obj.id
+            results.append(option)
+        }
+        return results
     }
 
-    CompanyItemsTableController.init = events;
-}
+    function getWarehouses() {
+        return fetch("/api/getWarehouses");
+    }
 
 const WarehouseSelectController = (function () {
     var warehouseSelect
@@ -74,7 +72,6 @@ const WarehouseSelectController = (function () {
             console.log(err)
         })
     }
-
     var getWarehouses = function () {
         return fetch("/api/getWarehouses")
     }
@@ -86,9 +83,7 @@ const WarehouseSelectController = (function () {
         option.attr("lon", warehouse.lon)
         return option
     }
-
-
     return {
         init: events
     }
-})()
+})()})}

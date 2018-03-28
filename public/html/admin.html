@@ -1,48 +1,131 @@
 <div class="nav">
     <div class="nav-head">        
-
+        <div face="login" class="nav-button">Login</div>
+        <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
+        <div face="shippedOrders" class="nav-button">Shipped Orders</div>
     </div>
 
-
     <div class="nav-body">
-        <div text-align="center">
-            <h1>Admin Util</h1>
+        <div face = "login" class = "face">
+            <div text-align="center">
+                 <h1>Admin</h1>
+            </div>
         </div>
-        <p>
-            <a href="/">Back</a>
-        </p>
+        <div>
+                <form method="post" action="">
+                    <label>
+                        <input type="select">
+                    </label>
+                    <button type="submit">submit</button>
+                </form>
+            </div>
+        </div>
 
-        <form action="/api/makeShippingRequest" method="POST">
+        <div face="unshippedOrders" class="face hidden">
+             <div text-align="center">
+                <h1>UnshippedOrders</h1>
+            </div>
+            
+            <form action="/api/makeShippingRequest" method="POST">
             <label>
-                Req Num
+                Request Number 
                 <input type="number" name="reqNum">
             </label>
             <br/>
             <label>
-                Vehicle ID
-                <input type="text" name="vehID">
+                Origin 
+                <input type="text" name="origin"> 
             </label>
             <br/>
             <label>
-                ID
-                <input type="number" name="ID">
+                Destination 
+                <input type="text" name="dest">
+            </label>
+            <br/>
+            <label>
+                Total Values  
+                <input type="number" name="total_val"> 
+            </label>
+            <br/>
+            <label>
+                Vehicle ID
+                <input type="text" name="vehID"> 
+            </label>
+            <br/>
+            <label>
+                Shipping Request ID
+                <input type="number" name="ID"> 
             </label>
             <br/>
             <label>
                 Latitude
-                <input type="number" name="lat">
+                <input type="number" name="lat"> 
             </label>
             <br/>
             <label>
                 Longitude
-                <input type="number" name="lon">
+                <input type="number" name="lon"> 
             </label>
             <br/>
             <label>
-                IID
-                <input type="number" name="IID">
+                Item ID 
+                <input type="number" name="IID"> 
             </label>
-            <button type="submit">submit</button>
-        </form>
+            </form>
+            <button type="yes">yes</button>
+            <button type="no">no</button>
     </div>
+
+    <div face="shippedOrders" class="face hidden">
+            <div text-align="center">
+               <h1>ShippedOrders</h1>
+           </div>
+           
+           <form action="/api/makeShippingRequest" method="POST">
+           <label>
+               Request Number 
+               <input type="number" name="reqNum">
+           </label>
+           <br/>
+           <label>
+               Origin 
+               <input type="text" name="origin"> 
+           </label>
+           <br/>
+           <label>
+               Destination 
+               <input type="text" name="dest">
+           </label>
+           <br/>
+           <label>
+               Total Values  
+               <input type="number" name="total_val"> 
+           </label>
+           <br/>
+           <label>
+               Vehicle ID
+               <input type="text" name="vehID"> 
+           </label>
+           <br/>
+           <label>
+               Shipping Request ID
+               <input type="number" name="ID"> 
+           </label>
+           <br/>
+           <label>
+               Latitude
+               <input type="number" name="lat"> 
+           </label>
+           <br/>
+           <label>
+               Longitude
+               <input type="number" name="lon"> 
+           </label>
+           <br/>
+           <label>
+               Item ID 
+               <input type="number" name="IID"> 
+           </label>
+           </form>
+   </div>
 </div>
