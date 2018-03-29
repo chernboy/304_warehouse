@@ -36,6 +36,28 @@ app.get('/', (req, res) => {
     res.sendFile(location + htmlpath + "/index.html");
 });
 
+app.get("/api/getCustomerPendingOrders", (req, res) => {
+    id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 0", [id]).then(function(result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function(err) {
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+})
+
+app.get("/api/getCustomerShippedOrders", (req, res) => {
+    id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 1", [id]).then(function(result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function(err) {
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+})
+
 app.get("/api/getItems", (req, res) => {
     var filter
     try {

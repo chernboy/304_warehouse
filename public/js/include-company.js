@@ -12,6 +12,7 @@ IncludeCompany = (function () {
                         .then(function (html) {
                             $(".company").prepend(html)
                             WarehouseSelectController.init();
+                            AdminController.init()
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get company " + error)
@@ -51,6 +52,31 @@ var WarehouseSelectController = (function () {
         option.attr("lon", warehouse.lon)
         return option
     }
+    return {
+        init: events
+    }
+})()
+
+var AdminController = {}
+
+var AdminController = (function() {
+
+    var events = function() {
+        let name = $("#companyLoginName").val()
+        $("#companyLoginSubmit").on("click", () => {
+            login(name).then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                Util.setCookie("co_login", result.uid)
+            })
+        })
+    }
+
+    var login = function(name) {
+        return fetch("/api/companyLogin?name=" + name)
+    }
+
     return {
         init: events
     }

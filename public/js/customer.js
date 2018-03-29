@@ -49,9 +49,14 @@ ItemTableController = (function () {
             })
         })
 
-        $("#loginSubmit").on('click', function () {
-            login().then(function (results) {
-                console.log("successfully logged in")
+        $("#customerLoginSubmit").on('click', function () {
+            let name = $("#customerLoginName").val()
+            login(name)
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (result) {
+                Util.setCookie("cu_login", result.uid)
             })
         })
 
@@ -68,8 +73,20 @@ ItemTableController = (function () {
         })
     };
 
+    var login = function(name) {
+        return fetch("api/userLogin?name=" + name)
+    }
+
     var getItems = function (itemFilter) {
         return fetch("/api/getItems?filter=" + itemFilter)
+    }
+
+    var getShippedOrders = function() {
+        return fetch("/api/getCustomerShippedOrders")
+    }
+
+    var getPendingOrders = function() {
+        return fetch("/api/getCustomerPendingOrders")
     }
 
     var importItemScript = function () {
