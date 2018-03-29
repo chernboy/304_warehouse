@@ -33,6 +33,7 @@ var ItemTableController = {}
 ItemTableController = (function () {
 
     let tablebody = $("#itemTableBody")
+    customer = this
 
     var events = function () {
 
@@ -51,7 +52,7 @@ ItemTableController = (function () {
 
         $("#customerLoginSubmit").on('click', function () {
             let name = $("#customerLoginName").val()
-            login(name)
+            customer.login(name)
             .then(function (response) {
                 return response.json()
             })
