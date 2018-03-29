@@ -14,7 +14,6 @@
 // "IID"       -  "number" 
 // app.post("/api/makeShippingRequest", (req, res) => {
 exports.makeShippingRequest = function(req, res, client) {
-    // TODO: Complete this
     // Adds a shipping request based on the parameters given in the request
     // - 
     // CREATE TABLE SHIPPING_REQUEST (
@@ -43,7 +42,6 @@ exports.makeShippingRequest = function(req, res, client) {
         checkExists(body, "i_id"     , "number")) {
         // retrieve information 
         // var reqNum = body["reqNum"];
-        // TODO: Determine req_num
         var req_num = 0;
         client.query("SELECT max(req_num) FROM shipping_request").then(function(result) {
         if (result.rowCount === 1) {
@@ -61,7 +59,6 @@ exports.makeShippingRequest = function(req, res, client) {
         // var i_id = body["i_id"];
 
         // Verify there exists the foreign elements in the other tables first
-        // TODO: Verify vehID exists in SHIPPING_METHOD table
         client.query("SELECT * FROM SHIPPING_METHOD WHERE veh_id = $1", [body.veh_id]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -73,7 +70,6 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
-        // TODO: ID exists in USER table
         client.query("SELECT * FROM USERS WHERE id = $1", [body.id]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -85,7 +81,6 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
-        // TODO: lat,lon exists in WAREHOUSE table
         client.query("SELECT * FROM WAREHOUSE WHERE lat = $1 AND lon = $2", [body.lat, body.lon]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -97,7 +92,6 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
-        // TODO: IID exists in ITEM table
         client.query("SELECT * FROM ITEM WHERE i_id = $1", [body.i_id]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -109,7 +103,6 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
-        // TODO: Add shipping request to table
         // res.send("We have items here, it works!");
 
         client.query("INSERT INTO SHIPPING_REQUEST VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [
@@ -131,10 +124,10 @@ exports.makeShippingRequest = function(req, res, client) {
             return;
         });
 
-        console.log("We got here for some reason...");
-        res.status(400);
-        res.send("Error...")
-        return;
+        // console.log("We got here for some reason...");
+        // res.status(400);
+        // res.send("Error...")
+        // return;
     }
     // res.send(req.body);
     // return;
@@ -163,7 +156,6 @@ exports.getOrders = function(req, res, client) {
 
 
 // retrieve all shipping methods
-// TODO: Test this
 // app.get("/api/getShippingMethods", (req, res) => {
 exports.getShippingMethods = function(req, res, client) {
     client.query("SELECT * FROM SHIPPING_METHOD").then(function(result) {
@@ -293,13 +285,42 @@ exports.addItem = function (req, res, client) {
 
 
     } else {
-        
-        // TODO: Send error, missing field(s)
         res.status(400);
-        res.send("Missing parameters; got : " + body); // DEBUG
+        res.send("Missing parameters; got : " + JSON.stringify(body)); // DEBUG
         return;
     }
 };
+
+exports.getItemPopularity = function(req, res, client) {
+    // TODO: Complete this
+    client.query("SELECT i_id, count(req_num) FROM shipping_request" + 
+    " GROUP BY i_id ORDER BY count(req_num) DESC").then(result => {
+        res.send(result.rows);
+        return;
+    }).catch(error => {
+        res.status(500);
+        res.send("Error generating popularity data. " + error);
+        return;
+    });
+}
+
+
+exports.deleteUser = function(req, res, client) {
+    if (checkExists(req.body, "id", "number")) {
+        client.query("DELETE FROM USERS WHERE id = $1", [req.body.id]).then(response => {
+            res.send(response);
+            return;
+        }).catch(error => {
+            res.status(500);
+            res.send("Error deleting user: " + error);
+            return;
+        });
+    } else {
+        res.status(400);
+        res.send("Incorrect parameters: Missing 'id' value in body.");
+        return;
+    }
+}
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
