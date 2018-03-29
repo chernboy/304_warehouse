@@ -30,7 +30,6 @@ exports.makeShippingRequest = function(req, res, client) {
     // -
     // This works for get requests, but we should use PUTs to add records
     body = req.body;
-    console.log(JSON.stringify(body))
     if (
         checkExists(body, "qty"      , "number")  &&
         checkExists(body, "origin"   , "string")  &&
@@ -132,11 +131,8 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("error: unable to determine next req_num"); 
             return;
         });
-
-        console.log("We got here for some reason...");
-        res.status(400);
-        res.send("Error...")
-        return;
+    } else {
+       
     }
     // res.send(req.body);
     // return;
@@ -309,6 +305,7 @@ exports.getCustomerPendingOrders = function(req, res, client) {
         res.status(200)
         res.send(result.rows)
     }).catch(function (err) {
+        console.log(err)
         res.status(400)
         res.send("failed to get orders for customer")
     })
@@ -320,6 +317,7 @@ exports.getCustomerShippedOrders = function(req, res, client) {
         res.status(200)
         res.send(result.rows)
     }).catch(function (err) {
+        console.log(err)
         res.status(400)
         res.send("failed to get orders for customer")
     })

@@ -8,7 +8,8 @@ IncludeCustomer = (function () {
                     Util.getHtml($(this).attr("include-customer-html"))
                         .then(function (html) {
                             $(".customer").prepend(html)
-                            ItemTableController.init();
+                            ItemTableController.init()
+                            OrderHistory.init()
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get customer " + JSON.stringify(error))
@@ -98,10 +99,10 @@ ItemTableController = (function () {
             orderObj["total_val"] = item.cost
             orderObj["shipped"] = 0
             orderObj["veh_id"] = "A0003"
-            orderObj["id"] = Util.getCookie("cu_login")
-            orderObj["lat"] = item.lat
-            orderObj["lon"] = item.lon
-            orderObj["i_id"] = item.i_id
+            orderObj["id"] = parseFloat(Util.getCookie("cu_login"))
+            orderObj["lat"] = parseFloat(item.lat)
+            orderObj["lon"] = parseFloat(item.lon)
+            orderObj["i_id"] = parseFloat(item.i_id)
             console.log("sending order: " + JSON.stringify(orderObj))
             $.ajax({
                 url: "/api/makeShippingRequest",
@@ -201,8 +202,8 @@ var OrderHistory = (function () {
 
         $("#ordersRefresh").on("click", () => {
             let orderPromises = []
-            orderPromises.push(getShippedOrders())
-            orderPromises.push(getPendingOrders())
+            orderPromises.push(getShippedOrders(Util.getCookie("cu_login")))
+            orderPromises.push(getPendingOrders(Util.getCookie("cu_login")))
 
             Promise.all(orderPromises).then((results) => {
                 results[0].json().then(populateShippedOrders)
@@ -211,21 +212,23 @@ var OrderHistory = (function () {
         })
     }
 
-    var getShippedOrders = function () {
-        return fetch("/api/getCustomerShippedOrders")
+    var getShippedOrders = function (id) {
+        return fetch("/api/getCustomerShippedOrders?id=" + id)
     }
 
     var populateShippedOrders = function (orders) {
+        shippedTable.empty()
         for (let order of orders) {
             shippedTable.append(generateOrderRow(order))
         }
     }
 
-    var getPendingOrders = function () {
-        return fetch("/api/getCustomerPendingOrders")
+    var getPendingOrders = function (id) {
+        return fetch("/api/getCustomerPendingOrders?id=" + id)
     }
 
     var populatePendingOrders = function (orders) {
+        pendingTable.empty()
         for (let order of orders) {
             pendingTable.append(generateOrderRow(order))
         }
@@ -250,7 +253,7 @@ var OrderHistory = (function () {
     return {
         init: events
     }
-})
+})()
 
 var Cart = (function() {
 
