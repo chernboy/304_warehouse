@@ -6,12 +6,15 @@ var UnshippedOrdersController = (function() {
     var ordersTable
     var events = function() {
         ordersTable = $("#unshippedOrders")
-        getUnshippedOrders()
-        .then((response) => {
-            return response.json()
-        })
-        .then((results) => {
-            populateOrdersTable(results)
+
+        $("#ordersRefresh").on("click", () => {
+            
+            let orderPromises = []
+            orderPromises.push(getUnshippedOrders(Util.getCookie("admin_login"))) 
+
+            Promise.all(orderPromises).then((results) => {
+                results[0].json().then(populateOrdersTable)
+            })
         })
 
         warehouseSelectMove = $("#moveItemsSelect")
@@ -93,7 +96,8 @@ var UnshippedOrdersController = (function() {
         return fetch("/api/getUnshippedOrders")
     }
 
-    var populateOrdersTable = function(results) {
+    var populateOrdersTable = function(results) {    
+        ordersTable.empty()
         for (let result of results) {
             ordersTable.append(createOrdersRow(result))
         }

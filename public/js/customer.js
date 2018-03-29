@@ -47,7 +47,7 @@ ItemTableController = (function () {
                 })
                 .then((results) => {
                     populateTableWithItems(results, tablebody)
-                    Cart.fillCartOptions(results)
+                    Cart.fillCartOptions(results) 
                 })
         })
 
