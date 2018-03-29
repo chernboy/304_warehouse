@@ -39,15 +39,31 @@
                     <!--populated by JS-->
                 </select>
                 <button type="button" id="deleteWarehouse">Delete</button>
-                <!--TODO: NOT WORKING-->
-                <div face="moveItems" class="face hidden">
-                    <select id="moveItemsSelect">
-                        <!--populated by JS-->
-                    </select>
-                    <button type="button" id="moveItems">Move Items</button>
-                </div>
             </div>
         </div>
+        <div face="warehousesMove" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <h5>Please select the warehouse to move items to</h5>
+                <select id="moveItemsSelect">
+                    <!--populated by JS-->
+                </select>
+                <button type="button" id="moveItems">Move Items</button>
+            </div>
+        </div>
+
+        <div face="itemMoveSuccess" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <h5>items successfully moved</h5>
+                <button type="button" id="backToWarehouses">Back</button>
+            </div>
+        </div>
+
         <div face="reports" class="face hidden">
             <div text-align="center">
                 <h1>Reports</h1>

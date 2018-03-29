@@ -42,7 +42,7 @@ var UnshippedOrdersController = (function() {
         $("#deleteWarehouse").on('click', function () {
             //TODO: Delete warehouse
             //TODO: FIX, not working!!
-            Util.showFace("moveItems")
+            Util.showFace("warehousesMove")
         })
 
         $("#adminLogin").on("submit", async e => {
@@ -52,7 +52,7 @@ var UnshippedOrdersController = (function() {
                 const res = await fetch(`/api/adminLogin?name=${$("#adminLoginName").val()}`)
                 const result = await res.json();
 
-                Util.setCookie("admin_login", "" + result.log);
+                Util.setCookie("admin_login", "" + result.id);
                 switchToLogout();
             } catch (err) {
                 console.log(err);
@@ -68,6 +68,15 @@ var UnshippedOrdersController = (function() {
             } catch (err) {
                 console.log(err)
             }
+        })
+
+        $("#moveItems").on('click', function () {
+            //TODO: Move Items to selected warehouse
+            Util.showFace("itemMoveSuccess")
+        })
+
+        $("#backToWarehouses").on('click', function () {
+            Util.showFace("warehouses")
         })
     
         function switchToLogout() {
