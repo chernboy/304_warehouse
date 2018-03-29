@@ -1,6 +1,8 @@
 var UnshippedOrdersController = {}
 
 var UnshippedOrdersController = (function() {
+    var warehouseSelect
+    var warehouseSelectMove
     var ordersTable
     var events = function() {
         ordersTable = $("#unshippedOrders")
@@ -11,6 +13,46 @@ var UnshippedOrdersController = (function() {
         .then((results) => {
             populateOrdersTable(results)
         })
+
+        warehouseSelectMove = $("#moveItemsSelect")
+        getWarehouses().then((response) => {
+            response.json().then((results) => {
+            for (let o of results) {
+            warehouseSelectMove.append(createWarehouseOption(o))
+        }
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        warehouseSelect = $("#adminWarehouseSelect")
+        getWarehouses().then((response) => {
+            response.json().then((results) => {
+            for (let o of results) {
+            warehouseSelect.append(createWarehouseOption(o))
+        }
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        $("#deleteWarehouse").on('click', function () {
+            //TODO: Delete warehouse
+            //TODO: FIX, not working!!
+            Util.showFace("moveItems")
+        })
+    }
+
+    var getWarehouses = function () {
+        return fetch("/api/getWarehouses")
+    }
+
+    var createWarehouseOption = function (warehouse) {
+        let option = $("<option>")
+        option.text("" + warehouse.lat + ", " + warehouse.lon)
+        option.attr("lat", warehouse.lat)
+        option.attr("lon", warehouse.lon)
+        return option
     }
 
     var getUnshippedOrders = function() {

@@ -3,6 +3,8 @@
         <div face="login" class="nav-button">Login</div>
         <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
         <div face="shippedOrders" class="nav-button">Shipped Orders</div>
+        <div face="reports" class="nav-button">Reports</div>
+        <div face="warehouses" class="nav-button">Warehouses</div>
     </div>
 
     <div class="nav-body">
@@ -14,10 +16,48 @@
                 <label>
                     <input type="select">
                 </label>
-                <button type="submit">submit</button>
+                <button type="button" id="adminLogin">submit</button>
             </form>
         </div>
-    </div>
+        <div face="logout" class="face hidden">
+            <div>
+                <h1>Logout</h1>
+            </div>
+            <div>
+                <form method="post" actions="">
+                    <label>
+                        <input type="select">
+                    </label>
+                    <button id="adminLogout" type="button">submit</button>
+                </form>
+            </div>
+        </div>
+        <div face="warehouses" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <select id="adminWarehouseSelect">
+                    <!--populated by JS-->
+                </select>
+                <button type="button" id="deleteWarehouse">Delete</button>
+                <!--TODO: NOT WORKING-->
+                <div face="moveItems" class="face hidden">
+                    <select id="moveItemsSelect">
+                        <!--populated by JS-->
+                    </select>
+                    <button type="button" id="moveItems">Move Items</button>
+                </div>
+            </div>
+        </div>
+        <div face="reports" class="face hidden">
+            <div text-align="center">
+                <h1>Reports</h1>
+            </div>
+            <button type="button" id="findMin">Find Min</button>
+            <button type="button" id="findMax">Find Max</button>
+            <button type="button" id="vip">VIP</button>
+        </div>
 
     <div face="unshippedOrders" class="face hidden">
         <div text-align="center">

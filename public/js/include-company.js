@@ -62,17 +62,30 @@ var CompanyController = {}
 var CompanyController = (function() {
 
     var events = function() {
-        let name
         $("#companyLoginSubmit").on("click", () => {
-            name = $("#companyLoginName").val()
+            let name = $("#companyLoginName").val();
             console.log("submit with " + name)
             login(name).then((response) => {
                 return response.json()
             })
             .then((result) => {
-                Util.setCookie("co_login", result.id)
+                Util.setCookie("co_login", result.id);
+                switchToLogout();
             })
         })
+
+        $("#companyLogout").on('click', function() {
+            //TODO: Delete company user cookie
+            switchToLogin();
+        })
+    }
+
+    var switchToLogout = function() {
+        $("#nav-login-comp").attr("face", "logout")
+    }
+
+    var switchToLogin = function() {
+        $("#nav-login-comp").attr("face", "login")
     }
 
     var login = function(name) {
