@@ -1,5 +1,3 @@
-use kalahari; 
-
 DROP TABLE SHIPPING_REQUEST;
 DROP TABLE ITEM;
 DROP TABLE CUSTOMER;
@@ -43,9 +41,9 @@ CREATE TABLE AIR
 
 CREATE TABLE LAND
 (
-    land_dis_mult   DOUBLE PRECISION,
+    land_dis_mult   DECIMAL,
     veh_ID          VARCHAR(30),
-    land_base_cost  DOUBLE PRECISION,
+    land_base_cost  DECIMAL,
     FOREIGN KEY (veh_ID)
         REFERENCES SHIPPING_METHOD(veh_ID)
         ON DELETE CASCADE
@@ -53,9 +51,9 @@ CREATE TABLE LAND
 
 CREATE TABLE SEA
 (
-    sea_dist_mult   DOUBLE PRECISION,
+    sea_dist_mult   DECIMAL,
     veh_ID          VARCHAR(30),
-    sea_base_cost   DOUBLE PRECISION,
+    sea_base_cost   DECIMAL,
     FOREIGN KEY (veh_ID)
         REFERENCES SHIPPING_METHOD(veh_ID)
         ON DELETE CASCADE
@@ -83,10 +81,10 @@ CREATE TABLE ITEM (
     I_ID        INTEGER NOT NULL,
     weight      DECIMAL,
     quantity    INTEGER NOT NULL,
+    cost        DECIMAL,
     volume      DECIMAL,
     lat         DECIMAL,
     lon         DECIMAL,
-    req_num     INTEGER,
     ID          INTEGER NOT NULL,
     PRIMARY KEY(I_ID),
     FOREIGN KEY(lat, lon) REFERENCES WAREHOUSE
@@ -97,13 +95,15 @@ CREATE TABLE ITEM (
 
 CREATE TABLE SHIPPING_REQUEST (
     req_num     INTEGER NOT NULL,
+    qty         INTEGER NOT NULL,
     origin      VARCHAR(30),
     dest        VARCHAR(30),
-    total_val   DOUBLE PRECISION,
+    total_val   DECIMAL,
+    shipped     INTEGER NOT NULL,
     veh_ID      VARCHAR(30) NOT NULL,
     ID          INTEGER NOT NULL,
-    lat         DOUBLE PRECISION NOT NULL,
-    lon         DOUBLE PRECISION NOT NULL,
+    lat         DECIMAL NOT NULL,
+    lon         DECIMAL NOT NULL,
     I_ID        INTEGER DEFAULT 0 NOT NULL,
     PRIMARY KEY (req_num),
     FOREIGN KEY (veh_ID) REFERENCES SHIPPING_METHOD

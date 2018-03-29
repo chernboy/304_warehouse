@@ -1,6 +1,6 @@
 <div class="nav">
     <div class="nav-head">
-        <div face="login" class="nav-button">Login</div>
+        <div id="login-nav-cust" face="login" class="nav-button">Login</div>
         <div face="catalog" class="nav-button">Catalog</div>
         <div face="orders" class="nav-button">Orders</div>
     </div>
@@ -12,15 +12,29 @@
             <div>
                 <form method="post" action="">
                     <label>
+                        <input id="customerLoginName" type="select">
+                    </label>
+                    <button id="customerLoginSubmit" type="button">submit</button>
+                </form>
+            </div>
+        </div>
+        <div face="logout" class="face hidden">
+            <div>
+                <h1>Logout</h1>
+            </div>
+            <div>
+                <form method="post" actions="">
+                    <label>
                         <input type="select">
                     </label>
+                    <button id="customerLogout" type="button">submit</button>
                 </form>
             </div>
         </div>
         <div face="catalog" class="face hidden">
             <h1>Catalog</h1>
             <form>
-                <input type="text" name="search">
+                <input type="text" id="itemFilter" name="search">
                 <button type="button" id="searchitems">Search</button>
             </form>
             <table>
@@ -33,9 +47,9 @@
                 </tbody>
             </table>
             <select>
-                <!--populate by JS-->
+                <!--TODO: populate by JS Dynamically-->
                 <option value="null">-Choose one-</option>
-                <option value="sea">Shipping</option>
+                <option value="sea">Sea</option>
                 <option value="air">Air</option>
                 <option value="land">Land</option>
             </select>
@@ -43,12 +57,27 @@
         </div>
         <div face="orders" class="face hidden">
             <h1>Order History</h1>
-            <!--populate orders-->
+            <table>
+                <thead>Pending Orders</thead>
+                <tbody id="orderHistoryPend">
+                <!--TODO: populate order history that are pending-->
+                </tbody>
+            </table>
+            <table>
+                <thead>Shipped Orders</thead>
+                <tbody id="orderHistoryShipped">
+                <!--TODO: populate order histry that are shipped-->
+                </tbody>
+            </table>
         </div>
         <div face="cart" class="face hidden">
             <h1>Cart</h1>
-            <!--populate cart-->
-            <!--list total cost-->
+            <table>
+                <tbody id="itemsInCart">
+                <!--TODO: populate cart-->
+                </tbody>
+            </table>
+            <!--TODO: list total cost-->
             <button type="button" id="placeorder">Place Order</button>
         </div>
     </div>

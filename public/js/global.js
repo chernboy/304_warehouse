@@ -44,6 +44,19 @@ var BodyController = (function () {
                 Util.hide($("#home"))
                 Util.hide($(".customer"))
                 Util.hide($(".company"))
+                if ($(".admin").children().length === 0) {
+                    console.log("including admin html")
+                    IncludeAdmin.execute().then(function () {
+                        console.log("got admin")
+                        NavController.init().then(() => {
+                            Util.refreshStyles("nav")
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+                    }).catch(function (err) {
+                        console.log(err)
+                    })
+                }
                 Util.show($(".admin"))
             })
             $("#goto-home").on('click', function () {

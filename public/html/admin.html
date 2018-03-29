@@ -1,50 +1,116 @@
 <div class="nav">
-    <div class="nav-head">        
-
+    <div class="nav-head">
+        <div face="login" class="nav-button">Login</div>
+        <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
+        <div face="shippedOrders" class="nav-button">Shipped Orders</div>
+        <div face="reports" class="nav-button">Reports</div>
+        <div face="warehouses" class="nav-button">Warehouses</div>
     </div>
-
 
     <div class="nav-body">
-        <div text-align="center">
-            <h1>Admin Util</h1>
+        <div face="login" class="face">
+            <div text-align="center">
+                <h1>Admin</h1>
+            </div>
+            <form method="post" action="">
+                <label>
+                    <input type="select">
+                </label>
+                <button type="button" id="adminLogin">submit</button>
+            </form>
         </div>
-        <p>
-            <a href="/">Back</a>
-        </p>
+        <div face="logout" class="face hidden">
+            <div>
+                <h1>Logout</h1>
+            </div>
+            <div>
+                <form method="post" actions="">
+                    <label>
+                        <input type="select">
+                    </label>
+                    <button id="adminLogout" type="button">submit</button>
+                </form>
+            </div>
+        </div>
+        <div face="warehouses" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <select id="adminWarehouseSelect">
+                    <!--populated by JS-->
+                </select>
+                <button type="button" id="deleteWarehouse">Delete</button>
+                <!--TODO: NOT WORKING-->
+                <div face="moveItems" class="face hidden">
+                    <select id="moveItemsSelect">
+                        <!--populated by JS-->
+                    </select>
+                    <button type="button" id="moveItems">Move Items</button>
+                </div>
+            </div>
+        </div>
+        <div face="reports" class="face hidden">
+            <div text-align="center">
+                <h1>Reports</h1>
+            </div>
+            <button type="button" id="findMin">Find Min</button>
+            <button type="button" id="findMax">Find Max</button>
+            <button type="button" id="vip">VIP</button>
+        </div>
 
-        <form action="/api/makeShippingRequest" method="POST">
-            <label>
-                Req Num
-                <input type="number" name="reqNum">
-            </label>
-            <br/>
-            <label>
-                Vehicle ID
-                <input type="text" name="vehID">
-            </label>
-            <br/>
-            <label>
-                ID
-                <input type="number" name="ID">
-            </label>
-            <br/>
-            <label>
-                Latitude
-                <input type="number" name="lat">
-            </label>
-            <br/>
-            <label>
-                Longitude
-                <input type="number" name="lon">
-            </label>
-            <br/>
-            <label>
-                IID
-                <input type="number" name="IID">
-            </label>
+    <div face="unshippedOrders" class="face hidden">
+        <div text-align="center">
+            <h1>UnshippedOrders</h1>
+        </div>
+        
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="unshippedOrders">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
+        
+        <button type="yes">yes</button>
+        <button type="no">no</button>
+    </div>
 
+    <div face="shippedOrders" class="face hidden">
+        <div text-align="center">
+            <h1>ShippedOrders</h1>
+        </div>
 
-            <button type="submit">submit</button>
-        </form>
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="shippedOrders">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
     </div>
 </div>
+
+<!--TODO: Create buttons for: find min, find max-->
