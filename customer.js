@@ -159,7 +159,7 @@ exports.userLogin = function(req, res, client) {
         res.status(500);
         res.send("Error fetching data")
     });
-}
+};
 
 exports.compLogin = function (req, res, client) {
     if (!checkExists(req.query, "name", "string")) {
@@ -179,8 +179,42 @@ exports.compLogin = function (req, res, client) {
         res.status(500);
         res.send("Error fetching data")
     });
+};
 
-}
+// POST
+exports.addItem = function (req, res, client) {
+    body = req.body;
+    if(
+        checkExists(body, "lat", "number") &&
+        checkExists(body, "lon", "number") &&
+        checkExists(body, "ID", "number") &&
+        checkExists(body, "weight", "number") &&
+        checkExists(body, "quantity", "number")  &&
+        checkExists(body, "volume", "number") 
+    ) {
+        // TODO: Determine (next) I_ID 
+        var next_i_id = 0;
+        client.query("SELECT max(i_id) FROM ITEM").then(result => {
+            if(result.rowCount === 1) {
+                console.log("We got something!"); // DEBUG
+                console.log(result.rows[0]);
+                next_i_id = result.rows[0].max;
+                res.send("hello world"); // DEBUG
+                return; // DEBUG
+            }
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("Server error: unable to generate next I_ID for new item");
+            return;
+        })
+    } else {
+        // TODO: Send error, missing field(s)
+        res.send("Missing parameters; got : " + body); // DEBUG
+
+        return; 
+    }
+};
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {

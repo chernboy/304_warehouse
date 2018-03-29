@@ -85,14 +85,18 @@ app.post("/api/makeShippingRequest", (req, res) => {
 
 // GETs the UserID associated with the given customer
 // Parameters: name - string - name of user
-app.post("/api/userLogin", (req, res) => {
+app.get("/api/userLogin", (req, res) => {
     customer.userLogin(req, res, client); 
 });
 
 // GETs the UserID associated with the given company
 // Parameters: name - string - name of company
-app.post("/api/companyLogin", (req, res) => {
+app.get("/api/companyLogin", (req, res) => {
     customer.compLogin(req, res, client);
+});
+
+app.post("/api/addItem", (req, res) => {
+    customer.addItem(req, res, client);
 });
 
 
