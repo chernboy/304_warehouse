@@ -50,8 +50,11 @@ ItemTableController = (function () {
 
 
 
-        $("#customerLoginSubmit").on('click', function () {
-            let name = $("#customerLoginName").val()
+        $("#customerLoginForm").on('submit', function (e) {
+            e.preventDefault();
+
+            let name = $("#customerLoginName").val();
+
             login(name)
             .then(function (response) {
                 return response.json()
@@ -62,8 +65,10 @@ ItemTableController = (function () {
             })
         })
 
-        $("#customerLogout").on('click', function () {
+        $("#customerLogoutForm").on('submit', function (e) {
+            e.preventDefault();
             //TODO: delete user cookie
+            // Util.deleteCookie("cu_login")
             switchToLogin()
         })
 
@@ -81,11 +86,13 @@ ItemTableController = (function () {
     };
 
     var switchToLogout = function() {
-        $("#nav-login-cust").attr("face", "logout")
+        $("#login-nav-cust").attr("face", "logout").text("Logout")
+        Util.showFace("logout")
     }
 
     var switchToLogin = function() {
-        $("#nav-login-cust").attr("face", "login")
+        $("#login-nav-cust").attr("face", "login").text("Login")
+        Util.showFace("login")
     }
 
     var login = function(name) {
