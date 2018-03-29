@@ -89,7 +89,6 @@ var Company = (function () {
 
         $("#companyLogoutForm").on('click', (e) => {
             e.preventDefault();
-            //TODO: Delete company user cookie
             Util.setCookie("co_login", "")
             switchToLogin();
         })

@@ -44,7 +44,6 @@ var UnshippedOrdersController = (function() {
 
         $("#deleteWarehouse").on('click', function () {
             //TODO: Delete warehouse
-            //TODO: FIX, not working!!
             Util.showFace("warehousesMove")
         })
 
@@ -79,6 +78,10 @@ var UnshippedOrdersController = (function() {
         })
 
         $("#backToWarehouses").on('click', function () {
+            Util.showFace("warehouses")
+        })
+
+        $("#backToWarehousesFail").on('click', function() {
             Util.showFace("warehouses")
         })
     
