@@ -1,6 +1,6 @@
 <div class="nav">
     <div class="nav-head">
-        <div face="login" class="nav-button">Login</div>
+        <div id="nav-login-comp" face="login" class="nav-button">Login</div>
         <div face="addItems" class="nav-button">Add Items</div>
         <div face="listItems" class="nav-button">List Items</div>
     </div>
@@ -16,13 +16,25 @@
                     </label>
                 </form>
             </div>
-            <button type="submit">submit</button>
+            <button type="button" id="companyLogin">submit</button>
+        </div>
+        <div face="logout" class="face hidden">
+            <div>
+                <h1>Logout</h1>
+            </div>
+            <div>
+                <form method="post" actions="">
+                    <label>
+                        <input type="select">
+                    </label>
+                    <button id="companyLogout" type="button">submit</button>
+                </form>
+            </div>
         </div>
         <div face="addItems" class="face hidden">
             <div text-align="center">
                 <h1>Add Items</h1>
             </div>
-
             <form action="/api/addItem" method="POST">
                 <label>
                     Cost

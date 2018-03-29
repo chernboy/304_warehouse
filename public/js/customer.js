@@ -63,6 +63,11 @@ ItemTableController = (function () {
             })
         })
 
+        $("#customerLogout").on('click', function () {
+            //TODO: delete user cookie
+            switchToLogin()
+        })
+
         //Moves to cart page on clicking checkout
         $("#checkout").on('click', function() {
             //TODO: implement robust checking (must select a shipping option)
@@ -77,11 +82,11 @@ ItemTableController = (function () {
     };
 
     var switchToLogout = function() {
-        $("#nav-login").attr("face", "logout")
+        $("#nav-login-cust").attr("face", "logout")
     }
 
     var switchToLogin = function() {
-        $("#nav-login").attr("face", "login")
+        $("#nav-login-cust").attr("face", "login")
     }
 
     var login = function(name) {
