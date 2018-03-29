@@ -10,11 +10,9 @@
                 <h1>Login</h1>
             </div>
             <div>
-                <form method="post" action="">
-                    <label>
-                        <input id="customerLoginName" type="select">
-                    </label>
-                    <button id="customerLoginSubmit" type="button">submit</button>
+                <form id="customerLoginForm">
+                    <input id="customerLoginName" type="text">
+                    <button id="customerLoginSubmit" type="submit">submit</button>
                 </form>
             </div>
         </div>
@@ -23,11 +21,8 @@
                 <h1>Logout</h1>
             </div>
             <div>
-                <form method="post" actions="">
-                    <label>
-                        <input type="select">
-                    </label>
-                    <button id="customerLogout" type="button">submit</button>
+                <form id="customerLogoutForm">
+                    <button id="customerLogout" type="submit">logout</button>
                 </form>
             </div>
         </div>
@@ -37,13 +32,22 @@
                 <input type="text" id="itemFilter" name="search">
                 <button type="button" id="searchitems">Search</button>
             </form>
+            <h5>Items in warehouse</h5>
             <table>
-                <thead>Items in warehouse</thead>
-                <tbody id="itemTableBody">
+                <thead>
                     <tr>
-                        <td>Item ID</td>
-                        <td>Item name</td>
+                        <th>ID</th>
+                        <th>weight</th>
+                        <th>qty</th>
+                        <th>cost</th>
+                        <th>volume</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>uid</th>
                     </tr>
+                </thead>
+                <tbody id="itemTableBody">
+
                 </tbody>
             </table>
             <select>
@@ -60,21 +64,29 @@
             <table>
                 <thead>Pending Orders</thead>
                 <tbody id="orderHistoryPend">
-                <!--TODO: populate order history that are pending-->
+                    <!--TODO: populate order history that are pending-->
                 </tbody>
             </table>
             <table>
                 <thead>Shipped Orders</thead>
                 <tbody id="orderHistoryShipped">
-                <!--TODO: populate order histry that are shipped-->
+                    <!--TODO: populate order histry that are shipped-->
                 </tbody>
             </table>
+            <button id="ordersRefresh">refresh</button>
         </div>
         <div face="cart" class="face hidden">
             <h1>Cart</h1>
             <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>qty</th>
+                        <th>cost</th>
+                    </tr>
+                </thead>
                 <tbody id="itemsInCart">
-                <!--TODO: populate cart-->
+                    <!--TODO: populate cart-->
                 </tbody>
             </table>
             <!--TODO: list total cost-->

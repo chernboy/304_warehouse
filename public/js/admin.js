@@ -6,12 +6,15 @@ var UnshippedOrdersController = (function() {
     var ordersTable
     var events = function() {
         ordersTable = $("#unshippedOrders")
-        getUnshippedOrders()
-        .then((response) => {
-            return response.json()
-        })
-        .then((results) => {
-            populateOrdersTable(results)
+
+        $("#ordersRefresh").on("click", () => {
+            
+            let orderPromises = []
+            orderPromises.push(getUnshippedOrders(Util.getCookie("admin_login"))) 
+
+            Promise.all(orderPromises).then((results) => {
+                results[0].json().then(populateOrdersTable)
+            })
         })
 
         warehouseSelectMove = $("#moveItemsSelect")
@@ -41,6 +44,40 @@ var UnshippedOrdersController = (function() {
             //TODO: FIX, not working!!
             Util.showFace("moveItems")
         })
+
+        $("#adminLogin").on("submit", async e => {
+            e.preventDefault();
+            console.log("submt");
+            try {
+                const res = await fetch(`/api/adminLogin?name=${$("#adminLoginName").val()}`)
+                const result = await res.json();
+
+                Util.setCookie("admin_login", "" + result.log);
+                switchToLogout();
+            } catch (err) {
+                console.log(err);
+            }
+        })
+
+        $("#adminLogoutForm").on("submit", async e => {
+            e.preventDefault()
+            console.log("logout submit")
+            try {
+                Util.setCookie("admin_login", "")
+            } catch (err) {
+                console.log(err)
+            }
+        })
+    
+        function switchToLogout() {
+            $("#nav-login-admin").attr("face", "logout").text("Logout")
+            Util.showFace("logout")
+        }
+    
+        function switchToLogin() {
+            $("#nav-login-admin").attr("face", "login").text("Login")
+            Util.showFace("login")
+        }
     }
 
     var getWarehouses = function () {
@@ -59,23 +96,25 @@ var UnshippedOrdersController = (function() {
         return fetch("/api/getUnshippedOrders")
     }
 
-    var populateOrdersTable = function(results) {
+    var populateOrdersTable = function(results) {    
+        ordersTable.empty()
         for (let result of results) {
             ordersTable.append(createOrdersRow(result))
         }
     }
 
     var createOrdersRow = function(result) {
+        console.log(result)
         let row = $("<tr>")
         row.append($("<td>").text(result.req_num))
         row.append($("<td>").text(result.origin))
         row.append($("<td>").text(result.dest))
         row.append($("<td>").text(result.total_val))
-        row.append($("<td>").text(result.veh_ID))
-        row.append($("<td>").text(result.ID))
+        row.append($("<td>").text(result.veh_id))
+        row.append($("<td>").text(result.id))
         row.append($("<td>").text(result.lat))
         row.append($("<td>").text(result.lon))
-        row.append($("<td>").text(result.I_ID))
+        row.append($("<td>").text(result.i_id))
         row.append($('<button id="shipOrder" value="' + result.req_num + 'type="button">yes</button>'))
         row.append($('<button id="rejectOrder" value="' + result.req_num + 'type="button">no</button>'))
 

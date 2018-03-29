@@ -1,6 +1,6 @@
 <div class="nav">
     <div class="nav-head">
-        <div face="login" class="nav-button">Login</div>
+        <div id="nav-login-admin" face="login" class="nav-button">Login</div>
         <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
         <div face="shippedOrders" class="nav-button">Shipped Orders</div>
         <div face="reports" class="nav-button">Reports</div>
@@ -13,11 +13,11 @@
             <div text-align="center">
                 <h1>Admin</h1>
             </div>
-            <form method="post" action="">
+            <form id="adminLogin">
                 <label>
-                    <input type="select">
+                    <input id="adminLoginName" type="select">
                 </label>
-                <button type="button" id="adminLogin">submit</button>
+                <button type="submit">submit</button>
             </form>
         </div>
         <div face="logout" class="face hidden">
@@ -25,11 +25,8 @@
                 <h1>Logout</h1>
             </div>
             <div>
-                <form method="post" actions="">
-                    <label>
-                        <input type="select">
-                    </label>
-                    <button id="adminLogout" type="button">submit</button>
+                <form id="adminLogoutForm" method="post" actions="">
+                    <button id="adminLogout" type="submit">submit</button>
                 </form>
             </div>
         </div>
@@ -78,14 +75,14 @@
                         <th>lon</th>
                         <th>IID</th>
                         <tr>
-                </thead>
+                </thead>  
+                
                 <tbody id="unshippedOrders">
                     <!-- populated by JS -->
                 </tbody>
             </table>
         
-        <button type="yes">yes</button>
-        <button type="no">no</button>
+        <button id="ordersRefresh">refresh</button>
     </div>
 
     <div face="shippedOrders" class="face hidden">

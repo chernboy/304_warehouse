@@ -3,6 +3,7 @@ var BodyController = {}
 var BodyController = (function () {
     var events = function () {
         $(function () {
+            clearLoginCookies()
             $("#goto-customer").on('click', function () {
                 Util.hide($("#home"))
                 Util.hide($(".company"))
@@ -66,6 +67,12 @@ var BodyController = (function () {
                 Util.show($("#home"))
             })
         })
+    }
+
+    var clearLoginCookies = function() {
+        Util.setCookie("cu_login", "")
+        Util.setCookie("co_login", "")
+        Util.setCookie("admin_login", "")
     }
 
     return {

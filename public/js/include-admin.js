@@ -2,7 +2,6 @@ IncludeAdmin = {}
 
 IncludeAdmin = (function () {
     var events = function () {
-        console.log("Starting to include admin")
         return new Promise((resolve, reject) => {
             $("*").each(function () {
                 if ($(this).attr("include-admin-html")) {
