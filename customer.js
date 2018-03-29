@@ -148,14 +148,14 @@ exports.userLogin = function(req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM customer WHERE cu_name = $1", [req.query["name"]]).then(result => {
+    client.query("SELECT * FROM customer WHERE cu_name = $1", [req.query.name]).then((result) => {
         if(result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does user exist?");
             return;
         }
-        res.send("" + result.rows[0].id);
-    }).catch(e => {
+        res.send(result.rows[0]);
+    }).catch((e) => {
         res.status(500);
         res.send("Error fetching data")
     });
@@ -168,14 +168,14 @@ exports.compLogin = function (req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM company WHERE co_name = $1", [req.query["name"]]).then(result => {
+    client.query("SELECT * FROM company WHERE co_name = $1", [req.query["name"]]).then((result) => {
         if (result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does company exist?");
             return;
         }
-        res.send("" + result.rows[0].id);
-    }).catch(e => {
+        res.send(result.rows[0]);
+    }).catch((e) => {
         res.status(500);
         res.send("Error fetching data")
     });

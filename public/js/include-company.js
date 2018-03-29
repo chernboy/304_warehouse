@@ -12,7 +12,7 @@ IncludeCompany = (function () {
                         .then(function (html) {
                             $(".company").prepend(html)
                             WarehouseSelectController.init();
-                            AdminController.init()
+                            CompanyController.init()
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get company " + error)
@@ -57,13 +57,15 @@ var WarehouseSelectController = (function () {
     }
 })()
 
-var AdminController = {}
+var CompanyController = {}
 
-var AdminController = (function() {
+var CompanyController = (function() {
 
     var events = function() {
-        let name = $("#companyLoginName").val()
+        let name
         $("#companyLoginSubmit").on("click", () => {
+            name = $("#companyLoginName").val()
+            console.log("submit with " + name)
             login(name).then((response) => {
                 return response.json()
             })

@@ -163,6 +163,17 @@ app.get("/api/companyLogin", (req, res) => {
     customer.compLogin(req, res, client);
 });
 
+app.get("/api/adminLogin", (req, res) => {
+    let name = req.query.name
+    if (name === "admin") {
+        res.status(200)
+        res.send("you're logged in")
+    } else {
+        res.status(400)
+        
+    }
+})
+
 app.post("/api/addItem", (req, res) => {
     customer.addItem(req, res, client);
 });

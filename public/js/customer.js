@@ -2,7 +2,6 @@ IncludeCustomer = {}
 
 IncludeCustomer = (function () {
     var events = function () {
-        console.log("Starting to include customer")
         //REMOVE THIS ONCE WE HAVE LOGIN
         Util.setCookie("cu_login", "something")
         return new Promise((resolve, reject) => {
