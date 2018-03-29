@@ -57,42 +57,50 @@ exports.makeShippingRequest = function(req, res, client) {
 
         // Verify there exists the foreign elements in the other tables first
         // TODO: Verify vehID exists in SHIPPING_METHOD table
-        client.query("SELECT * FROM SHIPPING_METHOD WHERE ID = " + vehID).then(function(result) {
+        client.query("SELECT * FROM SHIPPING_METHOD WHERE ID = $1", [vehID]).then(function(result) {
             if(result.rowCount() == 0) {
+                res.status(400);
                 res.send("Error, no Vehicle associated with " + vehID);
                 return;
             }
         }).catch(function(error) {
+                res.status(500);
                 res.send("Error: " + error);
                 return;
         });
         // TODO: ID exists in USER table
-        client.query("SELECT * FROM USER WHERE ID = " + ID).then(function(result) {
+        client.query("SELECT * FROM USER WHERE ID = $1", [ID]).then(function(result) {
             if(result.rowCount() == 0) {
+                res.status(400);
                 res.send("Error, no USER associated with " + ID);
                 return;
             }
         }).catch(function(error) {
+                res.status(500);
                 res.send("Error: " + error);
                 return;
         });
         // TODO: lat,lon exists in WAREHOUSE table
-        client.query("SELECT * FROM WAREHOUSE WHERE lat = " + lat + " AND lon " + lon).then(function(result) {
+        client.query("SELECT * FROM WAREHOUSE WHERE lat = $1 AND lon = $2", [lat,lon]).then(function(result) {
             if(result.rowCount() == 0) {
+                res.status(400);
                 res.send("Error, no WAREHOUSE associated with " + lat + " " + lon);
                 return;
             }
         }).catch(function(error) {
+                res.status(500);
                 res.send("Error: " + error);
                 return;
         });
         // TODO: IID exists in ITEM table
-        client.query("SELECT * FROM ITEM WHERE ID = " + i_id).then(function(result) {
+        client.query("SELECT * FROM ITEM WHERE ID = $1" + [i_id]).then(function(result) {
             if(result.rowCount() == 0) {
+                res.status(400);
                 res.send("Error, no ITEM associated with " + i_id);
                 return;
             }
         }).catch(function(error) {
+                res.status(500);
                 res.send("Error: " + error);
                 return;
         });
@@ -149,7 +157,7 @@ exports.userLogin = function(req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM customer WHERE cu_name = $1", [req.query["name"]]).then(result => {
+    client.query("SELECT id FROM customer WHERE cu_name = $1", [req.query["name"]]).then(result => {
         if(result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does user exist?");
@@ -169,7 +177,7 @@ exports.compLogin = function (req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM company WHERE co_name = $1", [req.query["name"]]).then(result => {
+    client.query("SELECT id FROM company WHERE co_name = $1", [req.query["name"]]).then(result => {
         if (result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does company exist?");
@@ -252,6 +260,7 @@ exports.addItem = function (req, res, client) {
 
 
     } else {
+        
         // TODO: Send error, missing field(s)
         res.status(400);
         res.send("Missing parameters; got : " + body); // DEBUG
