@@ -64,6 +64,7 @@ var UnshippedOrdersController = (function() {
             console.log("logout submit")
             try {
                 Util.setCookie("admin_login", "")
+                switchToLogin()
             } catch (err) {
                 console.log(err)
             }
