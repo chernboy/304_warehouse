@@ -30,18 +30,100 @@ exports.makeShippingRequest = function(req, res, client) {
     // -
     // This works for get requests, but we should use PUTs to add records
     body = req.body;
-    if (checkExists(body, "vehID", "string") &&
-        checkExists(body, "ID", "number") && checkExists(body, "lat", "number") &&
-        checkExists(body, "lon", "number") && checkExists(body, "i_id", "number")) {
+    if (
+        checkExists(body, "qty"      , "number")  &&
+        checkExists(body, "origin"   , "string")  &&
+        checkExists(body, "dest"     , "string")  &&
+        checkExists(body, "total_val", "number")  &&
+        checkExists(body, "shipped"  , "number")  &&        
+        checkExists(body, "veh_id"   , "string")  &&
+        checkExists(body, "id"       , "number")  &&
+        checkExists(body, "lat"      , "number")  &&
+        checkExists(body, "lon"      , "number")  &&
+        checkExists(body, "i_id"     , "number")) {
         // retrieve information 
         // var reqNum = body["reqNum"];
         // TODO: Determine req_num
         var req_num = 0;
         client.query("SELECT max(req_num) FROM shipping_request").then(function(result) {
-            // TODO: Remove this and debug
-            console.log(result.rows);
+        if (result.rowCount === 1) {
+            req_num = result.rows[0].max + 1;
+        } else {
+            res.status(500);
+            res.send("Unable to generate next req_num, invalid data inconsistancy");
+            return;
+        }
+
+        // var vehID = body["vehID"];
+        // var ID = body["ID"];
+        // var lat = body["lat"];
+        // var lon = body["lon"];
+        // var i_id = body["i_id"];
+
+        // Verify there exists the foreign elements in the other tables first
+        // TODO: Verify vehID exists in SHIPPING_METHOD table
+        client.query("SELECT * FROM SHIPPING_METHOD WHERE veh_id = $1", [body.veh_id]).then(function (result) {
+            if (result.rowCount == 0) {
+                res.status(400);
+                res.send("Error, no Vehicle associated with " + body.veh_id);
+                return;
+            }
+        }).catch(function (error) {
+            res.status(500);
+            res.send("Error: " + error);
+            return;
+        });
+        // TODO: ID exists in USER table
+        client.query("SELECT * FROM USERS WHERE id = $1", [body.id]).then(function (result) {
+            if (result.rowCount == 0) {
+                res.status(400);
+                res.send("Error, no USER associated with " + body.id);
+                return;
+            }
+        }).catch(function (error) {
+            res.status(500);
+            res.send("Error: " + error);
+            return;
+        });
+        // TODO: lat,lon exists in WAREHOUSE table
+        client.query("SELECT * FROM WAREHOUSE WHERE lat = $1 AND lon = $2", [body.lat, body.lon]).then(function (result) {
+            if (result.rowCount == 0) {
+                res.status(400);
+                res.send("Error, no WAREHOUSE associated with " + body.lat + " " + body.lon);
+                return;
+            }
+        }).catch(function (error) {
+            res.status(500);
+            res.send("Error: " + error);
+            return;
+        });
+        // TODO: IID exists in ITEM table
+        client.query("SELECT * FROM ITEM WHERE i_id = $1", [body.i_id]).then(function (result) {
+            if (result.rowCount == 0) {
+                res.status(400);
+                res.send("Error, no ITEM associated with " + body.i_id);
+                return;
+            }
+        }).catch(function (error) {
+            res.status(500);
+            res.send("Error: " + error);
+            return;
+        });
+        // TODO: Add shipping request to table
+        // res.send("We have items here, it works!");
+
+        client.query("INSERT INTO SHIPPING_REQUEST VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [
+            req_num, body.qty, body.origin, body.dest, body.total_val, body.shipped, body.veh_id, body.id, body.lat, body.lon, body.i_id
+        ]).then(result => {
+            console.log("Inserted new Shipping_request!");
             res.send(result.rows);
             return;
+        }).catch(error => {
+            res.status(400);
+            res.send("error: " + error);
+            return;
+        });
+    
         }).catch(function(error){
             console.log("Error: couldn't retrieve rows");
             res.status(500);
@@ -49,56 +131,9 @@ exports.makeShippingRequest = function(req, res, client) {
             return;
         });
 
-        var vehID  = body["vehID"];
-        var ID     = body["ID"];
-        var lat    = body["lat"];
-        var lon    = body["lon"];
-        var i_id   = body["i_id"];
-
-        // Verify there exists the foreign elements in the other tables first
-        // TODO: Verify vehID exists in SHIPPING_METHOD table
-        client.query("SELECT * FROM SHIPPING_METHOD WHERE ID = " + vehID).then(function(result) {
-            if(result.rowCount() == 0) {
-                res.send("Error, no Vehicle associated with " + vehID);
-                return;
-            }
-        }).catch(function(error) {
-                res.send("Error: " + error);
-                return;
-        });
-        // TODO: ID exists in USER table
-        client.query("SELECT * FROM USER WHERE ID = " + ID).then(function(result) {
-            if(result.rowCount() == 0) {
-                res.send("Error, no USER associated with " + ID);
-                return;
-            }
-        }).catch(function(error) {
-                res.send("Error: " + error);
-                return;
-        });
-        // TODO: lat,lon exists in WAREHOUSE table
-        client.query("SELECT * FROM WAREHOUSE WHERE lat = " + lat + " AND lon " + lon).then(function(result) {
-            if(result.rowCount() == 0) {
-                res.send("Error, no WAREHOUSE associated with " + lat + " " + lon);
-                return;
-            }
-        }).catch(function(error) {
-                res.send("Error: " + error);
-                return;
-        });
-        // TODO: IID exists in ITEM table
-        client.query("SELECT * FROM ITEM WHERE ID = " + i_id).then(function(result) {
-            if(result.rowCount() == 0) {
-                res.send("Error, no ITEM associated with " + i_id);
-                return;
-            }
-        }).catch(function(error) {
-                res.send("Error: " + error);
-                return;
-        });
-        // TODO: Add shipping request to table
-        // res.send("We have items here, it works!");
-
+        console.log("We got here for some reason...");
+        res.status(400);
+        res.send("Error...")
         return;
     }
     // res.send(req.body);
@@ -149,7 +184,7 @@ exports.userLogin = function(req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM customer WHERE cu_name = $1", [req.query.name]).then((result) => {
+    client.query("SELECT id FROM customer WHERE cu_name = $1", [req.query.name]).then((result) => {
         if(result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does user exist?");
@@ -169,7 +204,7 @@ exports.compLogin = function (req, res, client) {
         return;
     }
 
-    client.query("SELECT * FROM company WHERE co_name = $1", [req.query["name"]]).then((result) => {
+    client.query("SELECT id FROM company WHERE co_name = $1", [req.query["name"]]).then(result => {
         if (result.rowCount != 1) {
             res.status(500);
             res.send("Error pulling user from database; Does company exist?");
@@ -186,12 +221,13 @@ exports.compLogin = function (req, res, client) {
 exports.addItem = function (req, res, client) {
     body = req.body;
     if(
-        checkExists(body, "lat", "number") &&
-        checkExists(body, "lon", "number") &&
-        checkExists(body, "ID", "number") &&
-        checkExists(body, "weight", "number") &&
-        checkExists(body, "quantity", "number")  &&
-        checkExists(body, "volume", "number") 
+        checkExists(body, "lat"     , "number") &&
+        checkExists(body, "lon"     , "number") &&
+        checkExists(body, "ID"      , "number") &&
+        checkExists(body, "cost"    , "number") &&
+        checkExists(body, "weight"  , "number") &&
+        checkExists(body, "quantity", "number") &&
+        checkExists(body, "volume"  , "number") 
     ) {
         var next_i_id = 0;
         client.query("SELECT max(i_id) FROM ITEM").then(result => {
@@ -223,15 +259,20 @@ exports.addItem = function (req, res, client) {
                     return;
                 });
 
-                console.log("The next value will be: " + next_i_id);
-                client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [next_i_id,
-                    body.weight, body.quantity, body.volume, body.lat, body.lon, 1, body.ID]).then(result => {
+                console.log("" + [
+                    next_i_id,
+                    body.weight, body.quantity, body.cost, body.volume,
+                    body.lat, body.lon, body.ID]);
+                client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [
+                    next_i_id,
+                    body.weight, body.quantity, body.cost, body.volume, 
+                    body.lat, body.lon, body.ID]).then(result => {
                         console.log("Tada!");
                         res.send(result.rows);
                         return;
                     }).catch(error => {
                         res.status(400);
-                        res.send("Error: " + error);
+                        res.send("Error inserting: " + error);
                         return;
                     });
 
@@ -252,6 +293,7 @@ exports.addItem = function (req, res, client) {
 
 
     } else {
+        
         // TODO: Send error, missing field(s)
         res.status(400);
         res.send("Missing parameters; got : " + body); // DEBUG

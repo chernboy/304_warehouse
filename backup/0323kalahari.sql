@@ -1,3 +1,5 @@
+use kalahari;
+
 --
 -- PostgreSQL database dump
 --
@@ -77,10 +79,10 @@ CREATE TABLE public.item (
     i_id integer NOT NULL,
     weight numeric,
     quantity integer NOT NULL,
+    cost numeric,
     volume numeric,
     lat numeric,
     lon numeric,
-    req_num integer,
     id integer NOT NULL
 );
 
@@ -130,9 +132,11 @@ ALTER TABLE public.shipping_method OWNER TO postgres;
 
 CREATE TABLE public.shipping_request (
     req_num integer NOT NULL,
+    qty integer NOT NULL,
     origin character varying(30),
     dest character varying(30),
     total_val double precision,
+    shipped integer NOT NULL,
     veh_id character varying(30) NOT NULL,
     id integer NOT NULL,
     lat double precision NOT NULL,
@@ -211,7 +215,7 @@ Tiger	8
 -- Data for Name: item; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.item (i_id, weight, quantity, volume, lat, lon, req_num, id) FROM stdin;
+COPY public.item (i_id, weight, quantity, cost, volume, lat, lon, id) FROM stdin;
 \.
 
 
@@ -269,7 +273,7 @@ S3235
 -- Data for Name: shipping_request; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.shipping_request (req_num, origin, dest, total_val, veh_id, id, lat, lon, i_id) FROM stdin;
+COPY public.shipping_request (req_num, qty, origin, dest, total_val, shipped, veh_id, id, lat, lon, i_id) FROM stdin;
 \.
 
 
