@@ -212,6 +212,13 @@ app.get("/api/getCustomersPurchasingEverywhere", (req, res) => {
     customer.getCustomersPurchasingEverywhere(req, res, client);
 });
 
+app.get("/api/getMaxAverageWarehouse", (req, res) => {
+    customer.getMaxAverageWarehouse(req, res, client);
+});
+
+app.get("/api/getMinAverageWarehouse", (req, res) => {
+    customer.getMinAverageWarehouse(req, res, client);
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 

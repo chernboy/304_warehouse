@@ -325,7 +325,6 @@ exports.getCustomerShippedOrders = function(req, res, client) {
 }
 
 exports.getItemPopularity = function(req, res, client) {
-    // TODO: Complete this
     client.query("SELECT i_id, count(req_num) FROM shipping_request" + 
     " GROUP BY i_id ORDER BY count(req_num) DESC").then(result => {
         res.send(result.rows);
@@ -359,7 +358,6 @@ exports.deleteUser = function(req, res, client) {
 exports.getCustomersPurchasingEverywhere = function(req, res, client) {
     // This is a really long function name
     // help....
-    // TODO: Complete this
     // NOTE: There is no parameters for this api/function
     // client.query("SELECT cu.* FROM customer cu WHERE NOT EXISTS " + 
                     // "((SELECT co.id FROM company) EXCEPT "+
@@ -377,6 +375,45 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
                 res.send(error);
                 return;
             });
+}
+
+
+exports.getMaxAverageWarehouse = function(req, res, client) {
+    client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+        "                        FROM item i, warehouse w2" +
+        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+        "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+        "WHERE magic.avCost >= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+        "                        FROM item i, warehouse w2" +
+        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+        "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    ).then(result => {
+        res.send(result.rows);
+        return;
+    }).catch(error => {
+        res.status(500);
+        res.send(error);
+        return;
+    });
+}
+
+exports.getMinAverageWarehouse = function (req, res, client) {
+    client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+        "                        FROM item i, warehouse w2" +
+        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+        "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+        "WHERE magic.avCost <= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+        "                        FROM item i, warehouse w2" +
+        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+        "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    ).then(result => {
+        res.send(result.rows);
+        return;
+    }).catch(error => {
+        res.status(500);
+        res.send(error);
+        return;
+    });
 }
 
 // helper function that checks if the object contains the key and is of the correct type
