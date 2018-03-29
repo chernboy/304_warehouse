@@ -50,8 +50,8 @@ var BodyController = (function () {
                         console.log("got admin")
                         NavController.init().then(() => {
                             Util.refreshStyles("nav")
-                        }).catch(() => {
-                            console.log("Faled to load nav styles")
+                        }).catch((err) => {
+                            console.log(err)
                         })
                     }).catch(function (err) {
                         console.log(err)

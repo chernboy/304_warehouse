@@ -9,9 +9,10 @@ IncludeAdmin = (function () {
                     Util.getHtml($(this).attr("include-admin-html"))
                         .then(function (html) {
                             $(".admin").prepend(html)
+                            UnshippedOrdersController.init()
                             resolve()
                         }).catch(function (error) {
-                            reject("failed to get admin" + JSON.stringify(error))
+                            reject("failed to get admin" + error)
                         })
                 }
             })

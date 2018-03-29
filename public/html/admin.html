@@ -1,52 +1,74 @@
 <div class="nav">
-    <div class="nav-head">        
-
+    <div class="nav-head">
+        <div face="login" class="nav-button">Login</div>
+        <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
+        <div face="shippedOrders" class="nav-button">Shipped Orders</div>
     </div>
 
-
     <div class="nav-body">
-        <div text-align="center">
-            <h1>Admin Util</h1>
+        <div face="login" class="face">
+            <div text-align="center">
+                <h1>Admin</h1>
+            </div>
+            <form method="post" action="">
+                <label>
+                    <input type="select">
+                </label>
+                <button type="submit">submit</button>
+            </form>
         </div>
-        <p>
-            <a href="/">Back</a>
-        </p>
+    </div>
 
-        <form action="/api/makeShippingRequest" method="POST">
-            <label>
-                Req Num
-                <input type="number" name="reqNum">
-            </label>
-            <br/>
-            <label>
-                Vehicle ID
-                <input type="text" name="vehID">
-            </label>
-            <br/>
-            <label>
-                ID
-                <input type="number" name="ID">
-            </label>
-            <br/>
-            <label>
-                Latitude
-                <input type="number" name="lat">
-            </label>
-            <br/>
-            <label>
-                Longitude
-                <input type="number" name="lon">
-            </label>
-            <br/>
-            <label>
-                IID
-                <input type="number" name="IID">
-            </label>
-            <button type="submit">submit</button>
-        </form>
-        <table>
-            <thead></thead>
-            <tbody id="unshippedTable"></tbody>
-        </table>
+    <div face="unshippedOrders" class="face hidden">
+        <div text-align="center">
+            <h1>UnshippedOrders</h1>
+        </div>
+        
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="unshippedOrders">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
+        
+        <button type="yes">yes</button>
+        <button type="no">no</button>
+    </div>
+
+    <div face="shippedOrders" class="face hidden">
+        <div text-align="center">
+            <h1>ShippedOrders</h1>
+        </div>
+
+        <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>reqNum</th>
+                        <th>origin</th>
+                        <th>dest</th>
+                        <th>total_val</th>
+                        <th>vehID</th>
+                        <th>ID</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>IID</th>
+                        <tr>
+                </thead>
+                <tbody id="shippedOrders">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
     </div>
 </div>

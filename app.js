@@ -88,9 +88,10 @@ app.get("/api/getWarehouses", (req, res) => {
 })
 
 app.get("/api/getUnshippedOrders", (req,res) => {
-    client.query("SELECT * FROM SHIPPING_REQUESTS WHERE shipped = 0", function(err, result) {
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 0", function(err, result) {
         if (err) {
             res.status(400)
+            console.log(err)
             res.send("failed to get unshipped requests")
         } else {
             res.status(200)

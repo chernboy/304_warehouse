@@ -44,11 +44,26 @@
         </div>
         <div face="orders" class="face hidden">
             <h1>Order History</h1>
-            <!--populate orders-->
+            <table>
+                <thead>Pending Orders</thead>
+                <tbody id="orderHistoryPend">
+                <!--populate order history that are pending-->
+                </tbody>
+            </table>
+            <table>
+                <thead>Shipped Orders</thead>
+                <tbody id="orderHistoryShipped">
+                <!--populate order histry that are shipped-->
+                </tbody>
+            </table>
         </div>
         <div face="cart" class="face hidden">
             <h1>Cart</h1>
-            <!--populate cart-->
+            <table>
+                <tbody id="itemsInCart">
+                <!--populate cart-->
+                </tbody>
+            </table>
             <!--list total cost-->
             <button type="button" id="placeorder">Place Order</button>
         </div>

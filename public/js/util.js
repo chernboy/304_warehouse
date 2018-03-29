@@ -70,6 +70,7 @@ var Util = (function() {
         getHtml,
         showFace,
         checkCookieExists,
-        setCookie
+        setCookie,
+        refreshStyles
     }
 })()
