@@ -98,6 +98,7 @@ exports.makeShippingRequest = function(req, res, client) {
         });
         // TODO: Add shipping request to table
         // res.send("We have items here, it works!");
+
         return;
     }
     // res.send(req.body);
@@ -112,7 +113,7 @@ exports.getOrders = function(req, res, client) {
     // Checks if user ID exists, if it does
     if (checkExists(req.query, "UID", "string")) {
         var user_id = req.query["UID"];
-        client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = " + user_id).then(function(result) {
+        client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1", [user_id]).then(function(result) {
             res.send(result.rows);
         }).catch(function(error) {
             console.log("error, unable to retrieve orders for UID:" + user_id);
@@ -154,7 +155,7 @@ exports.userLogin = function(req, res, client) {
             res.send("Error pulling user from database; Does user exist?");
             return;
         }
-        res.send("" + result.rows[0].id);
+        res.send(result.rows[0]);
     }).catch(e => {
         res.status(500);
         res.send("Error fetching data")
@@ -174,7 +175,7 @@ exports.compLogin = function (req, res, client) {
             res.send("Error pulling user from database; Does company exist?");
             return;
         }
-        res.send("" + result.rows[0].id);
+        res.send(result.rows[0]);
     }).catch(e => {
         res.status(500);
         res.send("Error fetching data")
@@ -192,27 +193,69 @@ exports.addItem = function (req, res, client) {
         checkExists(body, "quantity", "number")  &&
         checkExists(body, "volume", "number") 
     ) {
-        // TODO: Determine (next) I_ID 
         var next_i_id = 0;
         client.query("SELECT max(i_id) FROM ITEM").then(result => {
             if(result.rowCount === 1) {
-                console.log("We got something!"); // DEBUG
-                console.log(result.rows[0]);
-                next_i_id = result.rows[0].max;
-                res.send("hello world"); // DEBUG
-                return; // DEBUG
+                next_i_id = result.rows[0].max + 1;
+                console.log("Next ID:" + next_i_id);
+
+                client.query("SELECT * FROM WAREHOUSE WHERE lat = $1 AND lon = $2", [body.lat, body.lon]).then(result => {
+                    if (result.rowCount < 1) {
+                        res.status(400);
+                        res.send("Unable to find a warehouse with lat: " + body.lat + " lon: " + body.lon);
+                        return;
+                    }
+                }).catch(error => {
+                    res.status(500);
+                    res.send("Database error");
+                    return;
+                });
+
+                client.query("SELECT * FROM COMPANY WHERE ID = $1", [body.ID]).then(result => {
+                    if (result.rowCount < 1) {
+                        res.status(400);
+                        res.send("Unable to find a company with id: " + body.ID);
+                        return;
+                    }
+                }).catch(error => {
+                    res.status(500);
+                    res.send("Database error");
+                    return;
+                });
+
+                console.log("The next value will be: " + next_i_id);
+                client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [next_i_id,
+                    body.weight, body.quantity, body.volume, body.lat, body.lon, 1, body.ID]).then(result => {
+                        console.log("Tada!");
+                        res.send(result.rows);
+                        return;
+                    }).catch(error => {
+                        res.status(400);
+                        res.send("Error: " + error);
+                        return;
+                    });
+
+
+            } else {
+                res.status(500);
+                res.send("Unable to generate next I_ID, invalid data inconsistancy");
+                return;
             }
         }).catch(error => {
             console.log(error);
             res.status(500);
             res.send("Server error: unable to generate next I_ID for new item");
             return;
-        })
+        });
+
+        // client.query("INSERT INTO ITEM VALUES(1, 2.0, 2, 2.4, 49.259680000000003, -123.173345, 2, 3)")
+
+
     } else {
         // TODO: Send error, missing field(s)
+        res.status(400);
         res.send("Missing parameters; got : " + body); // DEBUG
-
-        return; 
+        return;
     }
 };
 
