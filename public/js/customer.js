@@ -49,6 +49,8 @@ ItemTableController = (function () {
             })
         })
 
+
+
         $("#customerLoginSubmit").on('click', function () {
             let name = $("#customerLoginName").val()
             login(name)
@@ -57,6 +59,7 @@ ItemTableController = (function () {
             })
             .then(function (result) {
                 Util.setCookie("cu_login", result.id)
+                switchToLogout()
             })
         })
 
@@ -72,6 +75,14 @@ ItemTableController = (function () {
             Util.showFace("orders");
         })
     };
+
+    var switchToLogout = function() {
+        $("#nav-login").attr("face", "logout")
+    }
+
+    var switchToLogin = function() {
+        $("#nav-login").attr("face", "login")
+    }
 
     var login = function(name) {
         return fetch("api/userLogin?name=" + name)
