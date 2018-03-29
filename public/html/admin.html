@@ -71,14 +71,50 @@
             <button type="button" id="findMin">Find Min</button>
             <button type="button" id="findMax">Find Max</button>
             <button type="button" id="vip">VIP</button>
+            <button type="button" id="popItems">popular items</button>
+
+            <table class="reportsTable hidden" id="popItemsTable">
+                <thead>
+                    <tr>
+                        <th>I_ID</th>
+                        <th>count</th>
+                    </tr>
+                </thead>
+                <tbody id="popItemsTableBody"></tbody>
+            </table>
+            <table class="reportsTable hidden" id="minTable">
+                <thead>
+                        <th></th>
+                        <th></th>
+                </thead>
+                <tbody id="minTableBody"></tbody>
+            </table>
+            <table class="reportsTable hidden" id="maxTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="maxTableBody"></tbody>
+            </table>
+            <table class="reportsTable hidden" id="vipTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="vipTableBody"></tbody>
+            </table>
         </div>
 
-    <div face="unshippedOrders" class="face hidden">
-        <div text-align="center">
-            <h1>UnshippedOrders</h1>
-        </div>
-        
-        <table style="width:100%">
+        <div face="unshippedOrders" class="face hidden">
+            <div text-align="center">
+                <h1>UnshippedOrders</h1>
+            </div>
+
+            <table style="width:100%">
                 <thead>
                     <tr>
                         <th>reqNum</th>
@@ -91,22 +127,22 @@
                         <th>lon</th>
                         <th>IID</th>
                         <tr>
-                </thead>  
-                
+                </thead>
+
                 <tbody id="unshippedOrders">
                     <!-- populated by JS -->
                 </tbody>
             </table>
-        
-        <button id="ordersRefresh">refresh</button>
-    </div>
 
-    <div face="shippedOrders" class="face hidden">
-        <div text-align="center">
-            <h1>ShippedOrders</h1>
+            <button id="ordersRefresh">refresh</button>
         </div>
 
-        <table style="width:100%">
+        <div face="shippedOrders" class="face hidden">
+            <div text-align="center">
+                <h1>ShippedOrders</h1>
+            </div>
+
+            <table style="width:100%">
                 <thead>
                     <tr>
                         <th>reqNum</th>
@@ -124,7 +160,6 @@
                     <!-- populated by JS -->
                 </tbody>
             </table>
+        </div>
     </div>
 </div>
-
-<!--TODO: Create buttons for: find min, find max-->

@@ -9,6 +9,10 @@ IncludeAdmin = (function () {
                         .then(function (html) {
                             $(".admin").prepend(html)
                             UnshippedOrdersController.init()
+                            PopularItems.init()
+                            FindMin.init()
+                            FindMax.init()
+                            FindVip.init()
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get admin" + error)

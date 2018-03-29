@@ -40,6 +40,7 @@ ItemTableController = (function () {
 
         $("#searchitems").on("click", function () {
             Cart.emptyCartOptions()
+            Cart.emptyCart()
             let itemFilter = $("#itemFilter").val()
             getItems(itemFilter)
                 .then((response) => {
@@ -50,8 +51,6 @@ ItemTableController = (function () {
                     Cart.fillCartOptions(results) 
                 })
         })
-
-
 
         $("#customerLoginForm").on('submit', function (e) {
             e.preventDefault();

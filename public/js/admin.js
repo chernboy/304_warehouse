@@ -1,31 +1,31 @@
 var UnshippedOrdersController = {}
 
-var UnshippedOrdersController = (function() {
+var UnshippedOrdersController = (function () {
     var warehouseSelect
     var warehouseSelectMove
     var ordersTable
-    var events = function() {
-        ordersTable = $("#unshippedOrders")
+    var events = function () {
+        unshippedOrdersTable = $("#unshippedOrders")
         shippedOrdersTable = $("#shippedOrders")
 
         $("#ordersRefresh").on("click", () => {
-            
+
             let orderPromises = []
-            orderPromises.push(getUnshippedOrders(Util.getCookie("admin_login"))) 
-            orderPromises.push(getShippedOrders(Util.getCookie("admin_login"))) 
+            orderPromises.push(getUnshippedOrders())
+            orderPromises.push(getShippedOrders())
 
             Promise.all(orderPromises).then((results) => {
-                results[0].json().then(populateOrdersTable)
-                results[0].json().then(populateShippedOrdersTable)
+                results[0].json().then(populateUnshippedOrdersTable)
+                results[1].json().then(populateShippedOrdersTable)
             })
         })
 
         warehouseSelectMove = $("#moveItemsSelect")
         getWarehouses().then((response) => {
             response.json().then((results) => {
-            for (let o of results) {
-            warehouseSelectMove.append(createWarehouseOption(o))
-        }
+                for (let o of results) {
+                    warehouseSelectMove.append(createWarehouseOption(o))
+                }
             })
         }).catch((err) => {
             console.log(err)
@@ -34,9 +34,9 @@ var UnshippedOrdersController = (function() {
         warehouseSelect = $("#adminWarehouseSelect")
         getWarehouses().then((response) => {
             response.json().then((results) => {
-            for (let o of results) {
-            warehouseSelect.append(createWarehouseOption(o))
-        }
+                for (let o of results) {
+                    warehouseSelect.append(createWarehouseOption(o))
+                }
             })
         }).catch((err) => {
             console.log(err)
@@ -81,12 +81,12 @@ var UnshippedOrdersController = (function() {
         $("#backToWarehouses").on('click', function () {
             Util.showFace("warehouses")
         })
-    
+
         function switchToLogout() {
             $("#nav-login-admin").attr("face", "logout").text("Logout")
             Util.showFace("logout")
         }
-    
+
         function switchToLogin() {
             $("#nav-login-admin").attr("face", "login").text("Login")
             Util.showFace("login")
@@ -118,28 +118,28 @@ var UnshippedOrdersController = (function() {
         return option
     }
 
-    var getUnshippedOrders = function() {
+    var getUnshippedOrders = function () {
         return fetch("/api/getUnshippedOrders")
     }
-    var getShippedOrders = function() {
+    var getShippedOrders = function () {
         return fetch("/api/getShippedOrders")
     }
-    
-    var populateOrdersTable = function(results) {    
-        ordersTable.empty()
+
+    var populateUnshippedOrdersTable = function (results) {
+        unshippedOrdersTable.empty()
         for (let result of results) {
-            ordersTable.append(createOrdersRow(result))
+            unshippedOrdersTable.append(createOrdersRow(result))
         }
     }
 
-    var populateShippedOrdersTable = function(results) {    
-        ordersTable.empty()
+    var populateShippedOrdersTable = function (results) {
+        shippedOrdersTable.empty()
         for (let result of results) {
-            ordersTable.append(createShippedOrdersRow(result))
+            shippedOrdersTable.append(createShippedOrdersRow(result))
         }
     }
 
-    var createOrdersRow = function(result) {
+    var createOrdersRow = function (result) {
         console.log(result)
         let row = $("<tr>")
         row.append($("<td>").text(result.req_num))
@@ -157,7 +157,7 @@ var UnshippedOrdersController = (function() {
         return row
     }
 
-    var createShippedOrdersRow = function(result) {
+    var createShippedOrdersRow = function (result) {
         console.log(result)
         let row = $("<tr>")
         row.append($("<td>").text(result.req_num))
@@ -179,3 +179,198 @@ var UnshippedOrdersController = (function() {
 
 })()
 
+var PopularItems = (function () {
+
+    var init = function () {
+        $("#popItems").on("click", () => {
+            getPopularItems()
+                .then((response) => {
+                    return response.json()
+                })
+                .then((results) => {
+                    console.log(results)
+                    $(".reportsTable").each(() => {
+                        Util.hide($(this))
+                    })
+                    populatePopularItemsTable(results)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+                .catch((err) => {
+                    console.log("response not in correct format")
+                })
+        })
+    }
+
+    var getPopularItems = function () {
+        return fetch("/api/getItemPopularity")
+    }
+
+    var populatePopularItemsTable = function (items) {
+        $("#popItemsTableBody").empty()
+        for (let item of items) {
+            $("#popItemsTableBody").append(generatePopItemsRow(item))
+        }
+
+        Util.show($("#popItemsTable"))
+    }
+
+    var generatePopItemsRow = function(item) {
+        let row = $("<tr>")
+        row.append($("<td>").text(item.i_id))
+        row.append($("<td>").text(item.count))
+        return row
+    }
+
+    return {
+        init
+    }
+})()
+
+var FindMin = (function () {
+
+    var init = function () {
+        $("#findMin").on("click", () => {
+            getMin()
+                .then((response) => {
+                    response.json()
+                })
+                .then((results) => {
+                    $(".reportsTable").each(() => {
+                        util.hide($(this))
+                    })
+                    populateMinTable(results)
+                })
+                .catch((err) => {
+                    console.log("unable to get min")
+                })
+                .catch((err) => {
+                    console.log("response not in correct format for min")
+                })
+        })
+    }
+
+    var getMin = function () {
+        return fetch("/api/popularitems")
+    }
+
+    var populateMinTable = function (items) {
+        $("#minTableBody").empty()
+        for (let item of items) {
+            $("#minTableBody").append(generateMinRow(item))
+        }
+
+        util.show($("#minTable"))
+    }
+
+    var generateMinRow = function(item) {
+        //todo: generate the right kind of row
+        // let row = $("<tr>")
+        // row.append($("<td>").text(item.i_id))
+        // row.append($("<td>").text(item.cnt))
+        // return row
+    }
+
+    return {
+        init
+    }
+})()
+
+var FindMax = (function () {
+
+    var init = function () {
+        $("#findMax").on("click", () => {
+            getMax()
+                .then((response) => {
+                    response.json()
+                })
+                .then((results) => {
+                    $(".reportsTable").each(() => {
+                        util.hide($(this))
+                    })
+                    populateMaxTable(results)
+                })
+                .catch((err) => {
+                    console.log("unable to get popular max")
+                })
+                .catch((err) => {
+                    console.log("response not in correct format for max")
+                })
+        })
+    }
+
+    var getMax = function () {
+        return fetch("/api/getMax")
+    }
+
+    var populateMaxTable = function (items) {
+        $("#maxTableBody").empty()
+        for (let item of items) {
+            $("#maxTableBody").append(generateMaxRow(item))
+        }
+
+        util.show($("#minTable"))
+    }
+
+    var generateMaxRow = function(item) {
+        //todo: generate the right kind of row
+        // let row = $("<tr>")
+        // row.append($("<td>").text(item.i_id))
+        // row.append($("<td>").text(item.cnt))
+        // return row
+    }
+
+    return {
+        init
+    }
+})()
+
+var FindVip = (function () {
+
+    var init = function () {
+        $("#vip").on("click", () => {
+            getVip()
+                .then((response) => {
+                    response.json()
+                })
+                .then((results) => {
+                    $(".reportsTable").each(() => {
+                        util.hide($(this))
+                    })
+                    populateVipTable(results)
+                })
+                .catch((err) => {
+                    console.log("unable to get vip customers")
+                })
+                .catch((err) => {
+                    console.log("response not in correct format for vip")
+                })
+        })
+    }
+
+    var getVip = function () {
+        return fetch("/api/getVipCustomers")
+    }
+
+    var populateVipTable = function (items) {
+        $("#vipTableBody").empty()
+        for (let item of items) {
+            $("#vipTableBody").append(generateVipRow(item))
+        }
+
+        Util.show($("#vipTable"))
+    }
+
+    var generateVipRow = function(item) {
+        //todo: generate the right kind of row
+        // let row = $("<tr>")
+        // row.append($("<td>").text(item.i_id))
+        // row.append($("<td>").text(item.cnt))
+        // return row
+    }
+
+    return {
+        init
+    }
+})()

@@ -172,6 +172,20 @@ app.get("/api/shipOrder", (req, res) => {
         })
 })
 
+app.get("/api/rejectOrder", (req, res) => {
+    let req_num = req.query.req_num
+
+    client.query("delete from shipping_request where req_num = $1", [req_num])
+    .then((result) => {
+        res.status(200)
+        res.send("successfully deleted")
+    })
+    .catch((err) => {
+        res.status(400)
+        res.send("failed to delete")
+    })
+})
+
 app.get("/api/getShippingMethods", (req, res) => {
     customer.getShippingMethods(req, res, client);
 });
