@@ -69,7 +69,6 @@ ItemTableController = (function () {
 
         $("#customerLogoutForm").on('submit', function (e) {
             e.preventDefault();
-            //TODO: delete user cookie
             Util.setCookie("cu_login", "")
             switchToLogin()
         })

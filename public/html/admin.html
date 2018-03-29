@@ -6,8 +6,6 @@
         <div face="reports" class="nav-button">Reports</div>
         <div face="warehouses" class="nav-button">Warehouses</div>
     </div>
-
-    <!--TODO: Implement Dynamic Login for ADMIN-->
     <div class="nav-body">
         <div face="login" class="face">
             <div text-align="center">
@@ -59,8 +57,18 @@
                 <h1>Warehouses</h1>
             </div>
             <div>
-                <h5>items successfully moved</h5>
+                <h5>items successfully moved. Warehouse deleted</h5>
                 <button type="button" id="backToWarehouses">Back</button>
+            </div>
+        </div>
+
+        <div face="itemMoveFail" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <h5>An error has occurred. Task aborted.</h5>
+                <button type="button" id="backToWarehousesFail">Back</button>
             </div>
         </div>
 
@@ -84,8 +92,8 @@
             </table>
             <table class="reportsTable hidden" id="minTable">
                 <thead>
-                        <th></th>
-                        <th></th>
+                    <th></th>
+                    <th></th>
                 </thead>
                 <tbody id="minTableBody"></tbody>
             </table>
@@ -160,6 +168,7 @@
                     <!-- populated by JS -->
                 </tbody>
             </table>
+            <button id="ordersRefresh">refresh</button>
         </div>
     </div>
 </div>

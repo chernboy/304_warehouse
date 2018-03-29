@@ -38,6 +38,13 @@ var Util = (function() {
         })
     }
 
+    var handleError = function (error) {
+        $("#errorText").text(error.message)
+        $("#closeError").on('click', function () {
+            //TODO: do something to close error box
+        })
+    }
+
     //gotten from w3schools
     function setCookie(cname, cvalue) {
         document.cookie = cname + "=" + cvalue;
