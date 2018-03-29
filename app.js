@@ -126,6 +126,17 @@ app.get("/api/getUnshippedOrders", (req, res) => {
         })
 })
 
+app.get("/api/getShippedOrders", (req, res) => {
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 1")
+        .then((result) => {
+            res.status(200)
+            res.send(result.rows)
+        }).catch((err) => {
+            res.status(400)
+            res.send("couldnt get shipped orders")
+        })
+})
+
 app.get("/api/shipOrder", (req, res) => {
     if (!("body" in req)) {
         res.status(400)
