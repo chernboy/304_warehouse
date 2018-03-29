@@ -57,7 +57,8 @@ ItemTableController = (function () {
                 return response.json()
             })
             .then(function (result) {
-                Util.setCookie("cu_login", result.uid)
+                Util.setCookie("cu_login", result.uid);
+                Util.showFace("catalog");
             })
         })
 
