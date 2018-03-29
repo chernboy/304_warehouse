@@ -204,6 +204,14 @@ app.post("/api/addItem", (req, res) => {
     customer.addItem(req, res, client);
 });
 
+app.get("/api/getItemPopularity", (req, res) => {
+    customer.getItemPopularity(req, res, client); 
+});
+
+app.get("/api/getCustomersPurchasingEverywhere", (req, res) => {
+    customer.getCustomersPurchasingEverywhere(req, res, client);
+});
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
