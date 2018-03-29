@@ -100,16 +100,17 @@ var UnshippedOrdersController = (function() {
     }
 
     var createOrdersRow = function(result) {
+        console.log(result)
         let row = $("<tr>")
         row.append($("<td>").text(result.req_num))
         row.append($("<td>").text(result.origin))
         row.append($("<td>").text(result.dest))
         row.append($("<td>").text(result.total_val))
-        row.append($("<td>").text(result.veh_ID))
-        row.append($("<td>").text(result.ID))
+        row.append($("<td>").text(result.veh_id))
+        row.append($("<td>").text(result.id))
         row.append($("<td>").text(result.lat))
         row.append($("<td>").text(result.lon))
-        row.append($("<td>").text(result.I_ID))
+        row.append($("<td>").text(result.i_id))
         row.append($('<button id="shipOrder" value="' + result.req_num + 'type="button">yes</button>'))
         row.append($('<button id="rejectOrder" value="' + result.req_num + 'type="button">no</button>'))
 
