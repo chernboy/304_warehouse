@@ -170,7 +170,7 @@ app.get("/api/adminLogin", (req, res) => {
         res.send("you're logged in")
     } else {
         res.status(400)
-        
+        res.send()
     }
 })
 
