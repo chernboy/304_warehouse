@@ -143,14 +143,17 @@ exports.getOrders = function(req, res, client) {
         var user_id = req.query["UID"];
         client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1", [user_id]).then(function(result) {
             res.send(result.rows);
+            return;
         }).catch(function(error) {
             console.log("error, unable to retrieve orders for UID:" + user_id);
             res.status(500);
             res.send("error: 500");
+            return;
         });
     } else {
-        res.send("400");
+        res.status(400);
         res.send("No ID specified; unable to retrieve orders");
+        return;
     }
 };
 
@@ -186,6 +189,7 @@ exports.userLogin = function(req, res, client) {
     }).catch((e) => {
         res.status(500);
         res.send("Error fetching data")
+        return;
     });
 };
 
@@ -206,6 +210,7 @@ exports.compLogin = function (req, res, client) {
     }).catch((e) => {
         res.status(500);
         res.send("Error fetching data")
+        return;
     });
 };
 
@@ -245,20 +250,17 @@ exports.addItem = function (req, res, client) {
                         res.send("Unable to find a company with id: " + body.ID);
                         return;
                     }
-                }).catch(error => {
-                    res.status(500);
-                    res.send("Database error");
-                    return;
-                });
 
-                console.log("" + [
-                    next_i_id,
-                    body.weight, body.quantity, body.cost, body.volume,
-                    body.lat, body.lon, body.ID]);
-                client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [
-                    next_i_id,
-                    body.weight, body.quantity, body.cost, body.volume, 
-                    body.lat, body.lon, body.ID]).then(result => {
+                    console.log("" + [
+                        next_i_id,
+                        body.weight, body.quantity, body.cost, body.volume,
+                        body.lat, body.lon, body.ID
+                    ]);
+                    client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [
+                        next_i_id,
+                        body.weight, body.quantity, body.cost, body.volume,
+                        body.lat, body.lon, body.ID
+                    ]).then(result => {
                         console.log("Tada!");
                         res.send(result.rows);
                         return;
@@ -267,6 +269,15 @@ exports.addItem = function (req, res, client) {
                         res.send("Error inserting: " + error);
                         return;
                     });
+
+                
+                }).catch(error => {
+                    res.status(500);
+                    res.send("Database error");
+                    return;
+                });
+
+
 
 
             } else {
@@ -320,6 +331,30 @@ exports.deleteUser = function(req, res, client) {
         res.send("Incorrect parameters: Missing 'id' value in body.");
         return;
     }
+}
+
+
+exports.getCustomersPurchasingEverywhere = function(req, res, client) {
+    // This is a really long function name
+    // help....
+    // TODO: Complete this
+    // NOTE: There is no parameters for this api/function
+    // client.query("SELECT cu.* FROM customer cu WHERE NOT EXISTS " + 
+                    // "((SELECT co.id FROM company) EXCEPT "+
+                    // "(SELECT sr.id FROM shipping_request sr WHERE sr.))"
+            // )
+
+    client.query("SELECT cu.* FROM customer cu WHERE NOT EXISTS " +
+        "((SELECT co.id FROM company co) EXCEPT " +
+        "(SELECT i.id FROM item i, shipping_request sr WHERE " + 
+        "sr.i_id = i.i_id AND cu.id = sr.id))").then(result => {
+                res.send(result.rows);
+                return;
+            }).catch(error => {
+                res.status(500);
+                res.send(error);
+                return;
+            });
 }
 
 // helper function that checks if the object contains the key and is of the correct type
