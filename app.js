@@ -123,7 +123,15 @@ app.get("/api/getUnshippedOrders", (req,res) => {
 })
 
 app.get("/api/shipOrder", (req, res) => {
-    req_num = req.query.req_num
+    if (!("body" in req)){
+        res.status(400)
+        res.send("invalid body")
+    }
+
+    client.query("select I_ID from shipping request where II_D = $1", [req.body])
+    .then((result) => {
+        return client.query('')
+    })
     client.query("UPDATE SHIPPING_REQUEST SET shipped = 1", (err, result) => {
         if (err) {
             res.status(400)

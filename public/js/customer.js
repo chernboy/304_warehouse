@@ -48,8 +48,6 @@ ItemTableController = (function () {
             })
         })
 
-
-
         $("#customerLoginSubmit").on('click', function () {
             let name = $("#customerLoginName").val()
             login(name)
