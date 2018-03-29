@@ -87,6 +87,31 @@ app.get("/api/getWarehouses", (req, res) => {
     })
 })
 
+app.get("/api/getUnshippedOrders", (req,res) => {
+    client.query("SELECT * FROM SHIPPING_REQUESTS WHERE shipped = 0", function(err, result) {
+        if (err) {
+            res.status(400)
+            res.send("failed to get unshipped requests")
+        } else {
+            res.status(200)
+            res.send(result.rows)
+        }
+    })
+})
+
+app.get("/api/shipOrder", (req, res) => {
+    req_num = req.query.req_num
+    client.query("UPDATE SHIPPING_REQUEST SET shipped = 1", (err, result) => {
+        if (err) {
+            res.status(400)
+            res.send("could not ship order")
+        } else {
+            res.status(200)
+            res.send("successfully shipped order")
+        }
+    })
+})
+
 app.get("/api/getShippingMethods", (req, res) => {
     customer.getShippingMethods(req, res, client);
 });

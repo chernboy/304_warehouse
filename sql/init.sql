@@ -99,6 +99,7 @@ CREATE TABLE SHIPPING_REQUEST (
     origin      VARCHAR(30),
     dest        VARCHAR(30),
     total_val   DECIMAL,
+    shipped     INTEGER NOT NULL,
     veh_ID      VARCHAR(30) NOT NULL,
     ID          INTEGER NOT NULL,
     lat         DECIMAL NOT NULL,
