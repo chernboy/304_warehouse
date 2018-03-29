@@ -7,6 +7,7 @@
         <div face="warehouses" class="nav-button">Warehouses</div>
     </div>
 
+    <!--TODO: Implement Dynamic Login for ADMIN-->
     <div class="nav-body">
         <div face="login" class="face">
             <div text-align="center">
@@ -16,7 +17,7 @@
                 <label>
                     <input id="adminLoginName" type="select">
                 </label>
-                <button type="submit">submit</button>
+                <button type="submit">Login</button>
             </form>
         </div>
         <div face="logout" class="face hidden">
@@ -25,7 +26,7 @@
             </div>
             <div>
                 <form id="adminLogoutForm" method="post" actions="">
-                    <button id="adminLogout" type="submit">submit</button>
+                    <button id="adminLogout" type="submit">Logout</button>
                 </form>
             </div>
         </div>
@@ -38,15 +39,31 @@
                     <!--populated by JS-->
                 </select>
                 <button type="button" id="deleteWarehouse">Delete</button>
-                <!--TODO: NOT WORKING-->
-                <div face="moveItems" class="face hidden">
-                    <select id="moveItemsSelect">
-                        <!--populated by JS-->
-                    </select>
-                    <button type="button" id="moveItems">Move Items</button>
-                </div>
             </div>
         </div>
+        <div face="warehousesMove" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <h5>Please select the warehouse to move items to</h5>
+                <select id="moveItemsSelect">
+                    <!--populated by JS-->
+                </select>
+                <button type="button" id="moveItems">Move Items</button>
+            </div>
+        </div>
+
+        <div face="itemMoveSuccess" class="face hidden">
+            <div>
+                <h1>Warehouses</h1>
+            </div>
+            <div>
+                <h5>items successfully moved</h5>
+                <button type="button" id="backToWarehouses">Back</button>
+            </div>
+        </div>
+
         <div face="reports" class="face hidden">
             <div text-align="center">
                 <h1>Reports</h1>
@@ -74,14 +91,14 @@
                         <th>lon</th>
                         <th>IID</th>
                         <tr>
-                </thead>
+                </thead>  
+                
                 <tbody id="unshippedOrders">
                     <!-- populated by JS -->
                 </tbody>
             </table>
         
-        <button type="yes">yes</button>
-        <button type="no">no</button>
+        <button id="ordersRefresh">refresh</button>
     </div>
 
     <div face="shippedOrders" class="face hidden">
