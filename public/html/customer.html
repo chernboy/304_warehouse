@@ -10,11 +10,9 @@
                 <h1>Login</h1>
             </div>
             <div>
-                <form method="post" action="">
-                    <label>
-                        <input id="customerLoginName" type="select">
-                    </label>
-                    <button id="customerLoginSubmit" type="button">submit</button>
+                <form id="customerLoginForm">
+                    <input id="customerLoginName" type="text">
+                    <button id="customerLoginSubmit" type="submit">submit</button>
                 </form>
             </div>
         </div>
@@ -23,11 +21,8 @@
                 <h1>Logout</h1>
             </div>
             <div>
-                <form method="post" actions="">
-                    <label>
-                        <input type="select">
-                    </label>
-                    <button id="customerLogout" type="button">submit</button>
+                <form id="customerLogoutForm">
+                    <button id="customerLogout" type="submit">logout</button>
                 </form>
             </div>
         </div>
@@ -37,13 +32,16 @@
                 <input type="text" id="itemFilter" name="search">
                 <button type="button" id="searchitems">Search</button>
             </form>
+            <h5>Items in warehouse</h5>
             <table>
-                <thead>Items in warehouse</thead>
-                <tbody id="itemTableBody">
+                <thead>
                     <tr>
-                        <td>Item ID</td>
-                        <td>Item name</td>
+                        <th>Item ID</th>
+                        <th>Item name</th>
                     </tr>
+                </thead>
+                <tbody id="itemTableBody">
+                    
                 </tbody>
             </table>
             <select>

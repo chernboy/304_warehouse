@@ -18,17 +18,19 @@ var NavController = (function () {
                     $(this).on('click', function () {
                         let face = $(this).attr("face")
                         // only allow access to orders or catalog if user is signed in
-                        if ((face == "orders" || face == "catalog") && !Util.checkCookieExists("cu_login")) {
-                            return;
+                        if (!protectFaces(face, "cu_login", ["orders", "catalog"])) {
+                            return
                         }
 
                         //only allow access to additem and listitem if company is logged in
-                        if ((face == "listItems" || face == "addItems") && !Util.checkCookieExists("co_login")) {
-                            return;
-                        }
+                        if (!protectFaces(face, "co_login", ["listItems", "addItems"])) {
+                            return
+           i             }
 
                         //only allows acces to admin parts if admin is logged in
-                        //TODO:
+                        if (!protectFaces(face, "admin_login", ["unshippedOrders", "shippedOrders", "reports", "warehouses"])){
+                            return
+                        }
 
                         Util.showFace(face)
                     })
@@ -39,6 +41,23 @@ var NavController = (function () {
                         $(this).removeClass("active")
                     })
                 })
+            }
+
+            function protectFaces(target, cookie, protected) {
+                let check = false
+                console.log(target + " " + cookie + " " + protected)
+                for (let face of protected) {
+                    if (target === face) {
+                        console.log("found a match")
+                        check = true
+                    }
+                }
+
+                if (!Util.checkCookieExists(cookie) && check) {
+                    return false
+                } else {
+                    return true
+                }
             }
 
             resolve()

@@ -2,8 +2,6 @@ IncludeCompany = {}
 
 IncludeCompany = (function () {
     var events = function () {
-        //REMOVE THIS ONCE WE HAVE LOGIN
-        Util.setCookie("co_login", "something")
         return new Promise((resolve, reject) => {
             console.log("Starting to include company")
             $("*").each(function () {
@@ -62,7 +60,8 @@ var CompanyController = {}
 var CompanyController = (function() {
 
     var events = function() {
-        $("#companyLoginSubmit").on("click", () => {
+        $("#companyLoginForm").on("submit", (e) => {
+            e.preventDefault();
             let name = $("#companyLoginName").val();
             console.log("submit with " + name)
             login(name).then((response) => {
@@ -74,18 +73,24 @@ var CompanyController = (function() {
             })
         })
 
-        $("#companyLogout").on('click', function() {
+        $("#companyLogoutForm").on('click', function(e) {
+            e.preventDefault();
             //TODO: Delete company user cookie
+            Util.setCookie("co_login", "")
             switchToLogin();
         })
+
+        $("#addItems").on("click", () => Util.showFace("addItems"))
     }
 
     var switchToLogout = function() {
-        $("#nav-login-comp").attr("face", "logout")
+        $("#nav-login-comp").attr("face", "logout").text("Logout")
+        Util.showFace("logout")
     }
 
     var switchToLogin = function() {
-        $("#nav-login-comp").attr("face", "login")
+        $("#nav-login-comp").attr("face", "login").text("Login")
+        Util.showFace("login")
     }
 
     var login = function(name) {

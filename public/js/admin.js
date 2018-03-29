@@ -41,6 +41,40 @@ var UnshippedOrdersController = (function() {
             //TODO: FIX, not working!!
             Util.showFace("moveItems")
         })
+
+        $("#adminLogin").on("submit", async e => {
+            e.preventDefault();
+            console.log("submt");
+            try {
+                const res = await fetch(`/api/adminLogin?name=${$("#adminLoginName").val()}`)
+                const result = await res.json();
+
+                Util.setCookie("admin_login", "" + result.log);
+                switchToLogout();
+            } catch (err) {
+                console.log(err);
+            }
+        })
+
+        $("#adminLogoutForm").on("submit", async e => {
+            e.preventDefault()
+            console.log("logout submit")
+            try {
+                Util.setCookie("admin_login", "")
+            } catch (err) {
+                console.log(err)
+            }
+        })
+    
+        function switchToLogout() {
+            $("#nav-login-admin").attr("face", "logout").text("Logout")
+            Util.showFace("logout")
+        }
+    
+        function switchToLogin() {
+            $("#nav-login-admin").attr("face", "login").text("Login")
+            Util.showFace("login")
+        }
     }
 
     var getWarehouses = function () {

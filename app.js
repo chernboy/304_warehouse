@@ -175,10 +175,10 @@ app.get("/api/adminLogin", (req, res) => {
     let name = req.query.name
     if (name === "admin") {
         res.status(200)
-        res.send("you're logged in")
+        res.send({log: 1})
     } else {
         res.status(400)
-        
+        res.send()
     }
 })
 
