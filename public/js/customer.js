@@ -33,7 +33,6 @@ var ItemTableController = {}
 ItemTableController = (function () {
 
     let tablebody = $("#itemTableBody")
-    customer = this
 
     var events = function () {
 
@@ -52,13 +51,12 @@ ItemTableController = (function () {
 
         $("#customerLoginSubmit").on('click', function () {
             let name = $("#customerLoginName").val()
-            customer.login(name)
+            login(name)
             .then(function (response) {
                 return response.json()
             })
             .then(function (result) {
-                Util.setCookie("cu_login", result.uid);
-                Util.showFace("catalog");
+                Util.setCookie("cu_login", result.id)
             })
         })
 
