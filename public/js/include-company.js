@@ -68,7 +68,7 @@ var AdminController = (function() {
                 return response.json()
             })
             .then((result) => {
-                Util.setCookie("co_login", result.uid)
+                Util.setCookie("co_login", result.id)
             })
         })
     }
