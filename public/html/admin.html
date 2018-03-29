@@ -1,6 +1,6 @@
 <div class="nav">
     <div class="nav-head">
-        <div face="login" class="nav-button">Login</div>
+        <div id="nav-login-admin" face="login" class="nav-button">Login</div>
         <div face="unshippedOrders" class="nav-button">Unshipped Orders</div>
         <div face="shippedOrders" class="nav-button">Shipped Orders</div>
         <div face="reports" class="nav-button">Reports</div>
@@ -12,11 +12,11 @@
             <div text-align="center">
                 <h1>Admin</h1>
             </div>
-            <form method="post" action="">
+            <form id="adminLogin">
                 <label>
-                    <input type="select">
+                    <input id="adminLoginName" type="select">
                 </label>
-                <button type="button" id="adminLogin">submit</button>
+                <button type="submit">submit</button>
             </form>
         </div>
         <div face="logout" class="face hidden">
@@ -25,9 +25,6 @@
             </div>
             <div>
                 <form method="post" actions="">
-                    <label>
-                        <input type="select">
-                    </label>
                     <button id="adminLogout" type="button">submit</button>
                 </form>
             </div>

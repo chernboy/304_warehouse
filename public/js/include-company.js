@@ -80,6 +80,8 @@ var CompanyController = (function() {
             //TODO: Delete company user cookie
             switchToLogin();
         })
+
+        $("#addItems").on("click", () => Util.showFace("addItems"))
     }
 
     var switchToLogout = function() {
