@@ -21,12 +21,12 @@ app.get('/admin', (req, res) => {
     res.sendFile(location + htmlpath + "/admin.html");
 });
 
-app.get('/customer', (req,res) => {
+app.get('/customer', (req, res) => {
     console.log("received get request at customer");
     res.sendFile(location + htmlpath + "/customer.html");
 });
 
-app.get('/company', (req,res) => {
+app.get('/company', (req, res) => {
     console.log("received get request at company");
     res.sendFile(location + htmlpath + "/company.html");
 });
@@ -37,32 +37,18 @@ app.get('/', (req, res) => {
 });
 
 app.get("/api/getCustomerPendingOrders", (req, res) => {
-    id = parseInt(req.query.id)
-    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 0", [id]).then(function(result) {
-        res.status(200)
-        res.send(result.rows)
-    }).catch(function(err) {
-        res.status(400)
-        res.send("failed to get orders for customer")
-    })
+    customer.getCustomerPendingOrders(req, res, client)
 })
 
 app.get("/api/getCustomerShippedOrders", (req, res) => {
-    id = parseInt(req.query.id)
-    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 1", [id]).then(function(result) {
-        res.status(200)
-        res.send(result.rows)
-    }).catch(function(err) {
-        res.status(400)
-        res.send("failed to get orders for customer")
-    })
+    customer.getCustomerShippedOrders(req, res, client)
 })
 
 app.get("/api/getItems", (req, res) => {
     var filter
     try {
         filter = parseInt(req.query.filter)
-    } catch(err) {
+    } catch (err) {
         console.log(err)
     }
 
@@ -75,7 +61,7 @@ app.get("/api/getItems", (req, res) => {
                 res.send("failed to get items")
             } else {
                 res.status(200)
-                console.log("filtered:" +result.rows)
+                console.log("filtered:" + result.rows)
                 res.send(result.rows)
             }
         })
@@ -94,6 +80,26 @@ app.get("/api/getItems", (req, res) => {
     }
 });
 
+app.get("/api/getCompanyItems", (req, res) => {
+    let id
+    try {
+        id = parseInt(req.body.id)
+    } catch (e) {
+        res.status(400)
+        res.send("invalid id")
+    }
+
+    client.query("select * from item where ID = $1", [id])
+    .then((result) => {
+        res.status(200)
+        res.send(result.rows)
+    })
+    .catch((err) => {
+        res.status(400)
+        res.send("Unable to get company items")
+    })
+})
+
 app.get("/api/getWarehouses", (req, res) => {
     var rows = []
     client.query("SELECT * FROM WAREHOUSE", (err, result) => {
@@ -109,38 +115,50 @@ app.get("/api/getWarehouses", (req, res) => {
     })
 })
 
-app.get("/api/getUnshippedOrders", (req,res) => {
-    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 0", function(err, result) {
-        if (err) {
-            res.status(400)
-            console.log(err)
-            res.send("failed to get unshipped requests")
-        } else {
+app.get("/api/getUnshippedOrders", (req, res) => {
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 0")
+        .then((result) => {
             res.status(200)
             res.send(result.rows)
-        }
-    })
+        }).catch((err) => {
+            res.status(400)
+            res.send("couldnt get unshipped orders")
+        })
 })
 
 app.get("/api/shipOrder", (req, res) => {
-    if (!("body" in req)){
+    if (!("body" in req)) {
         res.status(400)
         res.send("invalid body")
     }
 
-    client.query("select I_ID from shipping request where II_D = $1", [req.body])
-    .then((result) => {
-        return client.query('')
+    req_num = req.body.req_num
+
+    queryPromises = []
+    let iid, qty
+    client.query("select I_ID from shipping_request where req_num = $1", [req_num])
+        .then((result) => {
+            iid = result.rows[0].I_ID
+            qty = result.rows[0].qty
+            return client.query("select quantity from item where I_ID = $1", [iid])
+        })
+        .then((result) => {
+            let itemQty = result.rows[0].quantity
+            if (itemQty < qty) {
+                return Promise.reject("Not enough items left!")
+            }
+            queryPromises.push(client.query("update shipping_request set shipped = 1 where req_num=$1", [req_num]))
+            queryPromises.push(client.query("update item set quantity=$1 where I_ID=$2", [itemQty - qty, iid]))
+        })
+
+    Promise.all(queryPromises).then((results) => {
+        res.status(200)
+        res.send("successfully shipped order")
     })
-    client.query("UPDATE SHIPPING_REQUEST SET shipped = 1", (err, result) => {
-        if (err) {
+        .catch((err) => {
             res.status(400)
-            res.send("could not ship order")
-        } else {
-            res.status(200)
-            res.send("successfully shipped order")
-        }
-    })
+            res.send("failed to ship order")
+        })
 })
 
 app.get("/api/getShippingMethods", (req, res) => {
@@ -162,7 +180,7 @@ app.post("/api/makeShippingRequest", (req, res) => {
 // GETs the UserID associated with the given customer
 // Parameters: name - string - name of user
 app.get("/api/userLogin", (req, res) => {
-    customer.userLogin(req, res, client); 
+    customer.userLogin(req, res, client);
 });
 
 // GETs the UserID associated with the given company
@@ -175,7 +193,7 @@ app.get("/api/adminLogin", (req, res) => {
     let name = req.query.name
     if (name === "admin") {
         res.status(200)
-        res.send({log: 1})
+        res.send({ log: 1 })
     } else {
         res.status(400)
         res.send()
@@ -190,5 +208,5 @@ app.post("/api/addItem", (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port, () => {
-  console.log('Example app listening on port ' + port);
+    console.log('Example app listening on port ' + port);
 });

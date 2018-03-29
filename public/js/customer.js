@@ -29,21 +29,25 @@ var ItemTableController = {}
 
 ItemTableController = (function () {
 
-    let tablebody = $("#itemTableBody")
+    let tablebody
 
     var events = function () {
+
+        tablebody = $("#itemTableBody")
 
         importItemScript(); //itemObj.js holds item schema definitio
 
         $("#searchitems").on("click", function () {
+            Cart.emptyCartOptions()
             let itemFilter = $("#itemFilter").val()
             getItems(itemFilter)
-            .then((response) => {
-                return response.json();
-            })
-            .then((results) => {
-                populateTableWithItems(results, tablebody)
-            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((results) => {
+                    populateTableWithItems(results, tablebody)
+                    Cart.fillCartOptions(results)
+                })
         })
 
 
@@ -54,13 +58,13 @@ ItemTableController = (function () {
             let name = $("#customerLoginName").val();
 
             login(name)
-            .then(function (response) {
-                return response.json()
-            })
-            .then(function (result) {
-                Util.setCookie("cu_login", result.id)
-                switchToLogout()
-            })
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (result) {
+                    Util.setCookie("cu_login", result.id)
+                    switchToLogout()
+                })
         })
 
         $("#customerLogoutForm").on('submit', function (e) {
@@ -71,42 +75,65 @@ ItemTableController = (function () {
         })
 
         //Moves to cart page on clicking checkout
-        $("#checkout").on('click', function() {
-            //TODO: implement robust checking (must select a shipping option)
+        $("#checkout").on('click', function () {
+            Cart.populateCart()
             Util.showFace("cart");
         })
 
         //Creates shipping req, adds it to database, then redirects to order history
-        $("#placeorder").on('click', function() {
-            //TODO: create shipping request and add it to database
+        $("#placeorder").on('click', function () {
+            makeOrders()
             Util.showFace("orders");
         })
     };
 
-    var switchToLogout = function() {
+    var makeOrders = function() {
+        var orderPromises = []
+        items = Cart.getCartItems()
+        for (let item of items) {
+            var orderObj = {}
+            orderObj["qty"] = parseFloat(item.quantity)
+            orderObj["origin"] = "PLACEHOLDER ORIGIN"
+            orderObj["dest"] = "PLACEHOLDER DEST"
+            orderObj["total_val"] = item.cost
+            orderObj["shipped"] = 0
+            orderObj["veh_id"] = "A0003"
+            orderObj["id"] = Util.getCookie("cu_login")
+            orderObj["lat"] = item.lat
+            orderObj["lon"] = item.lon
+            orderObj["i_id"] = item.i_id
+            console.log("sending order: " + JSON.stringify(orderObj))
+            $.ajax({
+                url: "/api/makeShippingRequest",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(orderObj),
+                success: function(result) {
+                    console.log("succeeded")
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+        }
+    }
+
+    var switchToLogout = function () {
         $("#login-nav-cust").attr("face", "logout").text("Logout")
         Util.showFace("logout")
     }
 
-    var switchToLogin = function() {
+    var switchToLogin = function () {
         $("#login-nav-cust").attr("face", "login").text("Login")
         Util.showFace("login")
     }
 
-    var login = function(name) {
+    var login = function (name) {
         return fetch("api/userLogin?name=" + name)
     }
 
     var getItems = function (itemFilter) {
         return fetch("/api/getItems?filter=" + itemFilter)
-    }
-
-    var getShippedOrders = function() {
-        return fetch("/api/getCustomerShippedOrders")
-    }
-
-    var getPendingOrders = function() {
-        return fetch("/api/getCustomerPendingOrders")
     }
 
     var importItemScript = function () {
@@ -117,20 +144,166 @@ ItemTableController = (function () {
     }
 
     var populateTableWithItems = function (items, table) {
+        table.empty()
         for (let item of items) {
             table.append(generateItemRow(item));
         }
         console.log("[CUSTOMER] finished populating table with items")
     }
 
-    var generateItemRow = function(item) {
-        let row = $("<tr>").attr("value", item.I_ID)
-        row.append($("<td>").text(item.I_ID))
+    var generateItemRow = function (item) {
+        let row = $("<tr>").attr("value", item.i_id)
+        row.append($("<td>").text(item.i_id))
+        row.append($("<td>").text(item.weight))
+        row.append($("<td>").text(item.quantity))
         row.append($("<td>").text(item.cost))
+        row.append($("<td>").text(item.volume))
+        row.append($("<td>").text(item.lat))
+        row.append($("<td>").text(item.lon))
+        row.append($("<td>").text(item.id))
+        row.append(initItemQuantitySelect(item.i_id))
+        row.append(initAddToCartButton(item.i_id))
+
+        return row
+    }
+
+    var initItemQuantitySelect = function(id) {
+        let input = $('<input type=number id="' + id + '_qty">')
+        return input
+    }
+
+    var initAddToCartButton = function(id) {
+        let button = $('<button value="' + id + '">add2Cart</button>')
+        $(button).on('click', () => {
+            let id = $(button).attr("value")
+            let qty = parseFloat($("#" + id + "_qty").val())
+            Cart.addToCart(id, qty)
+        })
+        return button
+    }
+
+    return {
+        init: events,
+        generateItemRow
+    }
+})();
+
+var OrderHistory = {}
+
+var OrderHistory = (function () {
+
+    let shippedTable, pendingTable
+
+    var events = function () {
+
+        shippedTable = $("#orderHistoryShipped")
+        pendingTable = $("#orderHistoryPend")
+
+        $("#ordersRefresh").on("click", () => {
+            let orderPromises = []
+            orderPromises.push(getShippedOrders())
+            orderPromises.push(getPendingOrders())
+
+            Promise.all(orderPromises).then((results) => {
+                results[0].json().then(populateShippedOrders)
+                results[1].json().then(populatePendingOrders)
+            })
+        })
+    }
+
+    var getShippedOrders = function () {
+        return fetch("/api/getCustomerShippedOrders")
+    }
+
+    var populateShippedOrders = function (orders) {
+        for (let order of orders) {
+            shippedTable.append(generateOrderRow(order))
+        }
+    }
+
+    var getPendingOrders = function () {
+        return fetch("/api/getCustomerPendingOrders")
+    }
+
+    var populatePendingOrders = function (orders) {
+        for (let order of orders) {
+            pendingTable.append(generateOrderRow(order))
+        }
+    }
+
+    var generateOrderRow = function (order) {
+        let row = $("<tr>")
+        row.append($("<td>").text(order.req_num))
+        row.append($("<td>").text(order.qty))
+        row.append($("<td>").text(order.origin))
+        row.append($("<td>").text(order.dest))
+        row.append($("<td>").text(order.total_val))
+        row.append($("<td>").text(order.shipped))
+        row.append($("<td>").text(order.veh_id))
+        row.append($("<td>").text(order.ID))
+        row.append($("<td>").text(order.lat))
+        row.append($("<td>").text(order.lon))
+        row.append($("<td>").text(order.i_id))
         return row
     }
 
     return {
         init: events
     }
-})();
+})
+
+var Cart = (function() {
+
+    var cart = []
+    var cartOptions = {}
+
+    var addToCart = function(id, qty) {
+        let order = cartOptions[id]
+        order.quantity = qty
+        order.cost = qty * order.cost
+        cart.push(cartOptions[id])
+    }
+
+    var getCartItems = function() {
+        return cart
+    }
+
+    var emptyCart = function() {
+        cart = []
+    }
+
+    var emptyCartOptions = function() {
+        cartOptions = {}
+    }
+
+    var fillCartOptions = function(options) {
+        for (let option of options) {
+            cartOptions[option.i_id] = option
+        }
+    }
+
+    var populateCart = function() {
+        cartTable = $("#itemsInCart")
+        for (let item of cart) {
+            cartTable.append(generateItemRow(item))
+        }
+    }
+
+    var generateItemRow = function (item) {
+        let row = $("<tr>").attr("value", item.i_id)
+        row.append($("<td>").text(item.i_id))
+        row.append($("<td>").text(item.quantity))
+        row.append($("<td>").text(item.cost))
+        return row
+    }
+
+    return {
+        addToCart,
+        getCartItems,
+        populateCart,
+        emptyCart,
+        emptyCartOptions,
+        fillCartOptions
+    }
+    
+})()

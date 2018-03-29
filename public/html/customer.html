@@ -36,12 +36,18 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Item ID</th>
-                        <th>Item name</th>
+                        <th>ID</th>
+                        <th>weight</th>
+                        <th>qty</th>
+                        <th>cost</th>
+                        <th>volume</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>uid</th>
                     </tr>
                 </thead>
                 <tbody id="itemTableBody">
-                    
+
                 </tbody>
             </table>
             <select>
@@ -58,21 +64,28 @@
             <table>
                 <thead>Pending Orders</thead>
                 <tbody id="orderHistoryPend">
-                <!--TODO: populate order history that are pending-->
+                    <!--TODO: populate order history that are pending-->
                 </tbody>
             </table>
             <table>
                 <thead>Shipped Orders</thead>
                 <tbody id="orderHistoryShipped">
-                <!--TODO: populate order histry that are shipped-->
+                    <!--TODO: populate order histry that are shipped-->
                 </tbody>
             </table>
         </div>
         <div face="cart" class="face hidden">
             <h1>Cart</h1>
             <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>qty</th>
+                        <th>cost</th>
+                    </tr>
+                </thead>
                 <tbody id="itemsInCart">
-                <!--TODO: populate cart-->
+                    <!--TODO: populate cart-->
                 </tbody>
             </table>
             <!--TODO: list total cost-->

@@ -45,10 +45,8 @@ var NavController = (function () {
 
             function protectFaces(target, cookie, protected) {
                 let check = false
-                console.log(target + " " + cookie + " " + protected)
                 for (let face of protected) {
                     if (target === face) {
-                        console.log("found a match")
                         check = true
                     }
                 }

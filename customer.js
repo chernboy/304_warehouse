@@ -30,6 +30,7 @@ exports.makeShippingRequest = function(req, res, client) {
     // -
     // This works for get requests, but we should use PUTs to add records
     body = req.body;
+    console.log(JSON.stringify(body))
     if (
         checkExists(body, "qty"      , "number")  &&
         checkExists(body, "origin"   , "string")  &&
@@ -116,6 +117,7 @@ exports.makeShippingRequest = function(req, res, client) {
             req_num, body.qty, body.origin, body.dest, body.total_val, body.shipped, body.veh_id, body.id, body.lat, body.lon, body.i_id
         ]).then(result => {
             console.log("Inserted new Shipping_request!");
+            res.status(200)
             res.send(result.rows);
             return;
         }).catch(error => {
@@ -300,6 +302,28 @@ exports.addItem = function (req, res, client) {
         return;
     }
 };
+
+exports.getCustomerPendingOrders = function(req, res, client) {
+    let id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 0", [id]).then(function (result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function (err) {
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+}
+
+exports.getCustomerShippedOrders = function(req, res, client) {
+    id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 1", [id]).then(function (result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function (err) {
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+}
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
