@@ -92,18 +92,6 @@ var UnshippedOrdersController = (function() {
             Util.showFace("login")
         }
 
-        $("#shipOrder").on('yes', function () {
-            //TODO: remove orders off the unshipped orders  
-            // Add orders to shipped orders 
-            // figure out which button corresponds to what row 
-            Util.showFace("shippedOrders")
-        })
-
-        $("#rejectOrder").on('no', function () {
-            //TODO: Remove orders off the unshipped orders 
-            Util.showFace("shippedOrders")
-        })
-
     }
 
     var getWarehouses = function () {
@@ -151,10 +139,49 @@ var UnshippedOrdersController = (function() {
         row.append($("<td>").text(result.lat))
         row.append($("<td>").text(result.lon))
         row.append($("<td>").text(result.i_id))
-        row.append($('<button id="shipOrder" value="' + result.req_num + 'type="button">yes</button>'))
-        row.append($('<button id="rejectOrder" value="' + result.req_num + 'type="button">no</button>'))
+        row.append(initShipOrderButton)
+        row.append(initRejectOrderButton)
 
         return row
+    }
+
+    var initShipOrderButton = function(id) {
+        let button = $('<button id="shipOrder" value="' + result.req_num + 'type="button">no</button>')
+        $(button).on('click', () => {
+            let id = $(button).attr("value") 
+            shipOrder(id)
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (result) {
+                    $("#ordersRefresh").trigger("click") 
+                })
+        })
+        return button
+    }
+
+    var shipOrder = function (id) {
+        return fetch("api/shipOrder?req_num=" + id)
+    }
+
+    var initRejectOrderButton = function(id) {
+        let button = $('<button id="rejectOrder" value="' + result.req_num + 'type="button">yes</button>')
+        $(button).on('click', () => {
+            let id = $(button).attr("value")
+            let qty = parseFloat($("#" + id + "_qty").val())
+            rejectOrder(id)
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (result) {
+                    $("#ordersRefresh").trigger("click") 
+                })
+        })
+        return button
+    }
+
+    var rejectOrder = function (id) {
+        return fetch("api/rejectOrder?req_num=" + id)
     }
 
     var createShippedOrdersRow = function(result) {
@@ -171,11 +198,10 @@ var UnshippedOrdersController = (function() {
         row.append($("<td>").text(result.i_id))
         row.append($('<button id="shipOrder" value="' + result.req_num))
         row.append($('<button id="rejectOrder" value="' + result.req_num))
-        return row
+        return row 
     }
     return {
         init: events
     }
-
 })()
 
