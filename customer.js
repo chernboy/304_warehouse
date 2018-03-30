@@ -379,18 +379,21 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
 
 
 exports.getMaxAverageWarehouse = function(req, res, client) {
-    client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
-        "                        FROM item i, warehouse w2" +
-        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
-        "                        GROUP BY w2.lat, w2.lon)) AS magic" +
-        "WHERE magic.avCost >= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
-        "                        FROM item i, warehouse w2" +
-        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
-        "                        GROUP BY w2.lat, w2.lon) AS magic2);"
-    ).then(result => {
+    // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+    //     "WHERE magic.avCost >= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    .then(result => {
+        res.status(200)
         res.send(result.rows);
         return;
     }).catch(error => {
+        console.log(error)
         res.status(500);
         res.send(error);
         return;
@@ -398,18 +401,20 @@ exports.getMaxAverageWarehouse = function(req, res, client) {
 }
 
 exports.getMinAverageWarehouse = function (req, res, client) {
-    client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
-        "                        FROM item i, warehouse w2" +
-        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
-        "                        GROUP BY w2.lat, w2.lon)) AS magic" +
-        "WHERE magic.avCost <= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
-        "                        FROM item i, warehouse w2" +
-        "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
-        "                        GROUP BY w2.lat, w2.lon) AS magic2);"
-    ).then(result => {
+    // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+    //     "WHERE magic.avCost <= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    .then(result => {
         res.send(result.rows);
         return;
     }).catch(error => {
+        console.log(error)
         res.status(500);
         res.send(error);
         return;
