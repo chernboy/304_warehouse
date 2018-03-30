@@ -186,6 +186,9 @@ app.get("/api/getCustomersPurchasingEverywhere", (req, res) => {
     customer.getCustomersPurchasingEverywhere(req, res, client);
 });
 
+app.post("/api/deleteWarehouseAndMove", (req, res) => {
+    customer.deleteWarehouseAndMove(req, res, client);
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
