@@ -241,9 +241,11 @@ var PopularItems = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
+        Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format")
+        Util.handleErrorBox(err)
                 })
         })
     }
