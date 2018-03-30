@@ -51,7 +51,6 @@
                 </tbody>
             </table>
             <select>
-                <!--TODO: populate by JS Dynamically-->
                 <option value="null">-Choose one-</option>
                 <option value="sea">Sea</option>
                 <option value="air">Air</option>
@@ -63,15 +62,11 @@
             <h1>Order History</h1>
             <table>
                 <thead>Pending Orders</thead>
-                <tbody id="orderHistoryPend">
-                    <!--TODO: populate order history that are pending-->
-                </tbody>
+                <tbody id="orderHistoryPend"></tbody>
             </table>
             <table>
                 <thead>Shipped Orders</thead>
-                <tbody id="orderHistoryShipped">
-                    <!--TODO: populate order histry that are shipped-->
-                </tbody>
+                <tbody id="orderHistoryShipped"></tbody>
             </table>
             <button id="ordersRefresh">refresh</button>
         </div>
@@ -85,11 +80,14 @@
                         <th>cost</th>
                     </tr>
                 </thead>
-                <tbody id="itemsInCart">
-                    <!--TODO: populate cart-->
-                </tbody>
+                <tbody id="itemsInCart"></tbody>
             </table>
-            <!--TODO: list total cost-->
+            <form id="destination">
+                <label>
+                    Destination
+                    <input type="text" name="address">
+                </label>
+            </form>
             <button type="button" id="placeorder">Place Order</button>
         </div>
     </div>
