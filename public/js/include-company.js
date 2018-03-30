@@ -12,10 +12,10 @@ IncludeCompany = (function () {
                             Company.init()
                             AddItem.init()
                             WarehouseSelect.init();
-                            
+
                             resolve()
                         }).catch(function (error) {
-                        Util.handleErrorBox(err)
+                            Util.handleErrorBox(err)
                             reject("failed to get company " + error)
                         })
                 }
@@ -40,7 +40,7 @@ var WarehouseSelect = (function () {
             })
         }).catch((err) => {
             console.log(err)
-        Util.handleErrorBox(err)
+            Util.handleErrorBox(err)
         })
     }
     var getWarehouses = function () {
@@ -55,11 +55,11 @@ var WarehouseSelect = (function () {
         return option
     }
 
-    var getSelectedLat = function() {
+    var getSelectedLat = function () {
         return warehouseSelect.find(":selected").attr("lat")
     }
 
-    var getSelectedLon = function() {
+    var getSelectedLon = function () {
         return warehouseSelect.find(":selected").attr("lon")
     }
 
@@ -131,6 +131,10 @@ var AddItem = (function () {
             for (let param of params) {
                 key = param.split("=")[0]
                 val = param.split("=")[1]
+                if (!parseFloat(val) || parseFloat(val) < 1) {
+                    Util.handleErrorBox("invalid value for " + key)
+                    return
+                } 
                 sendObj[key] = parseFloat(val)
             }
 
@@ -146,13 +150,13 @@ var AddItem = (function () {
                 contentType: "application/json",
                 data: JSON.stringify(sendObj)
             })
-            .done((response) => {
-                console.log("successfully added item")
-            })
-            .fail((err) => {
-                console.log(err)
-        Util.handleErrorBox(err)
-            })
+                .done((response) => {
+                    console.log("successfully added item")
+                })
+                .fail((err) => {
+                    console.log(err)
+                    Util.handleErrorBox(err)
+                })
         })
     }
 
@@ -165,34 +169,34 @@ var ListItemTableController = {}
 
 ListItemTableController = (function () {
 
-    let tablebody 
+    let tablebody
 
-    var event = function() {
+    var event = function () {
         tablebody = $("#companyItemsTable")
 
-        
-        let id = parseFloat(Util.getCookie("co_login")) 
+
+        let id = parseFloat(Util.getCookie("co_login"))
         getAllItems(id)
-                .then((response) => {
-                    return response.json();
-                })
-                .then((results) => {
-                    populateTableWithItems(results, tablebody)
-                })   
+            .then((response) => {
+                return response.json();
+            })
+            .then((results) => {
+                populateTableWithItems(results, tablebody)
+            })
 
         $("#AllItemsRefresh").on("click", () => {
             console.log("refreshing items")
             tablebody = $("#companyItemsTable")
-            
-            let id = parseFloat(Util.getCookie("co_login")) 
+
+            let id = parseFloat(Util.getCookie("co_login"))
             getAllItems(id)
-            .then((response) => {
-                return response.json();
+                .then((response) => {
+                    return response.json();
                 })
-            .then((results) => {
-                console.log(results)
-                 populateTableWithItems(results, tablebody)
-            })   
+                .then((results) => {
+                    console.log(results)
+                    populateTableWithItems(results, tablebody)
+                })
         })
     }
 

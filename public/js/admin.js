@@ -9,7 +9,6 @@ var UnshippedOrdersController = (function () {
 
         $(".ordersRefresh").each(function () {
             $(this).on("click", function () {
-                console.log("refreshing...")
                 getUnshippedOrders()
                     .then((response) => {
                         return response.json()
@@ -18,10 +17,10 @@ var UnshippedOrdersController = (function () {
                         populateUnshippedOrdersTable(results)
                     })
                     .catch((err) => {
-                        console.log(err)
+                        Util.handleErrorBox(err)
                     })
                     .catch((err) => {
-                        console.log(err)
+                        Util.handleErrorBox(err)
                     })
 
                 getShippedOrders()
@@ -32,10 +31,10 @@ var UnshippedOrdersController = (function () {
                         populateShippedOrdersTable(results)
                     })
                     .catch((err) => {
-                        console.log(err)
+                        Util.handleErrorBox(err)
                     })
                     .catch((err) => {
-                        console.log(err)
+                        Util.handleErrorBox(err)
                     })
             })
         })
@@ -48,7 +47,6 @@ var UnshippedOrdersController = (function () {
                 }
             })
         }).catch((err) => {
-            console.log(err)
             Util.handleErrorBox(err)
         })
 
@@ -60,7 +58,6 @@ var UnshippedOrdersController = (function () {
                 }
             })
         }).catch((err) => {
-            console.log(err)
             Util.handleErrorBox(err)
         })
 
@@ -82,7 +79,6 @@ var UnshippedOrdersController = (function () {
 
         $("#adminLogin").on("submit", async e => {
             e.preventDefault();
-            console.log("submt");
             try {
                 const res = await fetch(`/api/adminLogin?name=${$("#adminLoginName").val()}`)
                 const result = await res.json();
@@ -91,19 +87,16 @@ var UnshippedOrdersController = (function () {
                 switchToLogout();
             } catch (err) {
                 Util.handleErrorBox(err)
-                console.log(err);
             }
         })
 
         $("#adminLogoutForm").on("submit", async e => {
             e.preventDefault()
-            console.log("logout submit")
             try {
                 Util.setCookie("admin_login", "")
                 switchToLogin()
             } catch (err) {
                 Util.handleErrorBox(err)
-                console.log(err)
             }
         })
 
@@ -174,7 +167,6 @@ var UnshippedOrdersController = (function () {
     }
 
     var populateUnshippedOrdersTable = function (results) {
-        console.log("populating unshipped table with:" + JSON.stringify(results))
         unshippedOrdersTable.empty()
         for (let result of results) {
             unshippedOrdersTable.append(createOrdersRow(result))
@@ -182,7 +174,6 @@ var UnshippedOrdersController = (function () {
     }
 
     var populateShippedOrdersTable = function (results) {
-        console.log("populating shipped table with: " + JSON.stringify(results))
         shippedOrdersTable.empty()
         for (let result of results) {
             shippedOrdersTable.append(createShippedOrdersRow(result))
@@ -209,11 +200,13 @@ var UnshippedOrdersController = (function () {
     var initShipOrderButton = function (id) {
         let button = $('<button value="' + id + '" type="button">yes</button>')
         $(button).on('click', () => {
-            console.log("calling ship order")
             let id = $(button).attr("value")
             shipOrder(id)
                 .then(function (response) {
                     console.log(response)
+                })
+                .catch((err) => {
+                    Util.handleErrorBox(err)
                 })
         })
         return button
@@ -230,6 +223,9 @@ var UnshippedOrdersController = (function () {
             rejectOrder(id)
                 .then(function (response) {
                     console.log(response)
+                })
+                .catch((err) => {
+                    Util.handleErrorBox(err)
                 })
         })
         return button
@@ -266,18 +262,15 @@ var PopularItems = (function () {
                     return response.json()
                 })
                 .then((results) => {
-                    console.log(results)
                     $(".reportsTable").each(() => {
                         Util.hide($(this))
                     })
                     populatePopularItemsTable(results)
                 })
                 .catch((err) => {
-                    console.log(err)
                     Util.handleErrorBox(err)
                 })
                 .catch((err) => {
-                    console.log("response not in correct format")
                     Util.handleErrorBox(err)
                 })
         })
@@ -314,22 +307,18 @@ var FindMin = (function () {
         $("#findMin").on("click", () => {
             getMin()
                 .then((response) => {
-                    console.log(response)
                     return response.json()
                 })
                 .then((results) => {
                     $(".reportsTable").each(() => {
                         Util.hide($(this))
                     })
-                    console.log("results: " + results)
                     populateMinTable(results)
                 })
                 .catch((err) => {
-                    console.log(err)
                     Util.handleErrorBox(err)
                 })
                 .catch((err) => {
-                    console.log("response not in correct format for min")
                     Util.handleErrorBox(err)
                 })
         })
@@ -340,7 +329,6 @@ var FindMin = (function () {
     }
 
     var populateMinTable = function (items) {
-        console.log("items: " + items)
         $("#minTableBody").empty()
         for (let item of items) {
             $("#minTableBody").append(generateMinRow(item))
@@ -375,11 +363,9 @@ var FindMax = (function () {
                     populateMaxTable(results)
                 })
                 .catch((err) => {
-                    console.log(err)
                     Util.handleErrorBox(err)
                 })
                 .catch((err) => {
-                    console.log("response not in correct format for max")
                     Util.handleErrorBox(err)
                 })
         })
@@ -418,18 +404,15 @@ var FindVip = (function () {
                     return response.json()
                 })
                 .then((results) => {
-                    console.log(results)
                     $(".reportsTable").each(() => {
                         Util.hide($(this))
                     })
                     populateVipTable(results)
                 })
                 .catch((err) => {
-                    console.log("unable to get vip customers")
                     Util.handleErrorBox(err)
                 })
                 .catch((err) => {
-                    console.log("response not in correct format for vip")
                     Util.handleErrorBox(err)
                 })
         })

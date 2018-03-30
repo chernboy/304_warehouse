@@ -3,7 +3,6 @@ IncludeHeader = {}
 IncludeHeader = (function () {
     var events = function () {
         $(function () {
-            console.log("Startig to include header")
             $("*").each(function () {
                 if ($(this).attr("include-header-html")) {
                     Util.getHtml($(this).attr("include-header-html"))
@@ -12,7 +11,6 @@ IncludeHeader = (function () {
                             HeaderController.init();
                         }).catch(function (error) {
                             Util.handleErrorBox(err)
-                            console.log("failed to get header " + JSON.stringify(error))
                         })
                 }
             })
@@ -33,16 +31,13 @@ HeaderController = (function () {
     var header, logo, banner
 
     var events = function () {
-        console.log("header controller init")
         header = $(".header")
         logo = header.find(".logo")
         banner = header.find(".banner")
         $(".header").mousedown(function () {
-            console.log("mouse down")
             header.addClass("active")
         })
         $(".header").mouseup(function () {
-            console.log("mouse up")
             header.removeClass("active")
         })
     }

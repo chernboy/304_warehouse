@@ -4,7 +4,6 @@ var Util = (function() {
 
     var init = function() {
         $("#closeError").on('click', function () {
-            console.log("hiding error")
             Util.hide($("#errorBox"))
         })
     }
@@ -47,7 +46,6 @@ var Util = (function() {
     }
 
     var handleErrorBox = function (error) {
-        console.log("showing error box");
         Util.show($("#errorBox"))
         $("#errorText").text(error)
         Util.init()
