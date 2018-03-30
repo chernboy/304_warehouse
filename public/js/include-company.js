@@ -9,9 +9,10 @@ IncludeCompany = (function () {
                     Util.getHtml($(this).attr("include-company-html"))
                         .then(function (html) {
                             $(".company").prepend(html)
-                            WarehouseSelect.init();
                             Company.init()
                             AddItem.init()
+                            WarehouseSelect.init();
+                            
                             resolve()
                         }).catch(function (error) {
                             reject("failed to get company " + error)
@@ -83,6 +84,7 @@ var Company = (function () {
                 })
                 .then((result) => {
                     Util.setCookie("co_login", result.id);
+                    ListItemTableController.init()
                     switchToLogout();
                 })
         })
@@ -154,4 +156,55 @@ var AddItem = (function () {
     return {
         init: events
     }
+})()
+
+var ListItemTableController = {}
+
+ListItemTableController = (function () {
+
+    let tablebody 
+
+    var event = function() {
+        tablebody = $("#companyItemsTable")
+
+        let id = parseFloat(Util.getCookie("co_login")) 
+        getAllItems(id)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((results) => {
+                    populateTableWithItems(results, tablebody)
+                })   
+    }
+    
+    var populateTableWithItems = function (items, table) {
+        table.empty()
+        for (let item of items) {
+            table.append(generateItemRow(item));
+        }
+        console.log("[COMPANY] finished populating table with items")
+    }
+
+    var generateItemRow = function (item) {
+        let row = $("<tr>").attr("value", item.i_id)
+        row.append($("<td>").text(item.i_id))
+        row.append($("<td>").text(item.weight))
+        row.append($("<td>").text(item.quantity))
+        row.append($("<td>").text(item.cost))
+        row.append($("<td>").text(item.volume))
+        row.append($("<td>").text(item.lat))
+        row.append($("<td>").text(item.lon))
+        row.append($("<td>").text(item.id))
+
+        return row
+    }
+
+    var getAllItems = function (id) {
+        return fetch("/api/getCompanyItems?id=" + id)
+    }
+
+    return {
+        init: event
+    }
+
 })()
