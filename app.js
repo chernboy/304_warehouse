@@ -83,21 +83,21 @@ app.get("/api/getItems", (req, res) => {
 app.get("/api/getCompanyItems", (req, res) => {
     let id
     try {
-        id = parseInt(req.body.id)
+        id = parseInt(req.query.id)
     } catch (e) {
         res.status(400)
         res.send("invalid id")
     }
 
     client.query("select * from item where ID = $1", [id])
-    .then((result) => {
-        res.status(200)
-        res.send(result.rows)
-    })
-    .catch((err) => {
-        res.status(400)
-        res.send("Unable to get company items")
-    })
+        .then((result) => {
+            res.status(200)
+            res.send(result.rows)
+        })
+        .catch((err) => {
+            res.status(400)
+            res.send("Unable to get company items")
+        })
 })
 
 app.get("/api/getWarehouses", (req, res) => {
@@ -116,7 +116,7 @@ app.get("/api/getWarehouses", (req, res) => {
 })
 
 app.get("/api/getUnshippedOrders", (req, res) => {
-    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 0")
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped=0")
         .then((result) => {
             res.status(200)
             res.send(result.rows)
@@ -127,7 +127,7 @@ app.get("/api/getUnshippedOrders", (req, res) => {
 })
 
 app.get("/api/getShippedOrders", (req, res) => {
-    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped = 1")
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE shipped=1")
         .then((result) => {
             res.status(200)
             res.send(result.rows)
@@ -143,13 +143,13 @@ app.get("/api/shipOrder", (req, res) => {
         res.send("invalid body")
     }
 
-    req_num = req.body.req_num
+    let req_num = req.query.req_num
 
     queryPromises = []
     let iid, qty
-    client.query("select I_ID from shipping_request where req_num = $1", [req_num])
+    client.query("select I_ID, qty from shipping_request where req_num = $1", [req_num])
         .then((result) => {
-            iid = result.rows[0].I_ID
+            iid = result.rows[0].i_id
             qty = result.rows[0].qty
             return client.query("select quantity from item where I_ID = $1", [iid])
         })
@@ -158,7 +158,7 @@ app.get("/api/shipOrder", (req, res) => {
             if (itemQty < qty) {
                 return Promise.reject("Not enough items left!")
             }
-            queryPromises.push(client.query("update shipping_request set shipped = 1 where req_num=$1", [req_num]))
+            queryPromises.push(client.query("update shipping_request set shipped=1 where req_num=$1", [req_num]))
             queryPromises.push(client.query("update item set quantity=$1 where I_ID=$2", [itemQty - qty, iid]))
         })
 
@@ -176,14 +176,14 @@ app.get("/api/rejectOrder", (req, res) => {
     let req_num = req.query.req_num
 
     client.query("delete from shipping_request where req_num = $1", [req_num])
-    .then((result) => {
-        res.status(200)
-        res.send("successfully deleted")
-    })
-    .catch((err) => {
-        res.status(400)
-        res.send("failed to delete")
-    })
+        .then((result) => {
+            res.status(200)
+            res.send("successfully deleted")
+        })
+        .catch((err) => {
+            res.status(400)
+            res.send("failed to delete")
+        })
 })
 
 app.get("/api/getShippingMethods", (req, res) => {
@@ -230,7 +230,7 @@ app.post("/api/addItem", (req, res) => {
 });
 
 app.get("/api/getItemPopularity", (req, res) => {
-    customer.getItemPopularity(req, res, client); 
+    customer.getItemPopularity(req, res, client);
 });
 
 app.get("/api/getCustomersPurchasingEverywhere", (req, res) => {
