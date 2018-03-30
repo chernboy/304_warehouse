@@ -428,6 +428,11 @@ exports.deleteWarehouseAndMove = function(req, res, client) {
         checkExists(body, "new_lat", "number") &&
         checkExists(body, "new_lon", "number")
     ) {
+        if ((body.old_lat === body.new_lat) && (body.old_lon) === body.new_lon) {
+            res.status(400);
+            res.send("error: unable to send items to a warehouse that is being deleted");
+            return;
+        } 
         // TODO: Get all the items currently in the old warehouse
         client.query("SELECT * FROM ITEM WHERE lat = $1 AND lon = $2", [
             body.old_lat, body.old_lon
