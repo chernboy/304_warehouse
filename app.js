@@ -146,7 +146,7 @@ app.get("/api/getOrders", (req, res) => {
     customer.getOrders(req, res, client);
 });
 
-// TODO: Document this
+
 app.post("/api/makeShippingRequest", (req, res) => {
     customer.makeShippingRequest(req, res, client);
 });
