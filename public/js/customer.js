@@ -52,11 +52,14 @@ ItemTableController = (function () {
                 })
         })
 
+        $("#itemFilter").on("submit", function(e) {
+            e.preventDefault()
+        })
+
         $("#customerLoginForm").on('submit', function (e) {
             e.preventDefault();
 
             let name = $("#customerLoginName").val();
-
             login(name)
                 .then(function (response) {
                     return response.json()
@@ -87,13 +90,19 @@ ItemTableController = (function () {
     };
 
     var makeOrders = function() {
+        var dest = $("#destination").val
+        if (!dest) {
+            Util.handleErrorBox("Please enter a destination")
+            return
+        }
+
         var orderPromises = []
         items = Cart.getCartItems()
         for (let item of items) {
             var orderObj = {}
             orderObj["qty"] = parseFloat(item.quantity)
-            orderObj["origin"] = "PLACEHOLDER ORIGIN"
-            orderObj["dest"] = "PLACEHOLDER DEST"
+            orderObj["origin"] = "{" + item.lat + "," + item.lon + "}"
+            orderObj["dest"] = dest
             orderObj["total_val"] = item.cost
             orderObj["shipped"] = 0
             orderObj["veh_id"] = "A0003"
@@ -101,7 +110,6 @@ ItemTableController = (function () {
             orderObj["lat"] = parseFloat(item.lat)
             orderObj["lon"] = parseFloat(item.lon)
             orderObj["i_id"] = parseFloat(item.i_id)
-            console.log("sending order: " + JSON.stringify(orderObj))
             $.ajax({
                 url: "/api/makeShippingRequest",
                 method: "post",
@@ -147,7 +155,6 @@ ItemTableController = (function () {
         for (let item of items) {
             table.append(generateItemRow(item));
         }
-        console.log("[CUSTOMER] finished populating table with items")
     }
 
     var generateItemRow = function (item) {
@@ -176,7 +183,11 @@ ItemTableController = (function () {
         $(button).on('click', () => {
             let id = $(button).attr("value")
             let qty = parseFloat($("#" + id + "_qty").val())
-            Cart.addToCart(id, qty)
+            if(qty >= 1){
+                Cart.addToCart(id, qty)
+            } else {
+                Util.handleErrorBox("Invalid quantity")
+            }
         })
         return button
     }

@@ -43,15 +43,15 @@
                         <th>volume</th>
                         <th>lat</th>
                         <th>lon</th>
-                        <th>uid</th>
+                        <th>co_id</th>
                     </tr>
                 </thead>
                 <tbody id="itemTableBody">
 
                 </tbody>
             </table>
-            <select>
-                <option value="null">-Choose one-</option>
+            <select id="method">
+                <option value="land">-Choose one-</option>
                 <option value="sea">Sea</option>
                 <option value="air">Air</option>
                 <option value="land">Land</option>
@@ -85,7 +85,7 @@
             <form id="destination">
                 <label>
                     Destination
-                    <input type="text" name="address">
+                    <input type="text" id="destination" name="address">
                 </label>
             </form>
             <button type="button" id="placeorder">Place Order</button>
