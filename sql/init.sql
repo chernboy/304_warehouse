@@ -81,8 +81,7 @@ CREATE TABLE ITEM (
     I_ID        INTEGER NOT NULL,
     weight      DECIMAL,
     quantity    INTEGER NOT NULL,
-    cost        DECIMAL,
-    volume      DECIMAL,
+    cost        DECIMAL CHECK (cost >= 0)
     lat         DECIMAL,
     lon         DECIMAL,
     ID          INTEGER NOT NULL,
@@ -95,7 +94,7 @@ CREATE TABLE ITEM (
 
 CREATE TABLE SHIPPING_REQUEST (
     req_num     INTEGER NOT NULL,
-    qty         INTEGER NOT NULL,
+    qty         INTEGER NOT NULL CHECK (qty > 0),
     origin      VARCHAR(30),
     dest        VARCHAR(30),
     total_val   DECIMAL,
