@@ -11,6 +11,7 @@ IncludeHeader = (function () {
                             $(".header").prepend(html)
                             HeaderController.init();
                         }).catch(function (error) {
+                            Util.handleErrorBox(err)
                             console.log("failed to get header " + JSON.stringify(error))
                         })
                 }

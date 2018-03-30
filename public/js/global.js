@@ -3,6 +3,8 @@ var BodyController = {}
 var BodyController = (function () {
     var events = function () {
         $(function () {
+            //Util.init()
+            clearLoginCookies()
             $("#goto-customer").on('click', function () {
                 Util.hide($("#home"))
                 Util.hide($(".company"))
@@ -13,6 +15,7 @@ var BodyController = (function () {
                         console.log("got customer")
                         NavController.init()
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }
@@ -35,6 +38,7 @@ var BodyController = (function () {
                             console.log("Faled to load nav styles")
                         })
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }
@@ -51,9 +55,11 @@ var BodyController = (function () {
                         NavController.init().then(() => {
                             Util.refreshStyles("nav")
                         }).catch((err) => {
+                            Util.handleErrorBox(err)
                             console.log(err)
                         })
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }
@@ -66,6 +72,12 @@ var BodyController = (function () {
                 Util.show($("#home"))
             })
         })
+    }
+
+    var clearLoginCookies = function() {
+        Util.setCookie("cu_login", "")
+        Util.setCookie("co_login", "")
+        Util.setCookie("admin_login", "")
     }
 
     return {

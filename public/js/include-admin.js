@@ -2,7 +2,6 @@ IncludeAdmin = {}
 
 IncludeAdmin = (function () {
     var events = function () {
-        console.log("Starting to include admin")
         return new Promise((resolve, reject) => {
             $("*").each(function () {
                 if ($(this).attr("include-admin-html")) {
@@ -10,8 +9,13 @@ IncludeAdmin = (function () {
                         .then(function (html) {
                             $(".admin").prepend(html)
                             UnshippedOrdersController.init()
+                            PopularItems.init()
+                            FindMin.init()
+                            FindMax.init()
+                            FindVip.init()
                             resolve()
                         }).catch(function (error) {
+                        Util.handleErrorBox(err)
                             reject("failed to get admin" + error)
                         })
                 }

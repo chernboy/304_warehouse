@@ -109,6 +109,7 @@ exports.makeShippingRequest = function(req, res, client) {
             req_num, body.qty, body.origin, body.dest, body.total_val, body.shipped, body.veh_id, body.id, body.lat, body.lon, body.i_id
         ]).then(result => {
             console.log("Inserted new Shipping_request!");
+            res.status(200)
             res.send(result.rows);
             return;
         }).catch(error => {
@@ -123,11 +124,8 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("error: unable to determine next req_num"); 
             return;
         });
-
-        // console.log("We got here for some reason...");
-        // res.status(400);
-        // res.send("Error...")
-        // return;
+    } else {
+       return;
     }
     // res.send(req.body);
     // return;
@@ -302,8 +300,31 @@ exports.addItem = function (req, res, client) {
     }
 };
 
+exports.getCustomerPendingOrders = function(req, res, client) {
+    let id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 0", [id]).then(function (result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function (err) {
+        console.log(err)
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+}
+
+exports.getCustomerShippedOrders = function(req, res, client) {
+    id = parseInt(req.query.id)
+    client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 1", [id]).then(function (result) {
+        res.status(200)
+        res.send(result.rows)
+    }).catch(function (err) {
+        console.log(err)
+        res.status(400)
+        res.send("failed to get orders for customer")
+    })
+}
+
 exports.getItemPopularity = function(req, res, client) {
-    // TODO: Complete this
     client.query("SELECT i_id, count(req_num) FROM shipping_request" + 
     " GROUP BY i_id ORDER BY count(req_num) DESC").then(result => {
         res.send(result.rows);
@@ -351,8 +372,51 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
                 res.send(error);
                 return;
             });
-}
+};
 
+
+exports.getMaxAverageWarehouse = function(req, res, client) {
+    // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+    //     "WHERE magic.avCost >= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    .then(result => {
+        res.status(200)
+        res.send(result.rows);
+        return;
+    }).catch(error => {
+        console.log(error)
+        res.status(500);
+        res.send(error);
+        return;
+    });
+};
+
+exports.getMinAverageWarehouse = function (req, res, client) {
+    // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon)) AS magic" +
+    //     "WHERE magic.avCost <= ALL (SELECT avCost FROM (SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
+    //     "                        FROM item i, warehouse w2" +
+    //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
+    //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
+    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    .then(result => {
+        res.send(result.rows);
+        return;
+    }).catch(error => {
+        console.log(error)
+        res.status(500);
+        res.send(error);
+        return;
+    });
+};
 
 exports.deleteWarehouseAndMove = function(req, res, client) {
     // TODO: Verify the parameters
@@ -398,7 +462,7 @@ exports.deleteWarehouseAndMove = function(req, res, client) {
             return;
         });
     }
-}
+};
 
 
 
