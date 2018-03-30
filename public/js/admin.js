@@ -7,8 +7,8 @@ var UnshippedOrdersController = (function () {
         unshippedOrdersTable = $("#unshippedOrders")
         shippedOrdersTable = $("#shippedOrders")
 
-        $(".ordersRefresh").each(function() {
-            $(this).on("click", function() {
+        $(".ordersRefresh").each(function () {
+            $(this).on("click", function () {
                 console.log("refreshing...")
                 getUnshippedOrders()
                     .then((response) => {
@@ -49,24 +49,24 @@ var UnshippedOrdersController = (function () {
             })
         }).catch((err) => {
             console.log(err)
-        Util.handleErrorBox(err)
-        })
-
-        warehouseSelect = $("#adminWarehouseSelect")
-        getWarehouses().then((response) => {
-            response.json().then((results) => {
-                for (let o of results) {
-                    warehouseSelect.append(createWarehouseOption(o))
-                }
-            })
-        }).catch((err) => {
-            console.log(err)
-        Util.handleErrorBox(err)
+            Util.handleErrorBox(err)
         })
 
         $("#deleteWarehouse").on('click', function () {
             //TODO: Delete warehouse
             Util.showFace("warehousesMove")
+
+            warehouseSelect = $("#adminWarehouseSelect")
+            getWarehouses().then((response) => {
+                response.json().then((results) => {
+                    for (let o of results) {
+                        warehouseSelect.append(createWarehouseOption(o))
+                    }
+                })
+            }).catch((err) => {
+                console.log(err)
+                Util.handleErrorBox(err)
+            })
         })
 
         $("#adminLogin").on("submit", async e => {
@@ -241,11 +241,11 @@ var PopularItems = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -293,11 +293,11 @@ var FindMin = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for min")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -343,11 +343,11 @@ var FindMax = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for max")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -393,11 +393,11 @@ var FindVip = (function () {
                 })
                 .catch((err) => {
                     console.log("unable to get vip customers")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for vip")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }

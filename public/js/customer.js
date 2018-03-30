@@ -258,6 +258,10 @@ var Cart = (function() {
     var cart = []
     var cartOptions = {}
 
+    var init = function() {
+        $("#")
+    }
+
     var addToCart = function(id, qty) {
         let order = cartOptions[id]
         order.quantity = qty
@@ -299,6 +303,7 @@ var Cart = (function() {
     }
 
     return {
+        init,
         addToCart,
         getCartItems,
         populateCart,
