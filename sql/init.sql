@@ -81,7 +81,8 @@ CREATE TABLE ITEM (
     I_ID        INTEGER NOT NULL,
     weight      DECIMAL,
     quantity    INTEGER NOT NULL,
-    cost        DECIMAL CHECK (cost >= 0)
+    cost        DECIMAL CHECK (cost >= 0),
+    volume      DECIMAL,
     lat         DECIMAL,
     lon         DECIMAL,
     ID          INTEGER NOT NULL,
