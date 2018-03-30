@@ -29,6 +29,7 @@ var UnshippedOrdersController = (function () {
             })
         }).catch((err) => {
             console.log(err)
+        Util.handleErrorBox(err)
         })
 
         warehouseSelect = $("#adminWarehouseSelect")
@@ -40,6 +41,7 @@ var UnshippedOrdersController = (function () {
             })
         }).catch((err) => {
             console.log(err)
+        Util.handleErrorBox(err)
         })
 
         $("#deleteWarehouse").on('click', function () {
@@ -57,6 +59,7 @@ var UnshippedOrdersController = (function () {
                 Util.setCookie("admin_login", "" + result.id);
                 switchToLogout();
             } catch (err) {
+                Util.handleErrorBox(err)
                 console.log(err);
             }
         })

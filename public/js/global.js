@@ -3,6 +3,7 @@ var BodyController = {}
 var BodyController = (function () {
     var events = function () {
         $(function () {
+            //Util.init()
             clearLoginCookies()
             $("#goto-customer").on('click', function () {
                 Util.hide($("#home"))

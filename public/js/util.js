@@ -2,6 +2,13 @@ var Util = {}
 
 var Util = (function() {
 
+    var init = function() {
+        $("#closeError").on('click', function () {
+            console.log("hiding error")
+            Util.hide($("#errorBox"))
+        })
+    }
+
     var hide = function(element) {
         element.addClass("hidden")
     }
@@ -38,11 +45,11 @@ var Util = (function() {
         })
     }
 
-    var handleError = function (error) {
-        $("#errorText").text(error.message)
-        $("#closeError").on('click', function () {
-            //TODO: do something to close error box
-        })
+    var handleErrorBox = function (error) {
+        console.log("showing error box");
+        Util.show($("#errorBox"))
+        $("#errorText").text(error)
+        Util.init()
     }
 
     //gotten from w3schools
@@ -79,6 +86,8 @@ var Util = (function() {
         checkCookieExists,
         getCookie,
         setCookie,
-        refreshStyles
+        refreshStyles,
+        init,
+        handleErrorBox
     }
 })()
