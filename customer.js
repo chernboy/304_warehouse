@@ -336,7 +336,7 @@ exports.getItemPopularity = function(req, res, client) {
     });
 }
 
-
+// Deletes a user, and remove all associated information
 exports.deleteUser = function(req, res, client) {
     if (checkExists(req.body, "id", "number")) {
         client.query("DELETE FROM USERS WHERE id = $1", [req.body.id]).then(response => {
@@ -359,11 +359,8 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
     // This is a really long function name
     // help....
     // NOTE: There is no parameters for this api/function
-    // client.query("SELECT cu.* FROM customer cu WHERE NOT EXISTS " + 
-                    // "((SELECT co.id FROM company) EXCEPT "+
-                    // "(SELECT sr.id FROM shipping_request sr WHERE sr.))"
-            // )
-
+    // Select customers that have purchased an item 
+    // (created a shipping request) from every company
     client.query("SELECT cu.* FROM customer cu WHERE NOT EXISTS " +
         "((SELECT co.id FROM company co) EXCEPT " +
         "(SELECT i.id FROM item i, shipping_request sr WHERE " + 
@@ -375,7 +372,7 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
                 res.send(error);
                 return;
             });
-}
+};
 
 
 exports.getMaxAverageWarehouse = function(req, res, client) {
@@ -398,7 +395,7 @@ exports.getMaxAverageWarehouse = function(req, res, client) {
         res.send(error);
         return;
     });
-}
+};
 
 exports.getMinAverageWarehouse = function (req, res, client) {
     // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
@@ -419,7 +416,55 @@ exports.getMinAverageWarehouse = function (req, res, client) {
         res.send(error);
         return;
     });
-}
+};
+
+exports.deleteWarehouseAndMove = function(req, res, client) {
+    // TODO: Verify the parameters
+    var body = req.body;
+    var promiseArr = [];
+    if (
+        checkExists(body, "old_lat", "number") &&
+        checkExists(body, "old_lon", "number") &&
+        checkExists(body, "new_lat", "number") &&
+        checkExists(body, "new_lon", "number")
+    ) {
+        // TODO: Get all the items currently in the old warehouse
+        client.query("SELECT * FROM ITEM WHERE lat = $1 AND lon = $2", [
+            body.old_lat, body.old_lon
+        ]).then(result => {
+            // TODO: Update all the items found, and move them to the new warehouse
+            var oldItemList = result.rows;
+            for(let row of oldItemList) {
+                promiseArr.push(client.query("UPDATE ITEM SET lat = $1, lon = $2 WHERE lat = $3 AND lon = $4", [
+                    body.new_lat, body.new_lon, body.old_lat, body.old_lon
+                ]));
+            }
+            
+            Promise.all(promiseArr).then(result => {
+                // TODO: Delete the old warehouse   
+                client.query("DELETE FROM warehouse WHERE lat = $1 AND lon = $2", [
+                    body.old_lat, body.old_lon 
+                ]).then(result => {
+                    res.send("deleted warehouse and move all items");
+                }).catch(error => {
+                    res.status(500);
+                    res.send(error);
+                    return;
+                });
+            }).catch(error => {
+                res.status(500);
+                res.send(error);
+                return;
+            });
+        }).catch(error => {
+            res.status(500);
+            res.send(error);
+            return;
+        });
+    }
+};
+
+
 
 // helper function that checks if the object contains the key and is of the correct type
 function checkExists(object, key, type) {
