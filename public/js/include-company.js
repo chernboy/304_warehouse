@@ -14,6 +14,7 @@ IncludeCompany = (function () {
                             AddItem.init()
                             resolve()
                         }).catch(function (error) {
+                        Util.handleErrorBox(err)
                             reject("failed to get company " + error)
                         })
                 }
@@ -38,6 +39,7 @@ var WarehouseSelect = (function () {
             })
         }).catch((err) => {
             console.log(err)
+        Util.handleErrorBox(err)
         })
     }
     var getWarehouses = function () {
@@ -147,6 +149,7 @@ var AddItem = (function () {
             })
             .fail((err) => {
                 console.log(err)
+        Util.handleErrorBox(err)
             })
         })
     }

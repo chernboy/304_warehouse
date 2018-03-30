@@ -15,6 +15,7 @@ IncludeAdmin = (function () {
                             FindVip.init()
                             resolve()
                         }).catch(function (error) {
+                        Util.handleErrorBox(err)
                             reject("failed to get admin" + error)
                         })
                 }

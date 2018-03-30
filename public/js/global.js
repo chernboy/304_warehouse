@@ -15,6 +15,7 @@ var BodyController = (function () {
                         console.log("got customer")
                         NavController.init()
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }
@@ -37,6 +38,7 @@ var BodyController = (function () {
                             console.log("Faled to load nav styles")
                         })
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }
@@ -53,9 +55,11 @@ var BodyController = (function () {
                         NavController.init().then(() => {
                             Util.refreshStyles("nav")
                         }).catch((err) => {
+                            Util.handleErrorBox(err)
                             console.log(err)
                         })
                     }).catch(function (err) {
+                        Util.handleErrorBox(err)
                         console.log(err)
                     })
                 }

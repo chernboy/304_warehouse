@@ -293,9 +293,11 @@ var FindMin = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
+        Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for min")
+        Util.handleErrorBox(err)
                 })
         })
     }
@@ -343,9 +345,11 @@ var FindMax = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
+        Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for max")
+        Util.handleErrorBox(err)
                 })
         })
     }
@@ -392,9 +396,11 @@ var FindVip = (function () {
                 })
                 .catch((err) => {
                     console.log("unable to get vip customers")
+        Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for vip")
+        Util.handleErrorBox(err)
                 })
         })
     }

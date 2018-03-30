@@ -29,6 +29,7 @@ var Util = (function() {
                     resolve(data)
                 },
                 error: function(xhr, text, status) {
+                    Util.handleErrorBox(err)
                     reject(status)
                 }
             })
