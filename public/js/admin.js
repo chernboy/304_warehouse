@@ -52,19 +52,30 @@ var UnshippedOrdersController = (function () {
             Util.handleErrorBox(err)
         })
 
-        $("#deleteWarehouse").on('click', function () {
+        warehouseSelect = $("#adminWarehouseSelect")
+        getWarehouses().then((response) => {
+            response.json().then((results) => {
+                for (let o of results) {
+                    warehouseSelect.append(createWarehouseOption(o))
+                }
+            })
+        }).catch((err) => {
+            console.log(err)
+            Util.handleErrorBox(err)
+        })
+
+
+        $("#nextWarehouse").on('click', function () {
             //TODO: Delete warehouse
             Util.showFace("warehousesMove")
+        })
 
-            warehouseSelect = $("#adminWarehouseSelect")
-            getWarehouses().then((response) => {
-                response.json().then((results) => {
-                    for (let o of results) {
-                        warehouseSelect.append(createWarehouseOption(o))
-                    }
-                })
-            }).catch((err) => {
-                console.log(err)
+        $("#deleteWarehouse").on("click", function() {
+            deleteWarehouse()
+            .then((response) => {
+                Util.handleErrorBox("items moved: " + response)
+            })
+            .catch((err) => {
                 Util.handleErrorBox(err)
             })
         })
@@ -119,6 +130,28 @@ var UnshippedOrdersController = (function () {
             Util.showFace("login")
         }
 
+    }
+
+    var deleteWarehouse = function() {
+        let sendObj = {} 
+        sendObj["old_lat"] = parseFloat(getSelectedLat(warehouseSelect))
+        sendObj["old_lon"] = parseFloat(getSelectedLon(warehouseSelect))
+        sendObj["new_lat"] = parseFloat(getSelectedLat(warehouseSelectMove))
+        sendObj["new_lon"] = parseFloat(getSelectedLon(warehouseSelectMove))
+        return $.ajax({
+                url: "/api/deleteWarehouseAndMove",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(sendObj),
+            })
+    }
+
+    var getSelectedLat = function(warehouse) {
+        return warehouse.find(":selected").attr("lat")
+    }
+
+    var getSelectedLon = function(warehouse) {
+        return warehouse.find(":selected").attr("lon")
     }
 
     var getWarehouses = function () {

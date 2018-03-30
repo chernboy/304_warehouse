@@ -253,6 +253,7 @@ app.get("/api/getMinAverageWarehouse", (req, res) => {
 });
 
 app.post("/api/deleteWarehouseAndMove", (req, res) => {
+    console.log("deleting")
     customer.deleteWarehouseAndMove(req, res, client);
 });
 
