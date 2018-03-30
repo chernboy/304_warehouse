@@ -70,6 +70,7 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
+
         client.query("SELECT * FROM USERS WHERE id = $1", [body.id]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -119,7 +120,7 @@ exports.makeShippingRequest = function(req, res, client) {
     
         }).catch(function(error){
             res.status(500);
-            res.send("error: unable to determine next req_num"); 
+            res.send("error: unable to determine next req_num " + error); 
             return;
         });
     } else {
