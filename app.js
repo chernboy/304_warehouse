@@ -15,7 +15,6 @@ const htmlpath = "/public/html";
 client.connect();
 app.use(bodyParser.json()); // for parsing JSON body
 
-//FIX: this is kind of slow to look at, maybe route grouping would be good
 app.get('/admin', (req, res) => {
     console.log("received get request at admin");
     res.sendFile(location + htmlpath + "/admin.html");
@@ -178,6 +177,7 @@ Util.handleErrorBox(err)
         })
 })
 
+// Rejects the given order
 app.get("/api/rejectOrder", (req, res) => {
     let req_num = req.query.req_num
 
@@ -204,7 +204,7 @@ app.get("/api/getOrders", (req, res) => {
     customer.getOrders(req, res, client);
 });
 
-// TODO: Document this
+
 app.post("/api/makeShippingRequest", (req, res) => {
     customer.makeShippingRequest(req, res, client);
 });

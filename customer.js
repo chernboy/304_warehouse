@@ -70,6 +70,7 @@ exports.makeShippingRequest = function(req, res, client) {
             res.send("Error: " + error);
             return;
         });
+
         client.query("SELECT * FROM USERS WHERE id = $1", [body.id]).then(function (result) {
             if (result.rowCount == 0) {
                 res.status(400);
@@ -108,7 +109,6 @@ exports.makeShippingRequest = function(req, res, client) {
         client.query("INSERT INTO SHIPPING_REQUEST VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [
             req_num, body.qty, body.origin, body.dest, body.total_val, body.shipped, body.veh_id, body.id, body.lat, body.lon, body.i_id
         ]).then(result => {
-            console.log("Inserted new Shipping_request!");
             res.status(200)
             res.send(result.rows);
             return;
@@ -119,9 +119,8 @@ exports.makeShippingRequest = function(req, res, client) {
         });
     
         }).catch(function(error){
-            console.log("Error: couldn't retrieve rows");
             res.status(500);
-            res.send("error: unable to determine next req_num"); 
+            res.send("error: unable to determine next req_num " + error); 
             return;
         });
     } else {
@@ -176,7 +175,7 @@ exports.userLogin = function(req, res, client) {
         res.send("Invalid use of API; must specify user name");
         return;
     }
-
+ 
     client.query("SELECT id FROM customer WHERE cu_name = $1", [req.query.name]).then((result) => {
         if(result.rowCount != 1) {
             res.status(500);
@@ -226,10 +225,11 @@ exports.addItem = function (req, res, client) {
     ) {
         var next_i_id = 0;
         client.query("SELECT max(i_id) FROM ITEM").then(result => {
+            // retrieve the maximum i_id to determine the next one
             if(result.rowCount === 1) {
                 next_i_id = result.rows[0].max + 1;
-                console.log("Next ID:" + next_i_id);
 
+                // check if the warehouse exists
                 client.query("SELECT * FROM WAREHOUSE WHERE lat = $1 AND lon = $2", [body.lat, body.lon]).then(result => {
                     if (result.rowCount < 1) {
                         res.status(400);
@@ -242,6 +242,7 @@ exports.addItem = function (req, res, client) {
                     return;
                 });
 
+                // check if the company exists
                 client.query("SELECT * FROM COMPANY WHERE ID = $1", [body.ID]).then(result => {
                     if (result.rowCount < 1) {
                         res.status(400);
@@ -249,17 +250,18 @@ exports.addItem = function (req, res, client) {
                         return;
                     }
 
-                    console.log("" + [
-                        next_i_id,
-                        body.weight, body.quantity, body.cost, body.volume,
-                        body.lat, body.lon, body.ID
-                    ]);
+                    // console.log("" + [
+                        // next_i_id,
+                        // body.weight, body.quantity, body.cost, body.volume,
+                        // body.lat, body.lon, body.ID
+                    // ]);
+                    
+                    // Insert the item into the table
                     client.query("INSERT INTO ITEM VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [
                         next_i_id,
                         body.weight, body.quantity, body.cost, body.volume,
                         body.lat, body.lon, body.ID
                     ]).then(result => {
-                        console.log("Tada!");
                         res.send(result.rows);
                         return;
                     }).catch(error => {
@@ -274,9 +276,6 @@ exports.addItem = function (req, res, client) {
                     res.send("Database error");
                     return;
                 });
-
-
-
 
             } else {
                 res.status(500);
@@ -300,7 +299,13 @@ exports.addItem = function (req, res, client) {
     }
 };
 
+// Returns all orders that have not been shipped for a given customer
 exports.getCustomerPendingOrders = function(req, res, client) {
+    if(!checkExists(req.query, "id", "string")) {
+        res.status(400);
+        res.send("error: must specify id");
+        return;
+    }
     let id = parseInt(req.query.id)
     client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 0", [id]).then(function (result) {
         res.status(200)
@@ -309,10 +314,16 @@ exports.getCustomerPendingOrders = function(req, res, client) {
         console.log(err)
         res.status(400)
         res.send("failed to get orders for customer")
-    })
-}
+    });
+};
 
+// Returns all orders that have been shipped for a given customer
 exports.getCustomerShippedOrders = function(req, res, client) {
+    if(!checkExists(req.query, "id", "string")) {
+        res.status(400);
+        res.send("error: must specify id");
+        return;
+    }
     id = parseInt(req.query.id)
     client.query("SELECT * FROM SHIPPING_REQUEST WHERE ID = $1 AND shipped = 1", [id]).then(function (result) {
         res.status(200)
@@ -321,9 +332,10 @@ exports.getCustomerShippedOrders = function(req, res, client) {
         console.log(err)
         res.status(400)
         res.send("failed to get orders for customer")
-    })
-}
+    });
+};
 
+// Returns the item popularity, counting how many transactions occured for a given item
 exports.getItemPopularity = function(req, res, client) {
     client.query("SELECT i_id, count(req_num) FROM shipping_request" + 
     " GROUP BY i_id ORDER BY count(req_num) DESC").then(result => {
@@ -352,9 +364,9 @@ exports.deleteUser = function(req, res, client) {
         res.send("Incorrect parameters: Missing 'id' value in body.");
         return;
     }
-}
+};
 
-
+// Retuns all customers that have purcased an item from every company
 exports.getCustomersPurchasingEverywhere = function(req, res, client) {
     // This is a really long function name
     // help....
@@ -374,7 +386,7 @@ exports.getCustomersPurchasingEverywhere = function(req, res, client) {
             });
 };
 
-
+// Returns the warehouse with the higest average item cost
 exports.getMaxAverageWarehouse = function(req, res, client) {
     // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
     //     "                        FROM item i, warehouse w2" +
@@ -397,6 +409,7 @@ exports.getMaxAverageWarehouse = function(req, res, client) {
     });
 };
 
+// Returns the warehouse with the lowest average item cost
 exports.getMinAverageWarehouse = function (req, res, client) {
     // client.query("SELECT * FROM item i, ((SELECT w2.lat, w2.lon, avg(i.cost) AS avCost" +
     //     "                        FROM item i, warehouse w2" +
@@ -418,8 +431,8 @@ exports.getMinAverageWarehouse = function (req, res, client) {
     });
 };
 
+// Deletes a warehouse and moves all items at the old warehouse to the new warehouse
 exports.deleteWarehouseAndMove = function(req, res, client) {
-    // TODO: Verify the parameters
     var body = req.body;
     var promiseArr = [];
     if (
@@ -428,29 +441,31 @@ exports.deleteWarehouseAndMove = function(req, res, client) {
         checkExists(body, "new_lat", "number") &&
         checkExists(body, "new_lon", "number")
     ) {
+        // Check if the new warehouse is the same with the old warehosue
         if ((body.old_lat === body.new_lat) && (body.old_lon) === body.new_lon) {
             res.status(400);
             res.send("error: unable to send items to a warehouse that is being deleted");
             return;
-        } 
-        // TODO: Get all the items currently in the old warehouse
+        }
+        // Grabs all items associated with the old warehouse
         client.query("SELECT * FROM ITEM WHERE lat = $1 AND lon = $2", [
             body.old_lat, body.old_lon
         ]).then(result => {
-            // TODO: Update all the items found, and move them to the new warehouse
             var oldItemList = result.rows;
+            // For every item in the old warehouse
             for(let row of oldItemList) {
+                // Move it to the new warehouse
                 promiseArr.push(client.query("UPDATE ITEM SET lat = $1, lon = $2 WHERE lat = $3 AND lon = $4", [
                     body.new_lat, body.new_lon, body.old_lat, body.old_lon
                 ]));
             }
-            
+            // Wait for all queries to complete, then return
             Promise.all(promiseArr).then(result => {
-                // TODO: Delete the old warehouse   
                 client.query("DELETE FROM warehouse WHERE lat = $1 AND lon = $2", [
                     body.old_lat, body.old_lon 
                 ]).then(result => {
                     res.send("deleted warehouse and move all items");
+                    return;
                 }).catch(error => {
                     res.status(500);
                     res.send(error);
