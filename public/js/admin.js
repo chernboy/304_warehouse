@@ -7,8 +7,8 @@ var UnshippedOrdersController = (function () {
         unshippedOrdersTable = $("#unshippedOrders")
         shippedOrdersTable = $("#shippedOrders")
 
-        $(".ordersRefresh").each(function() {
-            $(this).on("click", function() {
+        $(".ordersRefresh").each(function () {
+            $(this).on("click", function () {
                 console.log("refreshing...")
                 getUnshippedOrders()
                     .then((response) => {
@@ -49,7 +49,7 @@ var UnshippedOrdersController = (function () {
             })
         }).catch((err) => {
             console.log(err)
-        Util.handleErrorBox(err)
+            Util.handleErrorBox(err)
         })
 
         warehouseSelect = $("#adminWarehouseSelect")
@@ -61,12 +61,23 @@ var UnshippedOrdersController = (function () {
             })
         }).catch((err) => {
             console.log(err)
-        Util.handleErrorBox(err)
+            Util.handleErrorBox(err)
         })
 
-        $("#deleteWarehouse").on('click', function () {
+
+        $("#nextWarehouse").on('click', function () {
             //TODO: Delete warehouse
             Util.showFace("warehousesMove")
+        })
+
+        $("#deleteWarehouse").on("click", function() {
+            deleteWarehouse()
+            .then((response) => {
+                Util.handleErrorBox("items moved: " + response)
+            })
+            .catch((err) => {
+                Util.handleErrorBox(err)
+            })
         })
 
         $("#adminLogin").on("submit", async e => {
@@ -119,6 +130,28 @@ var UnshippedOrdersController = (function () {
             Util.showFace("login")
         }
 
+    }
+
+    var deleteWarehouse = function() {
+        let sendObj = {} 
+        sendObj["old_lat"] = parseFloat(getSelectedLat(warehouseSelect))
+        sendObj["old_lon"] = parseFloat(getSelectedLon(warehouseSelect))
+        sendObj["new_lat"] = parseFloat(getSelectedLat(warehouseSelectMove))
+        sendObj["new_lon"] = parseFloat(getSelectedLon(warehouseSelectMove))
+        return $.ajax({
+                url: "/api/deleteWarehouseAndMove",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(sendObj),
+            })
+    }
+
+    var getSelectedLat = function(warehouse) {
+        return warehouse.find(":selected").attr("lat")
+    }
+
+    var getSelectedLon = function(warehouse) {
+        return warehouse.find(":selected").attr("lon")
     }
 
     var getWarehouses = function () {
@@ -241,11 +274,11 @@ var PopularItems = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -293,11 +326,11 @@ var FindMin = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for min")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -313,15 +346,13 @@ var FindMin = (function () {
             $("#minTableBody").append(generateMinRow(item))
         }
 
-        util.show($("#minTable"))
+        Util.show($("#minTable"))
     }
 
     var generateMinRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.min))
+        return row
     }
 
     return {
@@ -345,11 +376,11 @@ var FindMax = (function () {
                 })
                 .catch((err) => {
                     console.log(err)
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for max")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -368,11 +399,9 @@ var FindMax = (function () {
     }
 
     var generateMaxRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.max))
+        return row
     }
 
     return {
@@ -389,6 +418,7 @@ var FindVip = (function () {
                     return response.json()
                 })
                 .then((results) => {
+                    console.log(results)
                     $(".reportsTable").each(() => {
                         Util.hide($(this))
                     })
@@ -396,11 +426,11 @@ var FindVip = (function () {
                 })
                 .catch((err) => {
                     console.log("unable to get vip customers")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
                 .catch((err) => {
                     console.log("response not in correct format for vip")
-        Util.handleErrorBox(err)
+                    Util.handleErrorBox(err)
                 })
         })
     }
@@ -419,11 +449,10 @@ var FindVip = (function () {
     }
 
     var generateVipRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.id))
+        row.append($("<td>").text(item.cu_name))
+        return row
     }
 
     return {

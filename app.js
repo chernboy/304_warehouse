@@ -49,6 +49,7 @@ app.get("/api/getItems", (req, res) => {
     try {
         filter = parseInt(req.query.filter)
     } catch (err) {
+        Util.handleErrorBox(err)
         console.log(err)
     }
 
@@ -85,6 +86,7 @@ app.get("/api/getCompanyItems", (req, res) => {
     try {
         id = parseInt(req.query.id)
     } catch (e) {
+        Util.handleErrorBox(err)
         res.status(400)
         res.send("invalid id")
     }
@@ -96,6 +98,7 @@ app.get("/api/getCompanyItems", (req, res) => {
         })
         .catch((err) => {
             res.status(400)
+Util.handleErrorBox(err)
             res.send("Unable to get company items")
         })
 })
@@ -122,6 +125,7 @@ app.get("/api/getUnshippedOrders", (req, res) => {
             res.send(result.rows)
         }).catch((err) => {
             res.status(400)
+Util.handleErrorBox(err)
             res.send("couldnt get unshipped orders")
         })
 })
@@ -133,6 +137,7 @@ app.get("/api/getShippedOrders", (req, res) => {
             res.send(result.rows)
         }).catch((err) => {
             res.status(400)
+Util.handleErrorBox(err)
             res.send("couldnt get shipped orders")
         })
 })
@@ -168,6 +173,7 @@ app.get("/api/shipOrder", (req, res) => {
     })
         .catch((err) => {
             res.status(400)
+Util.handleErrorBox(err)
             res.send("failed to ship order")
         })
 })
@@ -182,6 +188,7 @@ app.get("/api/rejectOrder", (req, res) => {
         })
         .catch((err) => {
             res.status(400)
+Util.handleErrorBox(err)
             res.send("failed to delete")
         })
 })
@@ -246,6 +253,7 @@ app.get("/api/getMinAverageWarehouse", (req, res) => {
 });
 
 app.post("/api/deleteWarehouseAndMove", (req, res) => {
+    console.log("deleting")
     customer.deleteWarehouseAndMove(req, res, client);
 });
 
