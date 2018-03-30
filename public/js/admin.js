@@ -313,15 +313,13 @@ var FindMin = (function () {
             $("#minTableBody").append(generateMinRow(item))
         }
 
-        util.show($("#minTable"))
+        Util.show($("#minTable"))
     }
 
     var generateMinRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.min))
+        return row
     }
 
     return {
@@ -368,11 +366,9 @@ var FindMax = (function () {
     }
 
     var generateMaxRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.max))
+        return row
     }
 
     return {
@@ -389,6 +385,7 @@ var FindVip = (function () {
                     return response.json()
                 })
                 .then((results) => {
+                    console.log(results)
                     $(".reportsTable").each(() => {
                         Util.hide($(this))
                     })
@@ -419,11 +416,10 @@ var FindVip = (function () {
     }
 
     var generateVipRow = function (item) {
-        //todo: generate the right kind of row
-        // let row = $("<tr>")
-        // row.append($("<td>").text(item.i_id))
-        // row.append($("<td>").text(item.cnt))
-        // return row
+        let row = $("<tr>")
+        row.append($("<td>").text(item.id))
+        row.append($("<td>").text(item.cu_name))
+        return row
     }
 
     return {
