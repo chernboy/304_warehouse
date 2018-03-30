@@ -167,6 +167,7 @@ ListItemTableController = (function () {
     var event = function() {
         tablebody = $("#companyItemsTable")
 
+        
         let id = parseFloat(Util.getCookie("co_login")) 
         getAllItems(id)
                 .then((response) => {
@@ -175,8 +176,24 @@ ListItemTableController = (function () {
                 .then((results) => {
                     populateTableWithItems(results, tablebody)
                 })   
+
+        $("#AllItemsRefresh").on("click", () => {
+            console.log("refreshing items")
+            tablebody = $("#companyItemsTable")
+            
+            let id = parseFloat(Util.getCookie("co_login")) 
+            getAllItems(id)
+            .then((response) => {
+                return response.json();
+                })
+            .then((results) => {
+                console.log(results)
+                 populateTableWithItems(results, tablebody)
+            })   
+        })
     }
-    
+
+
     var populateTableWithItems = function (items, table) {
         table.empty()
         for (let item of items) {
