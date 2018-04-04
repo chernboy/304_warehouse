@@ -396,7 +396,7 @@ exports.getMaxAverageWarehouse = function(req, res, client) {
     //     "                        FROM item i, warehouse w2" +
     //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
     //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
-    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    client.query("select MAX(groups.av) as max from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
     .then(result => {
         res.status(200)
         res.send(result.rows);
@@ -419,7 +419,7 @@ exports.getMinAverageWarehouse = function (req, res, client) {
     //     "                        FROM item i, warehouse w2" +
     //     "                        WHERE i.lat = w2.lat AND i.lon = w2.lon" +
     //     "                        GROUP BY w2.lat, w2.lon) AS magic2);"
-    client.query("select MAX(groups.av) from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
+    client.query("select MIN(groups.av) as min from (select avg(cost) as av, item.lat, item.lon from item group by lat, lon) as groups")
     .then(result => {
         res.send(result.rows);
         return;

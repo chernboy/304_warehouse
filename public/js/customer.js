@@ -90,7 +90,7 @@ ItemTableController = (function () {
     };
 
     var makeOrders = function() {
-        var dest = $("#destination").val
+        var dest = $("#dest").val()
         if (!dest) {
             Util.handleErrorBox("Please enter a destination")
             return

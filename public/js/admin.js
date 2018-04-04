@@ -381,7 +381,7 @@ var FindMax = (function () {
             $("#maxTableBody").append(generateMaxRow(item))
         }
 
-        Util.show($("#minTable"))
+        Util.show($("#maxTable"))
     }
 
     var generateMaxRow = function (item) {
